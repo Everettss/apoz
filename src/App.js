@@ -43,7 +43,6 @@ class App extends Component {
             this.setState({
                 originalPicture: picture,
                 transformations: [
-                    ...this.state.transformations,
                     {
                         title: 'load image',
                         picture,
