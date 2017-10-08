@@ -1,66 +1,23 @@
 import React, { Component } from 'react';
-import * as d3 from 'd3';
 import './App.css';
 import getPixels from 'get-pixels';
-// import lenna from './Lenna.png';
 import lenna from './martyna.jpeg';
+import Histogram from './Histogram/Histogram';
+import Image from './Image/Image';
 
-const lineChart = _data => {
-
-    const data = [{ x: -1, r: 0, g: 0, b: 0, bw: 0 }, ..._data, { x: 256, r: 0, g: 0, b: 0, bw: 0 }];
-    const svg = d3.select('svg');
-    const margin = {top: 20, right: 15, bottom: 30, left: 15};
-    const width = +svg.attr('width') - margin.left - margin.right;
-    const height = +svg.attr('height') - margin.top - margin.bottom;
-
-    const x = d3.scaleLinear().range([0, width]);
-    const y = d3.scaleLinear().range([height, 0]);
-
-    svg.selectAll("*").remove();
-    const graph = svg.append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-
-    // Scale the range of the data
-    x.domain(d3.extent(data, d => d.x));
-    y.domain([0, d3.max([
-        d3.max(data, d => d.r),
-        d3.max(data, d => d.g),
-        d3.max(data, d => d.b),
-        d3.max(data, d => d.bw),
-    ])]);
-
-    const createPath = (getData, stroke, fill) => {
-        const line = d3.line()
-            .curve(d3.curveStep)
-            .x(d => x(d.x))
-            .y(d => y(getData(d)));
-
-        graph.append('path')
-            .data([data])
-            .attr('class', 'line')
-            .attr('fill', fill)
-            .attr('stroke', stroke)
-            .attr('stroke-width', '1px')
-            .attr('d', line);
-    };
-
-    createPath(d => d.bw, 'gray', 'gray');
-    createPath(d => d.r, 'red', 'none');
-    createPath(d => d.g, 'green', 'none');
-    createPath(d => d.b, 'blue', 'none');
-
-    // Add the X Axis
-    graph.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickValues([0, 63, 127, 191, 255]));
-
-};
+import Lighten from './Lighten/Lighten';
 
 
 class App extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            picture: null,
+            originalPicture: null,
+        };
         this.fileChange = this.fileChange.bind(this);
+        this.updateImage = this.updateImage.bind(this);
     }
 
     fileChange(e) {
@@ -76,48 +33,58 @@ class App extends Component {
     }
 
     importImage(src) {
-        getPixels(src, function(err, picture) {
+        getPixels(src, (err, picture) => {
             if(err) {
                 console.log("Bad image path");
                 return
             }
-            const width = picture.shape[0];
-            const height = picture.shape[1];
-
-            let hist = new Array(256).fill({});
-
-            hist = hist.map((_, i) => ({ x: i, r: 0, g: 0, b: 0, bw: 0 }));
-
-            console.log(hist);
-
-            for(let i = 0; i < width; ++i) {
-                for(let j = 0; j < height; ++j) {
-                    const r = picture.get(i, j, 0);
-                    const g = picture.get(i, j, 1);
-                    const b = picture.get(i, j, 2);
-                    const bw = Math.round((r + g + b) / 3);
-                    Object.assign(hist[r], { r: hist[r].r + 1 });
-                    Object.assign(hist[g], { g: hist[g].g + 1 });
-                    Object.assign(hist[b], { b: hist[b].b + 1 });
-                    Object.assign(hist[bw], { bw: hist[bw].bw + 1 });
-                }
-            }
-            lineChart(hist);
+            this.setState({ originalPicture: picture, picture });
         })
     }
 
-  render() {
-    return (
-      <div className="App">
-        <p className="App-intro">
-            <svg width="542" height="500"></svg>
-            <img src={lenna} alt="lenna"/> <br/>
+    updateImage(fn) {
+        const picture = fn(this.state.picture);
+        // console.log(this.state.picture);
+        // console.log(fn);
+        this.setState({ picture });
+    }
 
-            <input type='file' name='img' size='65' id='uploadimage' onChange={this.fileChange}/>
-        </p>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <div className="App">
+                <div className="menu">menu</div>
+                <div className="app-shell">
+                    <div className="images">
+                        <div className="images-row image-modified">
+                            <div className="histogram-wrapper">
+                                <Histogram data={this.state.picture} />
+                            </div>
+                            <div className="image-wrapper">
+                                <Image data={this.state.picture}/>
+                            </div>
+                        </div>
+                        <div className="images-row image-original">
+                            <div className="histogram-wrapper">
+                                <Histogram data={this.state.originalPicture} />
+                            </div>
+                            <div className="image-wrapper">
+                                <Image data={this.state.originalPicture}/>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="aside">
+                        aside
+                        <Lighten updateImage={this.updateImage} />
+                    </div>
+                </div>
+
+
+                <p className="App-intro">
+                    <input type='file' name='img' size='65' id='uploadimage' onChange={this.fileChange}/>
+                </p>
+            </div>
+        );
+    }
 }
 
 export default App;

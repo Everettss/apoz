@@ -5,9 +5,11 @@
   "dependencies": {
     "d3": "^4.11.0",
     "get-pixels": "^3.3.0",
+    "lodash": "^4.17.4",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "react-scripts": "1.0.14"
+    "react-scripts": "1.0.14",
+    "save-pixels": "^2.3.4"
   },
   "scripts": {
     "start": "react-scripts start",
