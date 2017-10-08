@@ -45,7 +45,10 @@ class Image extends Component {
                 }
             }
 
-            return image;
+            return {
+                title: `lighten +${amount}` ,
+                picture: image
+            };
         })
     }
     

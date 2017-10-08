@@ -63,8 +63,6 @@ const getHistogramData = picture => {
 
     hist = hist.map((_, i) => ({ x: i, r: 0, g: 0, b: 0, bw: 0 }));
 
-    console.log(hist);
-
     for(let i = 0; i < width; ++i) {
         for(let j = 0; j < height; ++j) {
             const r = picture.get(i, j, 0);
@@ -88,8 +86,6 @@ class Histogram extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(this.props);
-        console.log(nextProps);
         if (nextProps && nextProps.data) {
             lineChart(getHistogramData(nextProps.data), findDOMNode(this));
         }

@@ -8,11 +8,8 @@ class Image extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(this.props);
-        console.log(nextProps);
         if (nextProps && nextProps.data) {
             const canvas = savePixels(nextProps.data, 'canvas');
-            console.log(canvas);
             this.canvasWrapper.innerHTML = '';
             this.canvasWrapper.appendChild(canvas);
         }

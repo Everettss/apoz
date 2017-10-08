@@ -3,6 +3,7 @@
   flex-direction: column;
   height: 100vh;
   text-align: left;
+  padding: 0 15px;
 }
 
 .app-shell {
@@ -28,6 +29,21 @@
 .image-wrapper {
   flex-grow: 1;
   display: flex;
+}
+
+.history-position {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  padding: 5px 0;
+}
+
+.history-position__title {
+  flex-grow: 1;
+}
+
+.history-position__delete {
+  cursor: pointer;
 }
 
 @keyframes App-logo-spin {
