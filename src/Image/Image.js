@@ -8,14 +8,20 @@ class Image extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps && nextProps.data) {
-            const canvas = savePixels(nextProps.data, 'canvas');
+        if (
+            !this.props.data ||
+            (
+                nextProps &&
+                nextProps.data &&
+                nextProps.data.modificationDate &&
+                this.props.data &&
+                nextProps.data.modificationDate !== this.props.data.modificationDate
+            )
+        ) {
+            const canvas = savePixels(nextProps.data.picture, 'canvas');
             this.canvasWrapper.innerHTML = '';
             this.canvasWrapper.appendChild(canvas);
         }
-    }
-
-    componentDidMount() {
     }
 
     render() {

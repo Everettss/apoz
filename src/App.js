@@ -5,8 +5,8 @@ import getPixels from 'get-pixels';
 import lenna from './Lenna.png';
 import Histogram from './Histogram/Histogram';
 import Image from './Image/Image';
-
-import Lighten from './Lighten/Lighten';
+import ndarray from 'ndarray';
+import Menu from './Menu/Menu';
 
 
 class App extends Component {
@@ -16,10 +16,12 @@ class App extends Component {
         this.state = {
             transformations: [],
             originalPicture: null,
+            operation: null,
         };
         this.fileChange = this.fileChange.bind(this);
         this.updateImage = this.updateImage.bind(this);
         this.handleRemoveHistory = this.handleRemoveHistory.bind(this);
+        this.handleMenu = this.handleMenu.bind(this);
     }
 
     fileChange(e) {
@@ -41,12 +43,16 @@ class App extends Component {
                 return
             }
             this.setState({
-                originalPicture: picture,
+                originalPicture: {
+                    picture,
+                    modificationDate: new Date(),
+                },
                 transformations: [
                     {
                         title: 'load image',
                         picture,
-                        fn: x => x
+                        fn: x => x,
+                        modificationDate: new Date(),
                     }
                 ]
             });
@@ -54,20 +60,20 @@ class App extends Component {
     }
 
     updateImage(fn) {
-        const transformation = fn(this.state.transformations[this.state.transformations.length - 1].picture);
+        const image = this.state.transformations[this.state.transformations.length - 1].picture;
+        const newImage = ndarray([...image.data], [...image.shape], [...image.stride]);
+        const transformation = fn(newImage);
 
         this.setState({
             transformations: [
                 ...this.state.transformations,
-                Object.assign({}, transformation, { fn })
+                Object.assign({}, transformation, { fn, modificationDate: new Date() })
             ]
         });
     }
 
     handleRemoveHistory(position) {
         return () => {
-            console.log(position);
-            const prevPicture = this.state.transformations[position - 1].picture;
             const nextTransformations = this.state.transformations
                 .map(x => ({ title: x.title, fn: x.fn }))
                 .filter((_, i) => i > position);
@@ -75,22 +81,33 @@ class App extends Component {
             const newTransformations = this.state.transformations.filter((_, i) => i < position);
 
             nextTransformations.forEach(transformation => {
-                const res = transformation.fn(newTransformations[newTransformations.length - 1].picture);
-                newTransformations.push(Object.assign({}, res, { fn: transformation.fn }));
+                const image = newTransformations[newTransformations.length - 1].picture;
+                const newImage = ndarray([...image.data], [...image.shape], [...image.stride]);
+                const res = transformation.fn(newImage);
+                newTransformations.push(Object.assign(
+                    {},
+                    res,
+                    { fn: transformation.fn, modificationDate: new Date() }
+                ));
             });
-            console.log(prevPicture);
-            console.log(nextTransformations);
-            console.log(newTransformations);
 
             this.setState({ transformations: newTransformations });
         }
     }
 
+    handleMenu(operation) {
+        return e => {
+            e.preventDefault();
+            this.setState({ operation });
+        }
+    }
+
     render() {
-        console.log(this.state);
         return (
             <div className="App">
-                <div className="menu">menu</div>
+                <div className="menu">
+                    <Menu handleMenu={this.handleMenu} updateImage={this.updateImage} />
+                </div>
                 <div className="app-shell">
                     <div className="images">
                         <div className="images-row image-modified">
@@ -98,7 +115,7 @@ class App extends Component {
                                 <Histogram
                                     data={
                                         this.state.transformations.length &&
-                                        this.state.transformations[this.state.transformations.length - 1].picture
+                                        this.state.transformations[this.state.transformations.length - 1]
                                     }
                                 />
                             </div>
@@ -106,7 +123,7 @@ class App extends Component {
                                 <Image
                                     data={
                                         this.state.transformations.length &&
-                                        this.state.transformations[this.state.transformations.length - 1].picture
+                                        this.state.transformations[this.state.transformations.length - 1]
                                     }
                                 />
                             </div>
@@ -121,32 +138,34 @@ class App extends Component {
                         </div>
                     </div>
                     <div className="aside">
-                        <h3>Operation</h3>
-                        <Lighten updateImage={this.updateImage} />
+                        {this.state.operation ? <div className="aside__item aside__item--operation">
+                            <h3 className="aside__item__title">Operation</h3>
+                            {this.state.operation}
+                        </div> : ''}
+                        <div className="aside__item aside__item--history">
+                            <h3 className="aside__item__title">History</h3>
 
-                        <h3>History</h3>
-
-                        {this.state.transformations.map((transformation, i) => {
-                            return <div className="history-position" key={i}>
-                                <div className="history-position__title">
-                                    {transformation.title}
+                            {this.state.transformations.map((transformation, i) => {
+                                return <div className="history-position" key={i}>
+                                    <div className="history-position__title">
+                                        {transformation.title}
+                                    </div>
+                                    {i > 0 ?
+                                        <i
+                                            className="fa fa-trash history-position__delete"
+                                            onClick={this.handleRemoveHistory(i)}
+                                        /> :
+                                        ''
+                                    }
                                 </div>
-                                {i > 0 ?
-                                    <i
-                                        className="fa fa-trash history-position__delete"
-                                        onClick={this.handleRemoveHistory(i)}
-                                    /> :
-                                    ''
-                                }
-                            </div>
-                        })}
+                            })}
+                        </div>
+                        <div className="aside__item aside__item--upload">
+                            <h3 className="aside__item__title">Upload image</h3>
+                            <input type='file' name='img' size='65' id='uploadimage' onChange={this.fileChange}/>
+                        </div>
                     </div>
                 </div>
-
-
-                <p className="App-intro">
-                    <input type='file' name='img' size='65' id='uploadimage' onChange={this.fileChange}/>
-                </p>
             </div>
         );
     }

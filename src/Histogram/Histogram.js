@@ -50,7 +50,7 @@ const lineChart = (_data, el) => {
     // Add the X Axis
     graph.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickValues([0, 63, 127, 191, 255]));
+        .call(d3.axisBottom(x).tickValues([0, 63, 127, 191, 255]).tickSizeOuter(0));
 
 };
 
@@ -63,8 +63,8 @@ const getHistogramData = picture => {
 
     hist = hist.map((_, i) => ({ x: i, r: 0, g: 0, b: 0, bw: 0 }));
 
-    for(let i = 0; i < width; ++i) {
-        for(let j = 0; j < height; ++j) {
+    for (let i = 0; i < width; ++i) {
+        for (let j = 0; j < height; ++j) {
             const r = picture.get(i, j, 0);
             const g = picture.get(i, j, 1);
             const b = picture.get(i, j, 2);
@@ -86,16 +86,18 @@ class Histogram extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps && nextProps.data) {
-            lineChart(getHistogramData(nextProps.data), findDOMNode(this));
+        if (
+            !this.props.data ||
+            (
+                nextProps &&
+                nextProps.data &&
+                nextProps.data.modificationDate &&
+                this.props.data &&
+                nextProps.data.modificationDate !== this.props.data.modificationDate
+            )
+        ) {
+            lineChart(getHistogramData(nextProps.data.picture), findDOMNode(this));
         }
-    }
-
-    componentDidMount() {
-        console.log('mount');
-        // if (this.props.data) {
-        //     // lineChart(this.props.data);
-        // }
     }
 
     render() {
