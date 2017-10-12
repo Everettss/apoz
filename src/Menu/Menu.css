@@ -1,7 +1,55 @@
 
+.menu__inner-wrapper *::selection {
+    background: transparent;
+}
+
+.menu__inner-wrapper {
+    border-bottom: 1px solid lightgray;
+}
+
 .menu__inner-wrapper a {
     display: inline-block;
-    padding: 5px;
+    padding: 5px 8px;
     color: inherit;
     text-decoration: none;
+}
+
+.dropdown, .dropdown__content {
+    display: inline-block;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown .dropdown__content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    border: 1px solid lightgray;
+    border-top: none;
+ }
+
+.dropdown.dropdown--active .dropdown__content {
+    display: inline-block;
+}
+
+.dropdown__content a {
+    white-space: nowrap;
+}
+
+.dropdown__trigger {
+    cursor: pointer;
+}
+
+.dropdown__trigger:after {
+    font-family: FontAwesome;
+    content: '\f107';
+    margin-left: 5px;
+}
+
+.dropdown--active .dropdown__trigger:after {
+    content: '\f106';
 }

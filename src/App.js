@@ -96,10 +96,7 @@ class App extends Component {
     }
 
     handleMenu(operation) {
-        return e => {
-            e.preventDefault();
-            this.setState({ operation });
-        }
+        this.setState({ operation });
     }
 
     render() {
