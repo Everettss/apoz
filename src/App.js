@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 import 'font-awesome/css/font-awesome.css';
-import getPixels from 'get-pixels';
-import lenna from './Lenna.png';
 import Histogram from './Histogram/Histogram';
 import Image from './Image/Image';
+import ImportImage from './ImportImage/ImportImage';
 import ndarray from 'ndarray';
 import Menu from './Menu/Menu';
 
@@ -18,45 +17,27 @@ class App extends Component {
             originalPicture: null,
             operation: null,
         };
-        this.fileChange = this.fileChange.bind(this);
-        this.updateImage = this.updateImage.bind(this);
         this.handleRemoveHistory = this.handleRemoveHistory.bind(this);
         this.handleMenu = this.handleMenu.bind(this);
+        this.importImageHandler = this.importImageHandler.bind(this);
+        this.updateImage = this.updateImage.bind(this);
     }
 
-    fileChange(e) {
-        const file = e.target.files[0];
-        const url = window.URL || window.webkitURL;
-        const src = url.createObjectURL(file);
-
-        this.importImage(src);
-    }
-
-    componentDidMount() {
-        this.importImage(lenna);
-    }
-
-    importImage(src) {
-        getPixels(src, (err, picture) => {
-            if(err) {
-                console.log("Bad image path");
-                return
-            }
-            this.setState({
-                originalPicture: {
+    importImageHandler(picture) {
+        this.setState({
+            originalPicture: {
+                picture,
+                modificationDate: new Date(),
+            },
+            transformations: [
+                {
+                    title: 'load image',
                     picture,
+                    fn: x => x,
                     modificationDate: new Date(),
-                },
-                transformations: [
-                    {
-                        title: 'load image',
-                        picture,
-                        fn: x => x,
-                        modificationDate: new Date(),
-                    }
-                ]
-            });
-        })
+                }
+            ]
+        });
     }
 
     updateImage(fn) {
@@ -159,7 +140,7 @@ class App extends Component {
                         </div>
                         <div className="aside__item aside__item--upload">
                             <h3 className="aside__item__title">Upload image</h3>
-                            <input type='file' name='img' size='65' id='uploadimage' onChange={this.fileChange}/>
+                            <ImportImage importHandler={this.importImageHandler}/>
                         </div>
                     </div>
                 </div>
