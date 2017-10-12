@@ -91,6 +91,7 @@ class Image extends Component {
     render() {
         return (
             <div>
+                <h3 className="aside__item__title">Histogram</h3>
                 <form action="#" onSubmit={this.formHandler}>
 
                     <div onChange={this.radioHandler}>
@@ -98,7 +99,7 @@ class Image extends Component {
                         <input type="radio" value="2" name="type" defaultChecked={this.state.rule === 2}/> 2<br />
                         {/*<input type="radio" value="3" name="type" defaultChecked={this.state.rule === 3}/> 3<br />*/}
                     </div>
-                    <input type="submit"/>
+                    <input type="submit" value="Apply"/>
                 </form>
             </div>
         );

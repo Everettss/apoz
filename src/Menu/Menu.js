@@ -3,6 +3,10 @@ import './Menu.css';
 import Dropdown, { DropdownTrigger, DropdownContent } from 'react-simple-dropdown';
 import Lighten from '../Transformations/Lighten/Lighten';
 import HistogramTransformation from '../Transformations/Histogram/Histogram';
+import Negation from '../Transformations/Lab2/Negation/Negation';
+import Threshold from '../Transformations/Lab2/Threshold/Threshold';
+import ThresholdGrayLevels from '../Transformations/Lab2/ThresholdGrayLevels/ThresholdGrayLevels';
+import Stretching from '../Transformations/Lab2/Stretching/Stretching';
 
 class Menu extends Component {
     constructor(props) {
@@ -48,18 +52,42 @@ class Menu extends Component {
                         <a
                             href="#"
                             onClick={
-                                this.handleMenuClick(<HistogramTransformation updateImage={this.props.updateImage} />)
+                                this.handleMenuClick(<Negation updateImage={this.props.updateImage} />)
                             }
                         >
-                            histogram
+                            negation
                         </a>
                         <a
                             href="#"
                             onClick={
-                                this.handleMenuClick(<Lighten updateImage={this.props.updateImage} />)
+                                this.handleMenuClick(<Threshold updateImage={this.props.updateImage} />)
                             }
                         >
-                            lighten
+                            threshold
+                        </a>
+                        <a
+                            href="#"
+                            onClick={
+                                this.handleMenuClick(<ThresholdGrayLevels updateImage={this.props.updateImage} />)
+                            }
+                        >
+                            threshold with gray levels
+                        </a>
+                        <a
+                            href="#"
+                            onClick={
+                                this.handleMenuClick(<ThresholdGrayLevels updateImage={this.props.updateImage} />)
+                            }
+                        >
+                            reduction of gray levels
+                        </a>
+                        <a
+                            href="#"
+                            onClick={
+                                this.handleMenuClick(<Stretching updateImage={this.props.updateImage} />)
+                            }
+                        >
+                            stretching
                         </a>
                     </DropdownContent>
                 </Dropdown>

@@ -38,6 +38,7 @@
 
 .dropdown__content a {
     white-space: nowrap;
+    display: block;
 }
 
 .dropdown__trigger {

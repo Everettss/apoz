@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-const lightenTransformation = amount => image => {
+const negationTransformation = image => {
     const width = image.shape[0];
     const height = image.shape[1];
 
@@ -10,9 +10,9 @@ const lightenTransformation = amount => image => {
             let g = image.get(i, j, 1);
             let b = image.get(i, j, 2);
 
-            r = r + amount > 255 ? 255 : r + amount;
-            g = g + amount > 255 ? 255 : g + amount;
-            b = b + amount > 255 ? 255 : b + amount;
+            r = 255 - r;
+            g = 255 - g;
+            b = 255 - b;
 
             image.set(i, j, 0, r);
             image.set(i, j, 1, g);
@@ -21,36 +21,27 @@ const lightenTransformation = amount => image => {
     }
 
     return {
-        title: `lighten +${amount}`,
+        title: 'negation',
         picture: image
     };
 };
 
-class Image extends Component {
+class Negation extends Component {
     constructor(props) {
         super(props);
-        this.state = { amount: 0 };
-
-        this.inputHandler = this.inputHandler.bind(this);
         this.formHandler = this.formHandler.bind(this);
-    }
-
-    inputHandler(e) {
-        const amount = parseInt(e.target.value, 10);
-        this.setState({ amount });
     }
 
     formHandler(e) {
         e.preventDefault();
-        this.props.updateImage(lightenTransformation(this.state.amount));
+        this.props.updateImage(negationTransformation);
     }
     
     render() {
         return (
             <div>
-                <h3 className="aside__item__title">Lighten</h3>
+                <h3 className="aside__item__title">Negation</h3>
                 <form action="#" onSubmit={this.formHandler}>
-                    <input type="range" value={this.state.amount} onChange={this.inputHandler}/><br/>
                     <input type="submit" value="Apply"/>
                 </form>
             </div>
@@ -58,4 +49,4 @@ class Image extends Component {
     }
 }
 
-export default Image;
+export default Negation;

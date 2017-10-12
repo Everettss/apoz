@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-const lightenTransformation = amount => image => {
+const thresholdTransformation = level => image => {
     const width = image.shape[0];
     const height = image.shape[1];
 
@@ -10,9 +10,7 @@ const lightenTransformation = amount => image => {
             let g = image.get(i, j, 1);
             let b = image.get(i, j, 2);
 
-            r = r + amount > 255 ? 255 : r + amount;
-            g = g + amount > 255 ? 255 : g + amount;
-            b = b + amount > 255 ? 255 : b + amount;
+            // TODO implement threshold algorithm
 
             image.set(i, j, 0, r);
             image.set(i, j, 1, g);
@@ -21,36 +19,44 @@ const lightenTransformation = amount => image => {
     }
 
     return {
-        title: `lighten +${amount}`,
+        title: `threshold ${level}`,
         picture: image
     };
 };
 
-class Image extends Component {
+class Threshold extends Component {
     constructor(props) {
         super(props);
-        this.state = { amount: 0 };
+        this.state = { level: 0 };
 
         this.inputHandler = this.inputHandler.bind(this);
         this.formHandler = this.formHandler.bind(this);
     }
 
     inputHandler(e) {
-        const amount = parseInt(e.target.value, 10);
-        this.setState({ amount });
+        const level = parseInt(e.target.value, 10);
+        this.setState({ level });
     }
 
     formHandler(e) {
         e.preventDefault();
-        this.props.updateImage(lightenTransformation(this.state.amount));
+        this.props.updateImage(thresholdTransformation(this.state.level));
     }
-    
+
     render() {
         return (
             <div>
-                <h3 className="aside__item__title">Lighten</h3>
+                <h3 className="aside__item__title">Threshold</h3>
                 <form action="#" onSubmit={this.formHandler}>
-                    <input type="range" value={this.state.amount} onChange={this.inputHandler}/><br/>
+                    <input
+                        type="range"
+                        step="1"
+                        min="0"
+                        max="255"
+                        value={this.state.level}
+                        onChange={this.inputHandler}
+                    />
+                    {this.state.level}<br/>
                     <input type="submit" value="Apply"/>
                 </form>
             </div>
@@ -58,4 +64,4 @@ class Image extends Component {
     }
 }
 
-export default Image;
+export default Threshold;

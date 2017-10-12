@@ -117,7 +117,6 @@ class App extends Component {
                     </div>
                     <div className="aside">
                         {this.state.operation ? <div className="aside__item aside__item--operation">
-                            <h3 className="aside__item__title">Operation</h3>
                             {this.state.operation}
                         </div> : ''}
                         <div className="aside__item aside__item--history">

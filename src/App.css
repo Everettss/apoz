@@ -72,6 +72,10 @@
 
 }
 
+.aside__item--operation h3 {
+  margin-top: 0;
+}
+
 .aside__item--history {
   flex-grow: 1;
 }
