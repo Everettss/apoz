@@ -45,16 +45,13 @@ describe('arithmetic', () => {
     });
 
     describe('sub', () => {
-        // const expectedOutput =
-        //     [
-        //         [   7,  12,  76, 254 ],
-        //         [   2,   6,  40, 254 ],
-        //         [  18,   1,  20, 255 ],
-        //         [  24,   2,  11, 248 ],
-        //     ];
-
-        const expectedOutput = 'TODO make test'; // TODO add real expectedOutput
-
+        const expectedOutput =
+            [
+                [  14,   1, 133,  2  ],
+                [   2,   1,   1,  0  ],
+                [  13,   1,   1,  0  ],
+                [  12,   0,   1, 16  ],
+            ];
 
 
         const {picture, title} = arithmeticTransformation('sub', 16)(inputPicture1, inputPicture2);
@@ -70,16 +67,13 @@ describe('arithmetic', () => {
     });
 
     describe('difference', () => {
-        // const expectedOutput =
-        //     [
-        //         [   7,  12,  76, 254 ],
-        //         [   2,   6,  40, 254 ],
-        //         [  18,   1,  20, 255 ],
-        //         [  24,   2,  11, 248 ],
-        //     ];
-
-        const expectedOutput = 'TODO make test'; // TODO add real expectedOutput
-
+        const expectedOutput =
+            [
+                [   0,   0,   0,   0 ],
+                [   0,   0,   0,   1 ],
+                [   0,   0,   0,   1 ],
+                [   0,   1,   0,   0 ],
+            ];
 
         const {picture, title} = arithmeticTransformation('difference', 16)(inputPicture1, inputPicture2);
         const outputPicture = getOneChannelArr(picture);

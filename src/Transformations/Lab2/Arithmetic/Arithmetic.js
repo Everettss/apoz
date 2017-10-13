@@ -7,9 +7,9 @@ const arithmeticTransformation = (rule, M = 256) => (image1, image2) => {
         if (rule === 'add') {
             return Math.round((pixel1 + pixel2) / 2);
         } else if (rule === 'sub') {
-            return pixel1; // TODO sub
+            return Math.abs (pixel1 - pixel2);
         } else if (rule === 'difference') {
-            return pixel1; // TODO difference
+            return pixel1 === pixel2 ? 1 : 0;
         } else {
             return pixel1;
         }
