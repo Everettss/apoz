@@ -1,24 +1,11 @@
 import React, { Component } from 'react';
 
+import { forEachPixel } from '../../utils/helpers';
+
 const lightenTransformation = (amount, M = 256) => image => {
-    const width = image.shape[0];
-    const height = image.shape[1];
-
-    for (let i = 0; i < width; ++i) {
-        for (let j = 0; j < height; ++j) {
-            let r = image.get(i, j, 0);
-            let g = image.get(i, j, 1);
-            let b = image.get(i, j, 2);
-
-            r = r + amount > M - 1 ? M - 1 : r + amount;
-            g = g + amount > M - 1 ? M - 1 : g + amount;
-            b = b + amount > M - 1 ? M - 1 : b + amount;
-
-            image.set(i, j, 0, r);
-            image.set(i, j, 1, g);
-            image.set(i, j, 2, b);
-        }
-    }
+    forEachPixel(image, pixel => {
+        return pixel + amount > M - 1 ? M - 1 : pixel + amount;
+    });
 
     return {
         title: `lighten +${amount}`,

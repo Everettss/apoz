@@ -1,22 +1,10 @@
 import React, { Component } from 'react';
+import { forEachPixel } from '../../../utils/helpers';
 
 const stretchingTransformation = (p1, p2, q3, q4, qBackground, M = 256) => image => {
-    const width = image.shape[0];
-    const height = image.shape[1];
-
-    for (let i = 0; i < width; ++i) {
-        for (let j = 0; j < height; ++j) {
-            let r = image.get(i, j, 0);
-            let g = image.get(i, j, 1);
-            let b = image.get(i, j, 2);
-
-            // TODO implement Threshold with gray levels algorithm
-
-            image.set(i, j, 0, r);
-            image.set(i, j, 1, g);
-            image.set(i, j, 2, b);
-        }
-    }
+    forEachPixel(image, pixel => {
+        return pixel; // TODO implement Stretching
+    });
 
     return {
         title: `stretching p1:${p1}, p2:${p2}, q3:${q3}, q4:${q4}, background:${qBackground}`,
