@@ -96,6 +96,7 @@
 }
 
 .history-position__delete {
+  padding-left: 5px;
   cursor: pointer;
 }
 

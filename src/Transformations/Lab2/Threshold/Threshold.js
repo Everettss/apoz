@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-const thresholdTransformation = level => image => {
+const thresholdTransformation = (level, M = 256) => image => {
     const width = image.shape[0];
     const height = image.shape[1];
 
@@ -65,3 +65,4 @@ class Threshold extends Component {
 }
 
 export default Threshold;
+export { thresholdTransformation };

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-const lightenTransformation = amount => image => {
+const lightenTransformation = (amount, M = 256) => image => {
     const width = image.shape[0];
     const height = image.shape[1];
 
@@ -10,9 +10,9 @@ const lightenTransformation = amount => image => {
             let g = image.get(i, j, 1);
             let b = image.get(i, j, 2);
 
-            r = r + amount > 255 ? 255 : r + amount;
-            g = g + amount > 255 ? 255 : g + amount;
-            b = b + amount > 255 ? 255 : b + amount;
+            r = r + amount > M - 1 ? M - 1 : r + amount;
+            g = g + amount > M - 1 ? M - 1 : g + amount;
+            b = b + amount > M - 1 ? M - 1 : b + amount;
 
             image.set(i, j, 0, r);
             image.set(i, j, 1, g);
@@ -44,7 +44,7 @@ class Image extends Component {
         e.preventDefault();
         this.props.updateImage(lightenTransformation(this.state.amount));
     }
-    
+
     render() {
         return (
             <div>
@@ -59,3 +59,4 @@ class Image extends Component {
 }
 
 export default Image;
+export { lightenTransformation };

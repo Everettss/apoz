@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 
-const thresholdTransformation = (level1, level2) => image => {
+const thresholdTransformation = (level1, level2, M = 256) => image => {
     const width = image.shape[0];
     const height = image.shape[1];
-
-    console.log('level1', level1);
-    console.log('level2', level2);
 
     for (let i = 0; i < width; ++i) {
         for (let j = 0; j < height; ++j) {
@@ -86,3 +83,4 @@ class ThresholdGrayLevels extends Component {
 }
 
 export default ThresholdGrayLevels;
+export { thresholdTransformation };

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-const negationTransformation = image => {
+const negationTransformation = (M = 256) => image => {
     const width = image.shape[0];
     const height = image.shape[1];
 
@@ -10,9 +10,9 @@ const negationTransformation = image => {
             let g = image.get(i, j, 1);
             let b = image.get(i, j, 2);
 
-            r = 255 - r;
-            g = 255 - g;
-            b = 255 - b;
+            r = M - 1 - r;
+            g = M - 1 - g;
+            b = M - 1 - b;
 
             image.set(i, j, 0, r);
             image.set(i, j, 1, g);
@@ -34,9 +34,9 @@ class Negation extends Component {
 
     formHandler(e) {
         e.preventDefault();
-        this.props.updateImage(negationTransformation);
+        this.props.updateImage(negationTransformation());
     }
-    
+
     render() {
         return (
             <div>
@@ -50,3 +50,4 @@ class Negation extends Component {
 }
 
 export default Negation;
+export { negationTransformation };

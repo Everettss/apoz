@@ -7,6 +7,8 @@
     "font-awesome": "^4.7.0",
     "get-pixels": "^3.3.0",
     "lodash": "^4.17.4",
+    "ndarray-pack": "^1.2.1",
+    "ndarray-unpack": "^1.0.0",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
     "react-dropzone": "^4.2.0",

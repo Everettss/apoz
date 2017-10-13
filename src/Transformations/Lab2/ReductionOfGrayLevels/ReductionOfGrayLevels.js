@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-const thresholdTransformation = level => image => {
+const reductionOfLevelsTransformation = (level, M = 256) => image => {
     const width = image.shape[0];
     const height = image.shape[1];
 
@@ -19,7 +19,7 @@ const thresholdTransformation = level => image => {
     }
 
     return {
-        title: `threshold ${level}`,
+        title: `reduction to ${level} levels`,
         picture: image
     };
 };
@@ -27,20 +27,27 @@ const thresholdTransformation = level => image => {
 class ReductionOfGrayLevels extends Component {
     constructor(props) {
         super(props);
-        this.state = { level: 0 };
+        this.state = { inputVal: 0, level: 0 };
 
         this.inputHandler = this.inputHandler.bind(this);
         this.formHandler = this.formHandler.bind(this);
     }
 
     inputHandler(e) {
-        const level = parseInt(e.target.value, 10);
-        this.setState({ level });
+        const inputVal = parseInt(e.target.value, 10);
+
+        const availableLevels = [2, 4, 8, 16, 32, 64, 128];
+
+        const level = availableLevels.reduce((prev, curr) =>
+            (Math.abs(curr - inputVal) < Math.abs(prev - inputVal) ? curr : prev)
+        );
+
+        this.setState({ level, inputVal });
     }
 
     formHandler(e) {
         e.preventDefault();
-        this.props.updateImage(thresholdTransformation(this.state.level));
+        this.props.updateImage(reductionOfLevelsTransformation(this.state.level));
     }
 
     render() {
@@ -53,7 +60,7 @@ class ReductionOfGrayLevels extends Component {
                         step="1"
                         min="0"
                         max="255"
-                        value={this.state.level}
+                        value={this.state.inputVal}
                         onChange={this.inputHandler}
                     />
                     {this.state.level}<br/>
@@ -65,3 +72,4 @@ class ReductionOfGrayLevels extends Component {
 }
 
 export default ReductionOfGrayLevels;
+export { reductionOfLevelsTransformation };

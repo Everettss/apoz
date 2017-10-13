@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 
-const thresholdTransformation = (level1, level2) => image => {
+const stretchingTransformation = (p1, p2, q3, q4, qBackground, M = 256) => image => {
     const width = image.shape[0];
     const height = image.shape[1];
-
-    console.log('level1', level1);
-    console.log('level2', level2);
 
     for (let i = 0; i < width; ++i) {
         for (let j = 0; j < height; ++j) {
@@ -13,7 +10,7 @@ const thresholdTransformation = (level1, level2) => image => {
             let g = image.get(i, j, 1);
             let b = image.get(i, j, 2);
 
-            // TODO implement Stretching algorithm
+            // TODO implement Threshold with gray levels algorithm
 
             image.set(i, j, 0, r);
             image.set(i, j, 1, g);
@@ -22,7 +19,7 @@ const thresholdTransformation = (level1, level2) => image => {
     }
 
     return {
-        title: `Stretching (${level1}, ${level2})`,
+        title: `stretching p1:${p1}, p2:${p2}, q3:${q3}, q4:${q4}, background:${qBackground}`,
         picture: image
     };
 };
@@ -30,29 +27,59 @@ const thresholdTransformation = (level1, level2) => image => {
 class Stretching extends Component {
     constructor(props) {
         super(props);
-        this.state = { level1: 0, level2: 255 };
+        this.state = { p1: 0, p2: 255, q3: 0, q4: 255, qBackground: 0 };
 
-        this.inputHandler1 = this.inputHandler1.bind(this);
-        this.inputHandler2 = this.inputHandler2.bind(this);
+        this.inputHandlerP1 = this.inputHandlerP1.bind(this);
+        this.inputHandlerP2 = this.inputHandlerP2.bind(this);
+        this.inputHandlerQ3 = this.inputHandlerQ3.bind(this);
+        this.inputHandlerQ4 = this.inputHandlerQ4.bind(this);
+        this.inputHandlerQBackground = this.inputHandlerQBackground.bind(this);
         this.formHandler = this.formHandler.bind(this);
     }
 
-    inputHandler1(e) {
+    inputHandlerP1(e) {
         const level = parseInt(e.target.value, 10);
-        if (level < this.state.level2) {
-            this.setState({ level1: level });
+        if (level < this.state.p2) {
+            this.setState({ p1: level });
         }
     }
-    inputHandler2(e) {
+    inputHandlerP2(e) {
         const level = parseInt(e.target.value, 10);
-        if (this.state.level1 < level) {
-            this.setState({ level2: level });
+        if (this.state.p1 < level) {
+            this.setState({ p2: level });
         }
+    }
+
+    inputHandlerQ3(e) {
+        const level = parseInt(e.target.value, 10);
+        if (level < this.state.q4) {
+            this.setState({ q3: level });
+        }
+    }
+
+    inputHandlerQ4(e) {
+        const level = parseInt(e.target.value, 10);
+        if (this.state.q3 < level) {
+            this.setState({ q4: level });
+        }
+    }
+
+    inputHandlerQBackground(e) {
+        const level = parseInt(e.target.value, 10);
+        this.setState({ qBackground: level });
     }
 
     formHandler(e) {
         e.preventDefault();
-        this.props.updateImage(thresholdTransformation(this.state.level1, this.state.level2));
+        this.props.updateImage(
+            stretchingTransformation(
+                this.state.p1,
+                this.state.p2,
+                this.state.q3,
+                this.state.q4,
+                this.state.qBackground
+            )
+        );
     }
 
     render() {
@@ -65,19 +92,46 @@ class Stretching extends Component {
                         step="1"
                         min="0"
                         max="255"
-                        value={this.state.level1}
-                        onChange={this.inputHandler1}
+                        value={this.state.p1}
+                        onChange={this.inputHandlerP1}
                     />
-                    level1: {this.state.level1}<br/>
+                    p1: {this.state.p1}<br/>
                     <input
                         type="range"
                         step="1"
                         min="0"
                         max="255"
-                        value={this.state.level2}
-                        onChange={this.inputHandler2}
+                        value={this.state.p2}
+                        onChange={this.inputHandlerP2}
                     />
-                    level2: {this.state.level2}<br/>
+                    p2: {this.state.p2}<br/>
+                    <input
+                        type="range"
+                        step="1"
+                        min="0"
+                        max="255"
+                        value={this.state.q3}
+                        onChange={this.inputHandlerQ3}
+                    />
+                    q3: {this.state.q3}<br/>
+                    <input
+                        type="range"
+                        step="1"
+                        min="0"
+                        max="255"
+                        value={this.state.q4}
+                        onChange={this.inputHandlerQ4}
+                    />
+                    q4: {this.state.q4}<br/>
+                    <input
+                        type="range"
+                        step="1"
+                        min="0"
+                        max="255"
+                        value={this.state.qBackground}
+                        onChange={this.inputHandlerQBackground}
+                    />
+                    q_background: {this.state.qBackground}<br/>
                     <input type="submit" value="Apply"/>
                 </form>
             </div>
@@ -86,3 +140,4 @@ class Stretching extends Component {
 }
 
 export default Stretching;
+export { stretchingTransformation };

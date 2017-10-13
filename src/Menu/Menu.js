@@ -6,6 +6,7 @@ import HistogramTransformation from '../Transformations/Histogram/Histogram';
 import Negation from '../Transformations/Lab2/Negation/Negation';
 import Threshold from '../Transformations/Lab2/Threshold/Threshold';
 import ThresholdGrayLevels from '../Transformations/Lab2/ThresholdGrayLevels/ThresholdGrayLevels';
+import ReductionOfGrayLevels from '../Transformations/Lab2/ReductionOfGrayLevels/ReductionOfGrayLevels';
 import Stretching from '../Transformations/Lab2/Stretching/Stretching';
 
 class Menu extends Component {
@@ -76,7 +77,7 @@ class Menu extends Component {
                         <a
                             href="#"
                             onClick={
-                                this.handleMenuClick(<ThresholdGrayLevels updateImage={this.props.updateImage} />)
+                                this.handleMenuClick(<ReductionOfGrayLevels updateImage={this.props.updateImage} />)
                             }
                         >
                             reduction of gray levels
