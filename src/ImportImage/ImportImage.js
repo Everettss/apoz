@@ -13,7 +13,9 @@ class ImportImage extends Component {
     }
 
     componentDidMount() {
-        this.importImage(lenna);
+        if (this.props.importImageOnBoostrap) {
+            this.importImage(lenna);
+        }
     }
 
     fileChange(files) {
