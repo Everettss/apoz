@@ -3,7 +3,7 @@ import { forEachPixel } from '../../../utils/helpers';
 
 const thresholdTransformation = (level, M = 256) => image => {
     forEachPixel(image, pixel => {
-        return pixel; // TODO implement threshold algorithm
+        return pixel >= level ? 1 : 0;
     });
 
     return {
