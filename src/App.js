@@ -15,12 +15,14 @@ class App extends Component {
         this.state = {
             transformations: [],
             originalPicture: null,
+            secondPicture: null,
             operation: null,
         };
         this.handleRemoveHistory = this.handleRemoveHistory.bind(this);
         this.handleMenu = this.handleMenu.bind(this);
         this.importImageHandler = this.importImageHandler.bind(this);
         this.updateImage = this.updateImage.bind(this);
+        this.importSecondImageHandler = this.importSecondImageHandler.bind(this);
     }
 
     importImageHandler(picture) {
@@ -40,10 +42,26 @@ class App extends Component {
         });
     }
 
+    importSecondImageHandler(picture, cb) {
+        const shapeFirst = this.state.transformations[this.state.transformations.length - 1].picture.shape;
+        const shapeSecond = picture.shape;
+
+        if (shapeFirst[0] === shapeSecond[0] && shapeFirst[1] === shapeSecond[1]) {
+            const secondPicture = {
+                picture,
+                modificationDate: new Date(),
+            };
+            this.setState({ secondPicture }, cb(false, secondPicture));
+        } else {
+            cb('Not the same size!');
+        }
+    }
+
     updateImage(fn) {
         const image = this.state.transformations[this.state.transformations.length - 1].picture;
         const newImage = ndarray([...image.data], [...image.shape], [...image.stride]);
-        const transformation = fn(newImage);
+        const secondImage = this.state.secondPicture && this.state.secondPicture.picture;
+        const transformation = fn(newImage, secondImage);
 
         this.setState({
             transformations: [
@@ -64,7 +82,8 @@ class App extends Component {
             nextTransformations.forEach(transformation => {
                 const image = newTransformations[newTransformations.length - 1].picture;
                 const newImage = ndarray([...image.data], [...image.shape], [...image.stride]);
-                const res = transformation.fn(newImage);
+                const secondImage = this.state.secondPicture && this.state.secondPicture.picture;
+                const res = transformation.fn(newImage, secondImage);
                 newTransformations.push(Object.assign(
                     {},
                     res,
@@ -81,10 +100,16 @@ class App extends Component {
     }
 
     render() {
+        console.log(this.state);
         return (
             <div className="App">
                 <div className="menu">
-                    <Menu handleMenu={this.handleMenu} updateImage={this.updateImage} />
+                    <Menu
+                        handleMenu={this.handleMenu}
+                        updateImage={this.updateImage}
+                        importSecondImageHandler={this.importSecondImageHandler}
+                        secondImage={this.state.secondPicture}
+                    />
                 </div>
                 <div className="app-shell">
                     <div className="images">
@@ -139,7 +164,7 @@ class App extends Component {
                         </div>
                         <div className="aside__item aside__item--upload">
                             <h3 className="aside__item__title">Upload image</h3>
-                            <ImportImage importHandler={this.importImageHandler}/>
+                            <ImportImage importImageOnBoostrap={true} importHandler={this.importImageHandler}/>
                         </div>
                     </div>
                 </div>
