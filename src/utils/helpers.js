@@ -30,7 +30,26 @@ const forEachPixel = (picture, fn) => {
     }
 };
 
+const forEachPixel2Images = (picture1, picture2, fn) => {
+    const width = picture1.shape[0];
+    const height = picture1.shape[1];
+
+    for (let i = 0; i < width; ++i) {
+        for (let j = 0; j < height; ++j) {
+            for (let k = 0; k < 3; ++k) {
+                const val1 = picture1.get(i, j, k);
+                const val2 = picture2.get(i, j, k);
+                const newVal = fn(val1, val2);
+                picture1.set(i, j, k, newVal);
+            }
+        }
+    }
+};
+
+
+
 export {
     histogram,
-    forEachPixel
+    forEachPixel,
+    forEachPixel2Images
 }

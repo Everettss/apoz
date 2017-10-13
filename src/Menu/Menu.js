@@ -8,6 +8,7 @@ import Threshold from '../Transformations/Lab2/Threshold/Threshold';
 import ThresholdGrayLevels from '../Transformations/Lab2/ThresholdGrayLevels/ThresholdGrayLevels';
 import ReductionOfGrayLevels from '../Transformations/Lab2/ReductionOfGrayLevels/ReductionOfGrayLevels';
 import Stretching from '../Transformations/Lab2/Stretching/Stretching';
+import Arithmetic from '../Transformations/Lab2/Arithmetic/Arithmetic';
 
 class Menu extends Component {
     constructor(props) {
@@ -89,6 +90,20 @@ class Menu extends Component {
                             }
                         >
                             stretching
+                        </a>
+                        <a
+                            href="#"
+                            onClick={
+                                this.handleMenuClick(
+                                    <Arithmetic
+                                        updateImage={this.props.updateImage}
+                                        importSecondImage={this.props.importSecondImageHandler}
+                                        secondImage={this.props.secondImage}
+                                    />
+                                )
+                            }
+                        >
+                            arithmetic
                         </a>
                     </DropdownContent>
                 </Dropdown>
