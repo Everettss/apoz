@@ -14,11 +14,11 @@ describe('threshold', () => {
 
     const expectedOutput =
         [
-            [  1,  1,  0,  0,  0 ],
-            [  1,  1,  1,  0,  0 ],
-            [  0,  0,  0,  1,  1 ],
+            [ 15, 15,  0,  0,  0 ],
+            [ 15, 15, 15,  0,  0 ],
+            [  0,  0,  0, 15, 15 ],
             [  0,  0,  0,  0,  0 ],
-            [  1,  1,  1,  1,  1 ]
+            [ 15, 15, 15, 15, 15 ]
         ];
 
     const inputPicture = makeTestPicture(input);

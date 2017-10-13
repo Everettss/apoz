@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { histogram as histogramHelper } from '../../utils/helpers';
+import { histogram as histogramHelper, neighbours } from '../../utils/helpers';
 
 
 const histogramTransformation = rule => image => {
@@ -29,12 +29,10 @@ const histogramTransformation = rule => image => {
 
             /* 6 */
             rightValues[oldLevel] = newLevel;
-            if (rule === 1) {
+            if (rule === 'mean') {
                 newValues[oldLevel] = (leftValues[oldLevel] + rightValues[oldLevel]) / 2;
-            } else if (rule === 2) {
+            } else if (rule === 'random') {
                 newValues[oldLevel] = rightValues[oldLevel] - leftValues[oldLevel];
-            } else if (rule === 3) {
-                newValues[oldLevel] = undefined;
             }
         }
 
@@ -50,10 +48,20 @@ const histogramTransformation = rule => image => {
                 if (leftValues[pixelBeforeChange] === rightValues[pixelBeforeChange]) {
                     pixelAfterChange = leftValues[pixelBeforeChange];
                 } else {
-                    if (rule === 1) {
+                    if (rule === 'mean') {
                         pixelAfterChange = newValues[pixelBeforeChange];
-                    } else if (rule === 2) {
+                    } else if (rule === 'random') {
                         pixelAfterChange = leftValues[pixelBeforeChange] + Math.random() * newValues[pixelBeforeChange];
+                    } else if (rule === 'neighbours') {
+                        const neighboursArr = neighbours(image, i, j, channel);
+                        const neighboursMean = _.mean(neighboursArr);
+                        if (neighboursMean > rightValues[pixelBeforeChange]) {
+                            pixelAfterChange = rightValues[pixelBeforeChange];
+                        } else if (neighboursMean < leftValues[pixelBeforeChange]) {
+                            pixelAfterChange = leftValues[pixelBeforeChange];
+                        } else {
+                            pixelAfterChange = neighboursMean;
+                        }
                     }
                 }
 
@@ -73,7 +81,7 @@ const histogramTransformation = rule => image => {
 class Image extends Component {
     constructor(props) {
         super(props);
-        this.state = { rule: 1 };
+        this.state = { rule: 'mean' };
         this.formHandler = this.formHandler.bind(this);
         this.radioHandler = this.radioHandler.bind(this);
     }
@@ -85,7 +93,7 @@ class Image extends Component {
     }
 
     radioHandler(event) {
-        this.setState({ rule: parseInt(event.target.value, 10) })
+        this.setState({ rule: event.target.value })
     }
     
     render() {
@@ -95,9 +103,24 @@ class Image extends Component {
                 <form action="#" onSubmit={this.formHandler}>
 
                     <div onChange={this.radioHandler}>
-                        <input type="radio" value="1" name="type" defaultChecked={this.state.rule === 1}/> 1<br />
-                        <input type="radio" value="2" name="type" defaultChecked={this.state.rule === 2}/> 2<br />
-                        {/*<input type="radio" value="3" name="type" defaultChecked={this.state.rule === 3}/> 3<br />*/}
+                        <input
+                            type="radio"
+                            value="mean"
+                            name="type"
+                            defaultChecked={this.state.rule === 'mean'}
+                        /> mean<br />
+                        <input
+                            type="radio"
+                            value="random"
+                            name="type"
+                            defaultChecked={this.state.rule === 'random'}
+                        /> random<br />
+                        <input
+                            type="radio"
+                            value="neighbours"
+                            name="type"
+                            defaultChecked={this.state.rule === 'neighbours'}
+                        /> neighbours<br />
                     </div>
                     <input type="submit" value="Apply"/>
                 </form>
