@@ -27,6 +27,8 @@ class App extends Component {
 
     importImageHandler(picture) {
         this.setState({
+            secondPicture: null,
+            operation: null,
             originalPicture: {
                 picture,
                 modificationDate: new Date(),
