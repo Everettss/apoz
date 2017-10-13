@@ -37,13 +37,11 @@ class Menu extends Component {
         return (
             <div className="menu__inner-wrapper">
                 <a
-                    href="#"
                     onClick={this.handleMenuClick(<HistogramTransformation updateImage={this.props.updateImage} />)}
                 >
                     histogram
                 </a>
                 <a
-                    href="#"
                     onClick={this.handleMenuClick(<Lighten updateImage={this.props.updateImage} />)}
                 >
                     lighten
@@ -53,7 +51,6 @@ class Menu extends Component {
                     <DropdownTrigger>lab2</DropdownTrigger>
                     <DropdownContent>
                         <a
-                            href="#"
                             onClick={
                                 this.handleMenuClick(<Negation updateImage={this.props.updateImage} />)
                             }
@@ -61,7 +58,6 @@ class Menu extends Component {
                             negation
                         </a>
                         <a
-                            href="#"
                             onClick={
                                 this.handleMenuClick(<Threshold updateImage={this.props.updateImage} />)
                             }
@@ -69,7 +65,6 @@ class Menu extends Component {
                             threshold
                         </a>
                         <a
-                            href="#"
                             onClick={
                                 this.handleMenuClick(<ThresholdGrayLevels updateImage={this.props.updateImage} />)
                             }
@@ -77,7 +72,6 @@ class Menu extends Component {
                             threshold with gray levels
                         </a>
                         <a
-                            href="#"
                             onClick={
                                 this.handleMenuClick(<ReductionOfGrayLevels updateImage={this.props.updateImage} />)
                             }
@@ -85,7 +79,6 @@ class Menu extends Component {
                             reduction of gray levels
                         </a>
                         <a
-                            href="#"
                             onClick={
                                 this.handleMenuClick(<Stretching updateImage={this.props.updateImage} />)
                             }
@@ -93,7 +86,6 @@ class Menu extends Component {
                             stretching
                         </a>
                         <a
-                            href="#"
                             onClick={
                                 this.handleMenuClick(
                                     <Arithmetic
@@ -107,7 +99,6 @@ class Menu extends Component {
                             arithmetic
                         </a>
                         <a
-                            href="#"
                             onClick={
                                 this.handleMenuClick(
                                     <Logical
@@ -127,7 +118,6 @@ class Menu extends Component {
                     <DropdownTrigger>lab3</DropdownTrigger>
                     <DropdownContent>
                         <a
-                            href="#"
                             onClick={
                                 this.handleMenuClick(<div>todo 1 operation</div>)
                             }
@@ -135,7 +125,6 @@ class Menu extends Component {
                             todo 1
                         </a>
                         <a
-                            href="#"
                             onClick={
                                 this.handleMenuClick(<div>todo 2 operation</div>)
                             }

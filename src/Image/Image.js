@@ -3,10 +3,6 @@ import './Image.css'
 import savePixels from 'save-pixels';
 
 class Image extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     componentWillReceiveProps(nextProps) {
         if (
             !this.props.data ||

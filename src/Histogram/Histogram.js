@@ -81,10 +81,6 @@ const getHistogramData = picture => {
 
 
 class Histogram extends Component {
-    constructor(props) {
-        super(props);
-    }
-
     componentWillReceiveProps(nextProps) {
         if (
             !this.props.data ||
