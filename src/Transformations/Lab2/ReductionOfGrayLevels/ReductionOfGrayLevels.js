@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import { forEachPixel } from '../../../utils/helpers';
 
-const reductionOfLevelsTransformation = (level, M = 256) => image => {
-    forEachPixel(image, pixel => {
-        return pixel; // TODO implement Reduction of gray levels algorithm
-    });
+const reductionOfLevelsTransformation = (level, M = 256) => {
+    return image => {
+        forEachPixel(image, pixel => {
+            let stepCount = (M - 1) / (level - 1); //normalize to ${level} possible levels
 
-    return {
-        title: `reduction to ${level} levels`,
-        picture: image
+            return Math.round(pixel / stepCount) * Math.round(stepCount);
+        });
+
+        return {
+            title: `reduction to ${level} levels`,
+            picture: image
+        };
     };
 };
 
