@@ -3,7 +3,9 @@ import { forEachPixel } from '../../../utils/helpers';
 
 const stretchingTransformation = (p1, p2, q3, q4, qBackground, M = 256) => image => {
     forEachPixel(image, pixel => {
-        return pixel; // TODO implement Stretching
+        let algResult = Math.round((pixel - p1)*((q4-q3)/(p2 - p1)) + q3);
+
+        return pixel < p1 || pixel > p2 ? qBackground : algResult;
     });
 
     return {
