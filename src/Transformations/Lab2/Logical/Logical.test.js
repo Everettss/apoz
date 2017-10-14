@@ -21,9 +21,6 @@ describe('logical', () => {
             [ 14, 14, 14, 14, 14 ]
         ];
 
-    const inputPicture1 = makeTestPicture(input1);
-    const inputPicture2 = makeTestPicture(input2);
-
     describe('OR', () => {
         const expectedOutput =
             [
@@ -34,7 +31,8 @@ describe('logical', () => {
                 [ 0,  0,  0,  0,  0 ]
             ];
 
-
+        const inputPicture1 = makeTestPicture(input1);
+        const inputPicture2 = makeTestPicture(input2);
         const {picture, title} = logicalTransformation('OR', 16)(inputPicture1, inputPicture2);
         const outputPicture = getOneChannelArr(picture);
 
@@ -59,7 +57,8 @@ describe('logical', () => {
         const expectedOutput = 'TODO make test'; // TODO add real expectedOutput
 
 
-
+        const inputPicture1 = makeTestPicture(input1);
+        const inputPicture2 = makeTestPicture(input2);
         const {picture, title} = logicalTransformation('AND', 16)(inputPicture1, inputPicture2);
         const outputPicture = getOneChannelArr(picture);
 
@@ -83,7 +82,8 @@ describe('logical', () => {
 
         const expectedOutput = 'TODO make test'; // TODO add real expectedOutput
 
-
+        const inputPicture1 = makeTestPicture(input1);
+        const inputPicture2 = makeTestPicture(input2);
         const {picture, title} = logicalTransformation('XOR', 16)(inputPicture1, inputPicture2);
         const outputPicture = getOneChannelArr(picture);
 
