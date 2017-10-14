@@ -24,11 +24,11 @@ describe('logical', () => {
     describe('OR', () => {
         const expectedOutput =
             [
-                [ 0,  0,  0,  0,  0 ],
-                [ 0,  0, 14, 14,  0 ],
-                [ 0,  0, 14, 12,  2 ],
-                [ 2,  0,  0, 14,  0 ],
-                [ 0,  0,  0,  0,  0 ]
+                [ 14, 14, 14, 15, 14 ],
+                [ 15, 15, 15, 14, 14 ],
+                [ 15, 14, 15, 15, 14 ],
+                [ 14, 15, 14, 14, 14 ],
+                [ 15, 14, 14, 14, 14 ]
             ];
 
         const inputPicture1 = makeTestPicture(input1);
@@ -46,16 +46,14 @@ describe('logical', () => {
     });
 
     describe('AND', () => {
-        // const expectedOutput =
-        //     [
-        //         [   7,  12,  76, 254 ],
-        //         [   2,   6,  40, 254 ],
-        //         [  18,   1,  20, 255 ],
-        //         [  24,   2,  11, 248 ],
-        //     ];
-
-        const expectedOutput = 'TODO make test'; // TODO add real expectedOutput
-
+        const expectedOutput =
+            [
+                [  0,  0,  0,  0,  0 ],
+                [  0,  0, 14, 14,  0 ],
+                [  0,  0, 14, 12,  2 ],
+                [  2,  0,  0, 14,  0 ],
+                [  0,  0,  0,  0,  0 ]
+            ];
 
         const inputPicture1 = makeTestPicture(input1);
         const inputPicture2 = makeTestPicture(input2);
@@ -72,15 +70,14 @@ describe('logical', () => {
     });
 
     describe('XOR', () => {
-        // const expectedOutput =
-        //     [
-        //         [   7,  12,  76, 254 ],
-        //         [   2,   6,  40, 254 ],
-        //         [  18,   1,  20, 255 ],
-        //         [  24,   2,  11, 248 ],
-        //     ];
-
-        const expectedOutput = 'TODO make test'; // TODO add real expectedOutput
+        const expectedOutput =
+            [
+                [ 14, 14, 14, 15, 14 ],
+                [ 15, 15,  1,  0, 14 ],
+                [ 15, 14,  1,  3, 12 ],
+                [ 12, 15, 14,  0, 14 ],
+                [ 15, 14, 14, 14, 14 ]
+            ];
 
         const inputPicture1 = makeTestPicture(input1);
         const inputPicture2 = makeTestPicture(input2);
