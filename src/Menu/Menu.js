@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './Menu.css';
 import Dropdown, { DropdownTrigger, DropdownContent } from 'react-simple-dropdown';
 import Lighten from '../Transformations/Lighten/Lighten';
+import Greyscale from '../Transformations/Greyscale/Greyscale';
 import HistogramTransformation from '../Transformations/Histogram/Histogram';
 import Negation from '../Transformations/Lab2/Negation/Negation';
 import Threshold from '../Transformations/Lab2/Threshold/Threshold';
@@ -45,6 +46,11 @@ class Menu extends Component {
                     onClick={this.handleMenuClick(<Lighten updateImage={this.props.updateImage} />)}
                 >
                     lighten
+                </a>
+                <a
+                    onClick={this.handleMenuClick(<Greyscale updateImage={this.props.updateImage} />)}
+                >
+                    greyscale
                 </a>
 
                 <Dropdown ref={dropdown => { dropdown && this.dropdowns.set(1, dropdown); }}>
