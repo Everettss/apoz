@@ -4,7 +4,8 @@ import getPixels from 'get-pixels';
 import Dropzone from 'react-dropzone'
 import lenna from '../img/Lenna.png';
 import coffe from '../img/Cwicz2Obraz.bmp';
-
+import a from '../img/A.png';
+import b from '../img/B.png';
 
 class ImportImage extends Component {
     constructor(props) {
@@ -69,16 +70,16 @@ class ImportImage extends Component {
                         style={{ backgroundImage: `url(${coffe}` }}
                         onClick={this.handlePreloadedImage(coffe)}
                     />
-                    {/*<div*/}
-                        {/*className="download__image"*/}
-                        {/*style={{ backgroundImage: `url(${lenna}` }}*/}
-                        {/*onClick={this.handlePreloadedImage(lenna)}*/}
-                    {/*/>*/}
-                    {/*<div*/}
-                        {/*className="download__image"*/}
-                        {/*style={{ backgroundImage: `url(${lenna}` }}*/}
-                        {/*onClick={this.handlePreloadedImage(lenna)}*/}
-                    {/*/>*/}
+                    <div
+                        className="download__image"
+                        style={{ backgroundImage: `url(${a}` }}
+                        onClick={this.handlePreloadedImage(a)}
+                    />
+                    <div
+                        className="download__image"
+                        style={{ backgroundImage: `url(${b}` }}
+                        onClick={this.handlePreloadedImage(b)}
+                    />
                 </div>
 
             </div>

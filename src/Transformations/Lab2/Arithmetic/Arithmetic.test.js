@@ -19,9 +19,6 @@ describe('arithmetic', () => {
             [  18,   2,  11, 256 ],
         ];
 
-    const inputPicture1 = makeTestPicture(input1);
-    const inputPicture2 = makeTestPicture(input2);
-
     describe('add', () => {
         const expectedOutput =
             [
@@ -31,7 +28,8 @@ describe('arithmetic', () => {
                 [  24,   2,  11, 248 ],
             ];
 
-
+        const inputPicture1 = makeTestPicture(input1);
+        const inputPicture2 = makeTestPicture(input2);
         const {picture, title} = arithmeticTransformation('add', 16)(inputPicture1, inputPicture2);
         const outputPicture = getOneChannelArr(picture);
 
@@ -53,12 +51,13 @@ describe('arithmetic', () => {
                 [  12,   0,   1, 16  ],
             ];
 
-
+        const inputPicture1 = makeTestPicture(input1);
+        const inputPicture2 = makeTestPicture(input2);
         const {picture, title} = arithmeticTransformation('sub', 16)(inputPicture1, inputPicture2);
-        const outputPicture = getOneChannelArr(picture);
+        const outputPicture2 = getOneChannelArr(picture);
 
         it('algorithm', () => {
-            expect(outputPicture).toEqual(expectedOutput);
+            expect(outputPicture2).toEqual(expectedOutput);
         });
 
         it('display proper title', () => {
@@ -70,11 +69,13 @@ describe('arithmetic', () => {
         const expectedOutput =
             [
                 [   0,   0,   0,   0 ],
-                [   0,   0,   0,   1 ],
-                [   0,   0,   0,   1 ],
-                [   0,   1,   0,   0 ],
+                [   0,   0,   0,  15 ],
+                [   0,   0,   0,  15 ],
+                [   0,  15,   0,   0 ],
             ];
 
+        const inputPicture1 = makeTestPicture(input1);
+        const inputPicture2 = makeTestPicture(input2);
         const {picture, title} = arithmeticTransformation('difference', 16)(inputPicture1, inputPicture2);
         const outputPicture = getOneChannelArr(picture);
 
