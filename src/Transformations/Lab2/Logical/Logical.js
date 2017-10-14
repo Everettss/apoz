@@ -5,11 +5,11 @@ import { forEachPixel2Images } from '../../../utils/helpers';
 const logicalTransformation = (rule, M = 256) => (image1, image2) => {
     forEachPixel2Images(image1, image2, (pixel1, pixel2) => {
         if (rule === 'OR') {
-            return pixel1 // TODO OR
+            return pixel1 | pixel2;
         } else if (rule === 'AND') {
-            return pixel1; // TODO AND
+            return pixel1 & pixel2;
         } else if (rule === 'XOR') {
-            return pixel1; // TODO XOR
+            return pixel1 ^ pixel2;
         } else {
             return pixel1;
         }
