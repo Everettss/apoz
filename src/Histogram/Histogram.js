@@ -26,6 +26,7 @@ const lineChart = (_data, el) => {
         d3.max(data, d => d.b),
         d3.max(data, d => d.bw),
     ])]);
+
     const createPath = (getData, stroke, fill) => {
         const line = d3.line()
             .curve(d3.curveStep)
@@ -50,31 +51,6 @@ const lineChart = (_data, el) => {
     graph.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x).tickValues([0, 63, 127, 191, 255]).tickSizeOuter(0));
-
-    // add value of histogram in place pointed by mouse
-    let histBWValue = svg.append("g")
-        .style("display", null);
-
-    histBWValue.append("text")
-        .attr("x", 9)
-        .attr("dy", ".35em")
-        .attr("transform", "translate(" + 0 + "," + 30 + ")");
-
-    svg.on("mousemove", function () {
-        var mouseX = d3.mouse(this)[0] - margin.left;
-        if (mouseX < 1) {
-            mouseX = 1;
-        } else if (mouseX > width) {
-            mouseX = width
-        }
-        let x0 = Math.round( x.invert(mouseX) );
-
-        histBWValue.select("text").text(data[x0].bw);
-    });
-
-    svg.on("mouseout", function () {
-        histBWValue.select("text").text("");
-    });
 
 };
 
