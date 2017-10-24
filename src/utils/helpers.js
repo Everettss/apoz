@@ -17,7 +17,7 @@ const histogram = (picture, channel) => {
     return hist;
 };
 
-const neighbours = (picture, i, j, channel, type = 'omit') => {
+const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, type = 'omit' } = {}) => {
     const height = picture.shape[0];
     const width = picture.shape[1];
 
