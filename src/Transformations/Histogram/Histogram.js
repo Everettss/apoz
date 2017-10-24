@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { histogram as histogramHelper, neighbours } from '../../utils/helpers';
+import {
+    histogram as histogramHelper,
+    neighbours,
+    flattenMatix
+} from '../../utils/helpers';
 
 
 const histogramTransformation = rule => image => {
@@ -53,7 +57,7 @@ const histogramTransformation = rule => image => {
                     } else if (rule === 'random') {
                         pixelAfterChange = leftValues[pixelBeforeChange] + Math.random() * newValues[pixelBeforeChange];
                     } else if (rule === 'neighbours') {
-                        const neighboursArr = neighbours(image, i, j, channel);
+                        const neighboursArr = flattenMatix(neighbours(image, i, j, channel)).filter(x => x !== null);
                         const neighboursMean = _.mean(neighboursArr);
                         if (neighboursMean > rightValues[pixelBeforeChange]) {
                             pixelAfterChange = rightValues[pixelBeforeChange];
