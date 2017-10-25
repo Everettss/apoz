@@ -1,28 +1,28 @@
 
 import { makeTestPicture, getOneChannelArr } from '../../../utils/testHelpers';
-import { thresholdTransformation } from './Threshold';
+import { medianTransformation } from './Median';
 
-describe('threshold', () => {
+describe('median', () => {
     const input =
         [
-            [ 15, 15,  0,  0,  2 ],
-            [ 13, 13, 15,  0,  0 ],
-            [  0,  0,  7, 14, 14 ],
-            [  0,  1,  2,  3,  4 ],
-            [ 15, 14, 13, 12, 11 ]
+            [ 15, 15, 14, 13, 14 ],
+            [ 14, 14, 13,  0, 12 ],
+            [  1,  1, 12, 11, 12 ],
+            [  0,  0,  1,  1, 10 ],
+            [  0,  0,  0,  0,  1 ]
         ];
 
     const expectedOutput =
         [
-            [ 15, 15,  0,  0,  0 ],
-            [ 15, 15, 15,  0,  0 ],
-            [  0,  0,  0, 15, 15 ],
-            [  0,  0,  0,  0,  0 ],
-            [ 15, 15, 15, 15, 15 ]
+            [ 15, 15, 14, 13, 14 ],
+            [ 14, 14, 13, 12, 12 ],
+            [  1,  1,  1, 11, 12 ],
+            [  0,  0,  1,  1, 10 ],
+            [  0,  0,  0,  0,  1 ]
         ];
 
     const inputPicture = makeTestPicture(input);
-    const { picture, title } = thresholdTransformation(10, 16)(inputPicture);
+    const { picture, title } = medianTransformation('not-modify', { maskWidth: 3, maskHeight: 3 }, 16)(inputPicture);
     const outputPicture = getOneChannelArr(picture);
 
     it('algorithm', () => {
@@ -30,6 +30,6 @@ describe('threshold', () => {
     });
 
     it('display proper title', () => {
-        expect(title).toEqual('threshold 10');
+        expect(title).toEqual('median mask:3x3 edge: not-modify');
     })
 });

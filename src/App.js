@@ -4,8 +4,8 @@ import 'font-awesome/css/font-awesome.css';
 import Histogram from './Histogram/Histogram';
 import Image from './Image/Image';
 import ImportImage from './ImportImage/ImportImage';
-import ndarray from 'ndarray';
 import Menu from './Menu/Menu';
+import { cloneImage } from './utils/helpers';
 
 
 class App extends Component {
@@ -61,7 +61,7 @@ class App extends Component {
 
     updateImage(fn) {
         const image = this.state.transformations[this.state.transformations.length - 1].picture;
-        const newImage = ndarray([...image.data], [...image.shape], [...image.stride]);
+        const newImage = cloneImage(image);
         const secondImage = this.state.secondPicture && this.state.secondPicture.picture;
         const transformation = fn(newImage, secondImage);
 
@@ -83,7 +83,7 @@ class App extends Component {
 
             nextTransformations.forEach(transformation => {
                 const image = newTransformations[newTransformations.length - 1].picture;
-                const newImage = ndarray([...image.data], [...image.shape], [...image.stride]);
+                const newImage = cloneImage(image);
                 const secondImage = this.state.secondPicture && this.state.secondPicture.picture;
                 const res = transformation.fn(newImage, secondImage);
                 newTransformations.push(Object.assign(

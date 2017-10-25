@@ -1,5 +1,6 @@
 
 import _ from 'lodash';
+import ndarray from 'ndarray';
 
 const histogram = (picture, channel) => {
     let hist = new Array(256).fill(0);
@@ -202,7 +203,7 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
 
 const flattenMatix = matrix => _.flattenDeep(matrix);
 
-const forEachPixel = (picture, fn, mask) => {
+const forEachPixel = (picture, fn, pictureToApply, mask) => {
     const width = picture.shape[0];
     const height = picture.shape[1];
 
@@ -217,7 +218,11 @@ const forEachPixel = (picture, fn, mask) => {
                 }
 
                 const newVal = fn(val);
-                picture.set(i, j, k, newVal);
+                if (pictureToApply) {
+                    pictureToApply.set(i, j, k, newVal);
+                } else {
+                    picture.set(i, j, k, newVal);
+                }
             }
         }
     }
@@ -239,6 +244,8 @@ const forEachPixel2Images = (picture1, picture2, fn) => {
     }
 };
 
+const cloneImage = image => ndarray([...image.data], [...image.shape], [...image.stride]);
+
 
 export {
     histogram,
@@ -246,4 +253,5 @@ export {
     forEachPixel2Images,
     neighbours,
     flattenMatix,
+    cloneImage,
 }

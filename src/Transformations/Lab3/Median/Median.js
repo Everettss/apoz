@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { median } from 'simple-statistics';
-import { forEachPixel, flattenMatix } from '../../../utils/helpers';
+import { forEachPixel, flattenMatix, cloneImage } from '../../../utils/helpers';
 
 const medianTransformation = (edgeRule, maskRule, M = 256) => image => {
+    const newImage = cloneImage(image); // you can't mutate image during computation
 
     let operationOnPixelNeighbours;
     if (edgeRule === 'not-modify') {
@@ -20,11 +21,11 @@ const medianTransformation = (edgeRule, maskRule, M = 256) => image => {
         };
     }
 
-    forEachPixel(image, operationOnPixelNeighbours, { ...maskRule, type: edgeRule });
+    forEachPixel(image, operationOnPixelNeighbours, newImage, { ...maskRule, type: edgeRule });
 
     return {
         title: `median mask:${maskRule.maskWidth}x${maskRule.maskHeight} edge: ${edgeRule}`,
-        picture: image
+        picture: newImage
     };
 };
 
