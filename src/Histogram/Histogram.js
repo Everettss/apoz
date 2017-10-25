@@ -30,6 +30,7 @@ const lineChart = (_data, el) => {
         maxB,
         maxBW,
     ])]);
+
     const createPath = (getData, stroke, fill) => {
         const line = d3.line()
             .curve(d3.curveStep)
@@ -133,7 +134,6 @@ const lineChart = (_data, el) => {
     function roundTo2 (a, b) {
         return +(Math.round( (a * 100) / b)  / 100);
     }
-
 };
 
 
