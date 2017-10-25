@@ -12,6 +12,7 @@ import Stretching from '../Transformations/Lab2/Stretching/Stretching';
 import Arithmetic from '../Transformations/Lab2/Arithmetic/Arithmetic';
 import Logical from '../Transformations/Lab2/Logical/Logical';
 import Median from '../Transformations/Lab3/Median/Median';
+import Filter from '../Transformations/Lab3/Filter/Filter';
 
 class Menu extends Component {
     constructor(props) {
@@ -124,6 +125,13 @@ class Menu extends Component {
                 <Dropdown ref={dropdown => { dropdown && this.dropdowns.set(2, dropdown); }}>
                     <DropdownTrigger>lab3</DropdownTrigger>
                     <DropdownContent>
+                        <a
+                            onClick={
+                                this.handleMenuClick(<Filter updateImage={this.props.updateImage} />)
+                            }
+                        >
+                            filter
+                        </a>
                         <a
                             onClick={
                                 this.handleMenuClick(<Median updateImage={this.props.updateImage} />)
