@@ -14,7 +14,8 @@
     "react-dropzone": "^4.2.0",
     "react-scripts": "1.0.14",
     "react-simple-dropdown": "^3.2.0",
-    "save-pixels": "^2.3.4"
+    "save-pixels": "^2.3.4",
+    "simple-statistics": "^5.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

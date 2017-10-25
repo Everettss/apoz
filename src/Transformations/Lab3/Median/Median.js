@@ -1,10 +1,26 @@
 import React, { Component } from 'react';
-// import { forEachPixel } from '../../../utils/helpers';
+import { median } from 'simple-statistics';
+import { forEachPixel, flattenMatix } from '../../../utils/helpers';
 
 const medianTransformation = (edgeRule, maskRule, M = 256) => image => {
-    // forEachPixel(image, pixel => {
-    //     return pixel >= level ? M - 1 : 0;
-    // });
+
+    let operationOnPixelNeighbours;
+    if (edgeRule === 'not-modify') {
+        operationOnPixelNeighbours = arr => {
+            const flattenMask = flattenMatix(arr);
+            if (flattenMask.filter(x => x !== null).length < (maskRule.maskWidth * maskRule.maskHeight)) { // missing
+                return arr[(maskRule.maskHeight - 1) / 2][(maskRule.maskWidth - 1) / 2]; // get center pixel
+            } else {
+                return Math.round(median(flattenMask));
+            }
+        };
+    } else {
+        operationOnPixelNeighbours = arr => {
+            return Math.round(median(flattenMatix(arr).filter(x => x !== null)));
+        };
+    }
+
+    forEachPixel(image, operationOnPixelNeighbours, { ...maskRule, type: edgeRule });
 
     return {
         title: `median mask:${maskRule.maskWidth}x${maskRule.maskHeight} edge: ${edgeRule}`,

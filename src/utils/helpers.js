@@ -48,7 +48,7 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                 neighbours = [...neighbours, duplicated];
                 break;
             default:
-                break;
+                neighbours = [...neighbours, null];
         }
     }
 
@@ -64,7 +64,7 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                 neighbours = [...neighbours, picture.get(i, j, channel)];
                 break;
             default:
-                break;
+                neighbours = [...neighbours, null];
         }
     }
 
@@ -88,7 +88,7 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                 neighbours = [...neighbours, duplicated];
                 break;
             default:
-                break;
+                neighbours = [...neighbours, null];
         }
     }
 
@@ -104,7 +104,7 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                 neighbours = [...neighbours, picture.get(i, j, channel)];
                 break;
             default:
-                break;
+                neighbours = [...neighbours, null];
         }
     }
 
@@ -123,7 +123,7 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                 neighbours = [...neighbours, picture.get(i, j, channel)];
                 break;
             default:
-                break;
+                neighbours = [...neighbours, null];
         }
     }
 
@@ -147,7 +147,7 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                 neighbours = [...neighbours, duplicated];
                 break;
             default:
-                break;
+                neighbours = [...neighbours, null];
         }
     }
 
@@ -163,7 +163,7 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                 neighbours = [...neighbours, picture.get(i, j, channel)];
                 break;
             default:
-                break;
+                neighbours = [...neighbours, null];
         }
     }
 
@@ -187,7 +187,7 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                 neighbours = [...neighbours, duplicated];
                 break;
             default:
-                break;
+                neighbours = [...neighbours, null];
         }
     }
 
@@ -202,14 +202,20 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
 
 const flattenMatix = matrix => _.flattenDeep(matrix);
 
-const forEachPixel = (picture, fn) => {
+const forEachPixel = (picture, fn, mask) => {
     const width = picture.shape[0];
     const height = picture.shape[1];
 
     for (let i = 0; i < width; ++i) {
         for (let j = 0; j < height; ++j) {
             for (let k = 0; k < 3; ++k) {
-                const val = picture.get(i, j, k);
+                let val;
+                if (mask) {
+                    val = neighbours(picture, i, j, k, mask);
+                } else {
+                    val = picture.get(i, j, k);
+                }
+
                 const newVal = fn(val);
                 picture.set(i, j, k, newVal);
             }
