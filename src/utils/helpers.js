@@ -46,6 +46,9 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                     duplicated = picture.get(i - 1, j, channel); // f
                 }
                 neighbours = [...neighbours, duplicated];
+                break;
+            default:
+                break;
         }
     }
 
@@ -59,6 +62,9 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                 break;
             case 'duplicate':
                 neighbours = [...neighbours, picture.get(i, j, channel)];
+                break;
+            default:
+                break;
         }
     }
 
@@ -80,6 +86,9 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                     duplicated = picture.get(i - 1, j, channel); // f
                 }
                 neighbours = [...neighbours, duplicated];
+                break;
+            default:
+                break;
         }
     }
 
@@ -93,6 +102,9 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                 break;
             case 'duplicate':
                 neighbours = [...neighbours, picture.get(i, j, channel)];
+                break;
+            default:
+                break;
         }
     }
 
@@ -109,6 +121,9 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                 break;
             case 'duplicate':
                 neighbours = [...neighbours, picture.get(i, j, channel)];
+                break;
+            default:
+                break;
         }
     }
 
@@ -130,6 +145,9 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                     duplicated = picture.get(i + 1, j, channel); // b
                 }
                 neighbours = [...neighbours, duplicated];
+                break;
+            default:
+                break;
         }
     }
 
@@ -143,6 +161,9 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                 break;
             case 'duplicate':
                 neighbours = [...neighbours, picture.get(i, j, channel)];
+                break;
+            default:
+                break;
         }
     }
 
@@ -164,6 +185,9 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                     duplicated = picture.get(i + 1, j, channel); // b
                 }
                 neighbours = [...neighbours, duplicated];
+                break;
+            default:
+                break;
         }
     }
 
