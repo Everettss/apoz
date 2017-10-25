@@ -11,6 +11,7 @@ import ReductionOfGrayLevels from '../Transformations/Lab2/ReductionOfGrayLevels
 import Stretching from '../Transformations/Lab2/Stretching/Stretching';
 import Arithmetic from '../Transformations/Lab2/Arithmetic/Arithmetic';
 import Logical from '../Transformations/Lab2/Logical/Logical';
+import Median from '../Transformations/Lab3/Median/Median';
 
 class Menu extends Component {
     constructor(props) {
@@ -125,17 +126,10 @@ class Menu extends Component {
                     <DropdownContent>
                         <a
                             onClick={
-                                this.handleMenuClick(<div>todo 1 operation</div>)
+                                this.handleMenuClick(<Median updateImage={this.props.updateImage} />)
                             }
                         >
-                            todo 1
-                        </a>
-                        <a
-                            onClick={
-                                this.handleMenuClick(<div>todo 2 operation</div>)
-                            }
-                        >
-                            todo 2
+                            median
                         </a>
                     </DropdownContent>
                 </Dropdown>
