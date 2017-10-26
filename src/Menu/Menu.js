@@ -5,6 +5,7 @@ import Lighten from '../Transformations/Lighten/Lighten';
 import Greyscale from '../Transformations/Greyscale/Greyscale';
 import HistogramTransformation from '../Transformations/Histogram/Histogram';
 import Negation from '../Transformations/Lab2/Negation/Negation';
+import LUT from '../Transformations/Lab2/LUT/LUT';
 import Threshold from '../Transformations/Lab2/Threshold/Threshold';
 import ThresholdGrayLevels from '../Transformations/Lab2/ThresholdGrayLevels/ThresholdGrayLevels';
 import ReductionOfGrayLevels from '../Transformations/Lab2/ReductionOfGrayLevels/ReductionOfGrayLevels';
@@ -65,6 +66,13 @@ class Menu extends Component {
                             }
                         >
                             negation
+                        </a>
+                        <a
+                            onClick={
+                                this.handleMenuClick(<LUT updateImage={this.props.updateImage} />)
+                            }
+                        >
+                            LUT
                         </a>
                         <a
                             onClick={

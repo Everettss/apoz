@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bezier-easing": "^2.0.3",
+    "bezier-easing-editor": "^0.7.0",
     "d3": "^4.11.0",
     "font-awesome": "^4.7.0",
     "get-pixels": "^3.3.0",
