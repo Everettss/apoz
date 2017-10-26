@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './Menu.css';
 import Dropdown, { DropdownTrigger, DropdownContent } from 'react-simple-dropdown';
-import Lighten from '../Transformations/Lighten/Lighten';
 import Greyscale from '../Transformations/Greyscale/Greyscale';
 import HistogramTransformation from '../Transformations/Histogram/Histogram';
 import Negation from '../Transformations/Lab2/Negation/Negation';
@@ -45,11 +44,6 @@ class Menu extends Component {
                     onClick={this.handleMenuClick(<HistogramTransformation updateImage={this.props.updateImage} />)}
                 >
                     histogram
-                </a>
-                <a
-                    onClick={this.handleMenuClick(<Lighten updateImage={this.props.updateImage} />)}
-                >
-                    lighten
                 </a>
                 <a
                     onClick={this.handleMenuClick(<Greyscale updateImage={this.props.updateImage} />)}
