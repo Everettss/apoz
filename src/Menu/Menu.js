@@ -13,6 +13,7 @@ import Arithmetic from '../Transformations/Lab2/Arithmetic/Arithmetic';
 import Logical from '../Transformations/Lab2/Logical/Logical';
 import Median from '../Transformations/Lab3/Median/Median';
 import Filter from '../Transformations/Lab3/Filter/Filter';
+import Sharpening from '../Transformations/Lab3/Sharpening/Sharpening';
 
 class Menu extends Component {
     constructor(props) {
@@ -138,6 +139,13 @@ class Menu extends Component {
                             }
                         >
                             median
+                        </a>
+                        <a
+                            onClick={
+                                this.handleMenuClick(<Sharpening updateImage={this.props.updateImage} />)
+                            }
+                        >
+                            sharpening
                         </a>
                     </DropdownContent>
                 </Dropdown>
