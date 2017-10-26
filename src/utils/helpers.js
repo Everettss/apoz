@@ -21,6 +21,33 @@ const histogram = (picture, channel) => {
 const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, type = 'omit' } = {}) => {
     const height = picture.shape[0];
     const width = picture.shape[1];
+    let midX = (maskWidth - 1) / 2;
+    let midY = (maskHeight - 1) / 2;
+    let neighboursTable = Array(maskHeight).fill(0).map(x => Array(maskWidth).fill(0));
+
+    for (let k = 0; k < maskHeight; k++) {
+        for (let l = 0; l < maskWidth; l++) {
+            let xAwayFromMiddle = l - midX;
+            let yAwayFromMiddle = k - midY;
+            let shift = calculateShift(i + xAwayFromMiddle, j + yAwayFromMiddle, width, height);
+
+            switch (type) {
+                case 'duplicate':
+                    neighboursTable[l][k] = picture.get(i + xAwayFromMiddle + shift.shiftX,
+                        j + yAwayFromMiddle + shift.shiftY,
+                        channel);
+                    break;
+
+                default:
+                    if (shift.shiftX !== 0 || shift.shiftY !== 0) {
+                        neighboursTable[l][k] = null;
+                    } else {
+                        neighboursTable[l][k] = picture.get (i + xAwayFromMiddle, j + yAwayFromMiddle, channel);
+                    }
+            }
+
+        }
+    }
 
     // i - 1   g     f     e
     //   i     h     x     d
@@ -198,7 +225,25 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
         neighbours.filter((_, i) => i >= 6 && i < 9),
     ];
 
-    return res;
+    return neighboursTable;
+};
+
+const calculateShift = (x, y, width, height) => {
+    let shiftX = 0;
+    if (x < 0) {
+        shiftX = Math.abs(x); // if lower than 0, we return how much pixels away is zero
+    } else if (x > width) {
+        shiftX = width - x; // if higher than width, we return how much pixels away is max width value
+    }
+
+    let shiftY = 0;
+    if(y < 0) {
+        shiftY = Math.abs(y);
+    } else if (y > height) {
+        shiftY = height - y;
+    }
+
+    return {shiftX, shiftY}
 };
 
 const flattenMatix = matrix => _.flattenDeep(matrix);
