@@ -270,7 +270,8 @@ describe('helpers', () => {
                             [ 0,  3,  2 ],
                             [ 0,  3,  2 ],
                             [ 15,  0,  1 ],
-                            [  7, 14, 14 ]
+                            [  7, 14, 14 ],
+                            [  2,  3,  4 ]
                         ];
                     const inputPicture = makeTestPicture(input);
                     const outputNeighbours =
