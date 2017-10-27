@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Menu.css';
 import Dropdown, { DropdownTrigger, DropdownContent } from 'react-simple-dropdown';
+import ImportImage from '../ImportImage/ImportImage';
 import Greyscale from '../Transformations/Greyscale/Greyscale';
 import HistogramTransformation from '../Transformations/Histogram/Histogram';
 import Negation from '../Transformations/Lab2/Negation/Negation';
@@ -40,15 +41,27 @@ class Menu extends Component {
     render() {
         return (
             <div className="menu__inner-wrapper">
-                <a
-                    onClick={this.handleMenuClick(<HistogramTransformation updateImage={this.props.updateImage} />)}
-                >
-                    histogram
-                </a>
+                <Dropdown ref={dropdown => { dropdown && this.dropdowns.set(1, dropdown); }}>
+                    <DropdownTrigger>add image</DropdownTrigger>
+                    <DropdownContent className="dropdown__content--image">
+                        <div className="aside__item aside__item--upload">
+                            <h3 className="aside__item__title">Upload image</h3>
+                            <ImportImage
+                                importImageOnBoostrap={true}
+                                importHandler={this.props.importFirstImageHandler}
+                            />
+                        </div>
+                    </DropdownContent>
+                </Dropdown>
                 <a
                     onClick={this.handleMenuClick(<Greyscale updateImage={this.props.updateImage} />)}
                 >
                     greyscale
+                </a>
+                <a
+                    onClick={this.handleMenuClick(<HistogramTransformation updateImage={this.props.updateImage} />)}
+                >
+                    histogram
                 </a>
 
                 <Dropdown ref={dropdown => { dropdown && this.dropdowns.set(1, dropdown); }}>

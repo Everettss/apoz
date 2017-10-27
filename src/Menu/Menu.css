@@ -33,6 +33,11 @@
     border-top: none;
  }
 
+.dropdown__content--image {
+    width: 300px;
+    padding: 15px;
+}
+
 .dropdown.dropdown--active .dropdown__content {
     display: inline-block;
 }
