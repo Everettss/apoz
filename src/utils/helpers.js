@@ -78,7 +78,7 @@ const calculateShift = (x, y, width, height) => {
     return {shiftX, shiftY}
 };
 
-const flattenMatix = matrix => _.flattenDeep(matrix);
+const flattenMatrix = matrix => _.flattenDeep(matrix);
 
 const forEachPixel = (picture, fn, pictureToApply, mask) => {
     const width = picture.shape[0];
@@ -139,7 +139,7 @@ export {
     forEachPixel,
     forEachPixel2Images,
     neighbours,
-    flattenMatix,
+    flattenMatrix,
     cloneImage,
     fitToRange,
 }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as edgesMasks from './edgesMasks';
-import { forEachPixel, flattenMatix, cloneImage, fitToRange } from '../../../utils/helpers';
+import { forEachPixel, flattenMatrix, cloneImage, fitToRange } from '../../../utils/helpers';
 
 const edgesTransformation = (edgeRule, maskType, M = 256) => image => {
     const newImage = cloneImage(image); // you can't mutate image during computation
@@ -38,7 +38,7 @@ const edgesTransformation = (edgeRule, maskType, M = 256) => image => {
     let operationOnPixelNeighbours;
     if (edgeRule === 'not-modify') {
         operationOnPixelNeighbours = arr => {
-            const flattenMask = flattenMatix(arr);
+            const flattenMask = flattenMatrix(arr);
             if (flattenMask.filter(x => x !== null).length < maskHeight * maskWidth) { // missing some data
                 return arr[midMaskY][midMaskX]; // get center pixel
             } else {
