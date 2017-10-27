@@ -1,0 +1,20 @@
+
+.filter-inputs__input {
+    width: 25px;
+    height: 25px;
+    margin: 2px;
+    text-align: center;
+}
+
+.form-wrapper {
+    display: flex;
+}
+
+.form-col:nth-child(2) {
+    padding-left: 15px;
+}
+
+.filter-inputs__preselected-link {
+    display: block;
+    cursor: pointer;
+}

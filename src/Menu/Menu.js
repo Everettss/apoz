@@ -14,6 +14,7 @@ import Logical from '../Transformations/Lab2/Logical/Logical';
 import Median from '../Transformations/Lab3/Median/Median';
 import Filter from '../Transformations/Lab3/Filter/Filter';
 import Sharpening from '../Transformations/Lab3/Sharpening/Sharpening';
+import UniversalLogicalSmooth from '../Transformations/Lab3/UniversalLogicalSmooth/UniversalLogicalSmooth';
 
 class Menu extends Component {
     constructor(props) {
@@ -146,6 +147,13 @@ class Menu extends Component {
                             }
                         >
                             sharpening
+                        </a>
+                        <a
+                            onClick={
+                                this.handleMenuClick(<UniversalLogicalSmooth updateImage={this.props.updateImage} />)
+                            }
+                        >
+                            universal logical smooth
                         </a>
                     </DropdownContent>
                 </Dropdown>
