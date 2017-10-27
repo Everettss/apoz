@@ -1,8 +1,8 @@
 
 import { makeTestPicture, getOneChannelArr } from '../../../utils/testHelpers';
-import { sharpeningTransformation } from './Sharpening';
+import { edgesTransformation } from './Edges';
 
-describe('sharpening', () => {
+describe('edges', () => {
     const input =
         [
             [  2,  5,  6,  2 ],
@@ -20,7 +20,7 @@ describe('sharpening', () => {
             ];
 
         const inputPicture = makeTestPicture(input);
-        const {picture, title} = sharpeningTransformation('not-modify', 'roberts', 16)(inputPicture);
+        const {picture, title} = edgesTransformation('not-modify', 'roberts', 16)(inputPicture);
         const outputPicture = getOneChannelArr(picture);
 
         it('algorithm', () => {
@@ -28,7 +28,7 @@ describe('sharpening', () => {
         });
 
         it('display proper title', () => {
-            expect(title).toEqual('sharpening roberts');
+            expect(title).toEqual('edges roberts');
         });
     });
 
@@ -48,7 +48,7 @@ describe('sharpening', () => {
             ];
 
         const inputPicture = makeTestPicture(input);
-        const {picture, title} = sharpeningTransformation('not-modify', 'sobel', 16)(inputPicture);
+        const {picture, title} = edgesTransformation('not-modify', 'sobel', 16)(inputPicture);
         const outputPicture = getOneChannelArr(picture);
 
         it('algorithm', () => {
@@ -56,7 +56,7 @@ describe('sharpening', () => {
         });
 
         it('display proper title', () => {
-            expect(title).toEqual('sharpening sobel');
+            expect(title).toEqual('edges sobel');
         });
     });
 });

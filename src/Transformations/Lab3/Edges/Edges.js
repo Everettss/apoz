@@ -59,7 +59,7 @@ const edgesTransformation = (edgeRule, maskType, M = 256) => image => {
     );
 
     return {
-        title: `sharpening ${maskType}`,
+        title: `edges ${maskType}`,
         picture: newImage
     };
 };
