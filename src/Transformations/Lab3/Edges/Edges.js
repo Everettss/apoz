@@ -54,7 +54,8 @@ const edgesTransformation = (edgeRule, maskType, M = 256) => image => {
     forEachPixel(
         image,
         operationOnPixelNeighbours,
-        newImage, { maskWidth, maskHeight, type: edgeRule }
+        newImage,
+        { maskWidth, maskHeight, type: edgeRule }
     );
 
     return {
