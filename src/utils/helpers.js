@@ -46,10 +46,10 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                         channel);
                     break;
 
-                case 'half-with-duplicate':
+                case 'dim-with-duplicate':
                     neighboursTable[k][l] = Math.round (picture.get(i + yAwayFromMiddle + shift.shiftY,
                         j + xAwayFromMiddle + shift.shiftX,
-                        channel) / 2 );
+                        channel) / 1,1 );
                     break;
 
                 default:

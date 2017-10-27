@@ -95,7 +95,7 @@ class UniversalLogicalSmooth extends Component {
                         /> Omit <br />
                         <input
                             type="radio"
-                            value="half-with-duplicate"
+                            value="dim-with-duplicate"
                             name="edgeRule"
                             defaultChecked={this.state.edgeRule === 'omit'}
                         /> Duplicate and half <br />
