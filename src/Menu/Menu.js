@@ -15,6 +15,7 @@ import Logical from '../Transformations/Lab2/Logical/Logical';
 import Median from '../Transformations/Lab3/Median/Median';
 import Filter from '../Transformations/Lab3/Filter/Filter';
 import Edges from '../Transformations/Lab3/Edges/Edges';
+import UniversalLogicalSmooth from '../Transformations/Lab3/UniversalLogicalSmooth/UniversalLogicalSmooth';
 
 class Menu extends Component {
     constructor(props) {
@@ -154,6 +155,13 @@ class Menu extends Component {
                             }
                         >
                             median
+                        </a>
+                        <a
+                            onClick={
+                                this.handleMenuClick(<UniversalLogicalSmooth updateImage={this.props.updateImage} />)
+                            }
+                        >
+                            universal logical smooth
                         </a>
                         <a
                             onClick={
