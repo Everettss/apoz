@@ -1,33 +1,61 @@
 import React, { Component } from 'react';
-import * as sharpenMasks from './sharpenMasks';
-import { forEachPixel, flattenMatix, cloneImage } from '../../../utils/helpers';
+import * as edgesMasks from './edgesMasks';
+import { forEachPixel, flattenMatix, cloneImage, fitToRange } from '../../../utils/helpers';
 
-const sharpeningTransformation = (edgeRule, maskType, M = 256) => image => {
-    const masks = sharpenMasks[maskType];
-    console.log('edgeRule', edgeRule);
-    console.log('maskType', maskType);
-    console.log('masks', masks);
-
-
+const edgesTransformation = (edgeRule, maskType, M = 256) => image => {
     const newImage = cloneImage(image); // you can't mutate image during computation
+    const masks = edgesMasks[maskType];
+    const Gx = masks.x;
+    const Gy = masks.y;
+    const maskHeight = Gx[0].length;
+    const maskWidth = Gx.length;
+    let midMaskX = (maskWidth - (maskWidth % 2)) / 2 - ((maskWidth + 1) % 2);
+    let midMaskY = (maskHeight - (maskHeight % 2)) / 2 - ((maskHeight + 1) % 2);
+
+    let algorithmSum;
+
+    if (maskType === 'roberts') { // I deduced that Roberts is a special case
+        algorithmSum = (x, y) => Math.abs(x) + Math.abs(y);
+    } else {
+        algorithmSum = (x, y) => Math.round(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+    }
+
+    const algorithm = arr => {
+        let x = 0;
+        let y = 0;
+
+        for (let i = 0; i < maskHeight; i++) {
+            for (let j = 0; j < maskHeight; j++) {
+                x += Gx[i][j] * arr[i][j];
+                y += Gy[i][j] * arr[i][j];
+            }
+        }
+
+        const res = algorithmSum(x, y);
+        return fitToRange(res, 0, M - 1);
+    };
 
     let operationOnPixelNeighbours;
     if (edgeRule === 'not-modify') {
         operationOnPixelNeighbours = arr => {
             const flattenMask = flattenMatix(arr);
-            if (flattenMask.filter(x => x !== null).length < 9) { // missing
-                return arr[1][1]; // get center pixel
+            if (flattenMask.filter(x => x !== null).length < maskHeight * maskWidth) { // missing some data
+                return arr[midMaskY][midMaskX]; // get center pixel
             } else {
-                return arr[1][1]; // TODO implement
+                return algorithm(arr);
             }
         };
     } else {
         operationOnPixelNeighbours = arr => {
-            return arr[1][1]; // TODO implement
+            return algorithm(arr);
         };
     }
 
-    forEachPixel(image, operationOnPixelNeighbours, newImage, { type: edgeRule });
+    forEachPixel(
+        image,
+        operationOnPixelNeighbours,
+        newImage, { maskWidth, maskHeight, type: edgeRule }
+    );
 
     return {
         title: `sharpening ${maskType}`,
@@ -35,13 +63,13 @@ const sharpeningTransformation = (edgeRule, maskType, M = 256) => image => {
     };
 };
 
-class Sharpening extends Component {
+class Edges extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
             edgeRule: 'not-modify',
-            maskType: 'universal'
+            maskType: 'roberts'
         };
 
         this.radioEdgeHandler = this.radioEdgeHandler.bind(this);
@@ -59,13 +87,13 @@ class Sharpening extends Component {
 
     formHandler(e) {
         e.preventDefault();
-        this.props.updateImage(sharpeningTransformation(this.state.edgeRule, this.state.maskType));
+        this.props.updateImage(edgesTransformation(this.state.edgeRule, this.state.maskType));
     }
 
     render() {
         return (
             <div>
-                <h3 className="aside__item__title">Sharpening</h3>
+                <h3 className="aside__item__title">Edges</h3>
                 <form action="#" onSubmit={this.formHandler}>
                     Mask
                     <div onChange={this.radioMaskTypeHandler}>
@@ -73,6 +101,7 @@ class Sharpening extends Component {
                             type="radio"
                             value="universal"
                             name="maskType"
+                            disabled={true}
                             defaultChecked={this.state.maskType === 'universal'}
                         /> Universal <br />
                         <input
@@ -122,5 +151,5 @@ class Sharpening extends Component {
     }
 }
 
-export default Sharpening;
-export { sharpeningTransformation };
+export default Edges;
+export { edgesTransformation };

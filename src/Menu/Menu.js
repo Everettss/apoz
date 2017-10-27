@@ -14,7 +14,7 @@ import Arithmetic from '../Transformations/Lab2/Arithmetic/Arithmetic';
 import Logical from '../Transformations/Lab2/Logical/Logical';
 import Median from '../Transformations/Lab3/Median/Median';
 import Filter from '../Transformations/Lab3/Filter/Filter';
-import Sharpening from '../Transformations/Lab3/Sharpening/Sharpening';
+import Edges from '../Transformations/Lab3/Edges/Edges';
 
 class Menu extends Component {
     constructor(props) {
@@ -157,10 +157,10 @@ class Menu extends Component {
                         </a>
                         <a
                             onClick={
-                                this.handleMenuClick(<Sharpening updateImage={this.props.updateImage} />)
+                                this.handleMenuClick(<Edges updateImage={this.props.updateImage} />)
                             }
                         >
-                            sharpening
+                            edges
                         </a>
                     </DropdownContent>
                 </Dropdown>

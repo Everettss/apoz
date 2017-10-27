@@ -123,6 +123,16 @@ const forEachPixel2Images = (picture1, picture2, fn) => {
 
 const cloneImage = image => ndarray([...image.data], [...image.shape], [...image.stride]);
 
+const fitToRange = (val, start, end) => {
+    let newVal = val;
+    if (val > end) {
+        newVal = end
+    } else if (val < start) {
+        newVal = start
+    }
+    return newVal;
+};
+
 
 export {
     histogram,
@@ -131,4 +141,5 @@ export {
     neighbours,
     flattenMatix,
     cloneImage,
+    fitToRange,
 }
