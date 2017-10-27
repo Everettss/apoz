@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { forEachPixel, flattenMatix, cloneImage } from '../../../utils/helpers';
+import { forEachPixel, cloneImage } from '../../../utils/helpers';
 
 const universalLogicalSmoothTransformation = (edgeRule, rotationGrade, M = 256) => image => {
     const newImage = cloneImage(image); // you can't mutate image during computation
