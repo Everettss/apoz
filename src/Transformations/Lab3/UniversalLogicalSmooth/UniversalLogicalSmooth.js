@@ -5,7 +5,7 @@ const universalLogicalSmoothTransformation = (edgeRule, rotationGrade, M = 256) 
     const newImage = cloneImage(image); // you can't mutate image during computation
 
     let operationOnPixelNeighbours;
-    if (rotationGrade === '0') {
+    if (rotationGrade === 0) {
         operationOnPixelNeighbours = arr => {
             let oppositePixelsMatch = arr[1][0] === arr [1][2];
             return oppositePixelsMatch ? arr[1][0] : arr[1][1];
@@ -31,11 +31,11 @@ class UniversalLogicalSmooth extends Component {
 
         this.state = {
             edgeRule: 'not-modify',
-            rotationGrade: '0'
+            rotationGrade: 0
         };
 
         this.radioEdgeHandler = this.radioEdgeHandler.bind(this);
-        this.radioMaskHandler = this.radioMaskHandler.bind(this);
+        this.radioRotationGrade = this.radioRotationGrade.bind(this);
         this.formHandler = this.formHandler.bind(this);
     }
 
@@ -43,14 +43,13 @@ class UniversalLogicalSmooth extends Component {
         this.setState({ edgeRule: event.target.value });
     }
 
-    radioMaskHandler(event) {
-
-        this.setState({ rotationGrade: event.target.value });
+    radioRotationGrade(event) {
+        this.setState({ rotationGrade: parseInt(event.target.value, 10) });
     }
 
     formHandler(e) {
         e.preventDefault();
-        this.props.updateImage(universalLogicalSmoothTransformation(this.state.edgeRule, this.state.maskRule));
+        this.props.updateImage(universalLogicalSmoothTransformation(this.state.edgeRule, this.state.rotationGrade));
     }
 
     render() {
@@ -59,18 +58,18 @@ class UniversalLogicalSmooth extends Component {
                 <h3 className="aside__item__title">Median</h3>
                 <form action="#" onSubmit={this.formHandler}>
                     Rotation
-                    <div onChange={this.radioMaskHandler}>
+                    <div onChange={this.radioRotationGrade}>
                         <input
                             type="radio"
                             value="0"
                             name="rotationGrade"
-                            defaultChecked={this.state.rotationGrade = 0}
+                            defaultChecked={this.state.rotationGrade === 0}
                         /> 0 <br />
                         <input
                             type="radio"
                             value="90"
                             name="rotationGrade"
-                            defaultChecked={this.state.rotationGrade = 90}
+                            defaultChecked={this.state.rotationGrade === 90}
                         /> 90 <br />
                     </div>
                     <br/>Edge
