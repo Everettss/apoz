@@ -21,9 +21,9 @@ const histogram = (picture, channel) => {
 const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, type = 'omit' } = {}) => {
     const height = picture.shape[0];
     const width = picture.shape[1];
-    let midX = (maskWidth - 1) / 2;
-    let midY = (maskHeight - 1) / 2;
-    let neighboursTable = Array(maskHeight).fill(0).map(x => Array(maskWidth).fill(0));
+    let midX = (maskWidth - (maskWidth % 2)) / 2 - ((maskWidth + 1) % 2);
+    let midY = (maskHeight - (maskHeight % 2)) / 2 - ((maskHeight + 1) % 2);
+    let neighboursTable = new Array(maskHeight).fill(0).map(x => new Array(maskWidth).fill(0));
 
     // [
     //     [ 11, 15,  0,  3,  2 ],
