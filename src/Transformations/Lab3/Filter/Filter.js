@@ -3,9 +3,9 @@ import _ from 'lodash';
 import NumericInput from 'react-numeric-input';
 import './Filter.css';
 import * as preselected from './preselected';
-import { forEachPixel, flattenMatix, cloneImage } from '../../../utils/helpers';
+import { forEachPixel, flattenMatrix, cloneImage } from '../../../utils/helpers';
 
-const detectMinusValInFilter = arr => !!flattenMatix(arr).filter(x => x < 0).length;
+const detectMinusValInFilter = arr => !!flattenMatrix(arr).filter(x => x < 0).length;
 
 const filterTransformation = (edgeRule, scaleRule, filter, type, M = 256) => image => {
     console.log('edgeRule', edgeRule);
@@ -18,7 +18,7 @@ const filterTransformation = (edgeRule, scaleRule, filter, type, M = 256) => ima
     let operationOnPixelNeighbours;
     if (edgeRule === 'not-modify') {
         operationOnPixelNeighbours = arr => {
-            const flattenMask = flattenMatix(arr);
+            const flattenMask = flattenMatrix(arr);
             if (flattenMask.filter(x => x !== null).length < 9) { // missing
                 return arr[1][1]; // get center pixel
             } else {

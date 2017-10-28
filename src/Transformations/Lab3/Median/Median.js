@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { median } from 'simple-statistics';
-import { forEachPixel, flattenMatix, cloneImage } from '../../../utils/helpers';
+import { forEachPixel, flattenMatrix, cloneImage } from '../../../utils/helpers';
 
 const medianTransformation = (edgeRule, maskRule, M = 256) => image => {
     const newImage = cloneImage(image); // you can't mutate image during computation
@@ -8,7 +8,7 @@ const medianTransformation = (edgeRule, maskRule, M = 256) => image => {
     let operationOnPixelNeighbours;
     if (edgeRule === 'not-modify') {
         operationOnPixelNeighbours = arr => {
-            const flattenMask = flattenMatix(arr);
+            const flattenMask = flattenMatrix(arr);
             if (flattenMask.filter(x => x !== null).length < (maskRule.maskWidth * maskRule.maskHeight)) { // missing
                 return arr[(maskRule.maskHeight - 1) / 2][(maskRule.maskWidth - 1) / 2]; // get center pixel
             } else {
@@ -17,7 +17,7 @@ const medianTransformation = (edgeRule, maskRule, M = 256) => image => {
         };
     } else {
         operationOnPixelNeighbours = arr => {
-            return Math.round(median(flattenMatix(arr).filter(x => x !== null)));
+            return Math.round(median(flattenMatrix(arr).filter(x => x !== null)));
         };
     }
 

@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {
     histogram as histogramHelper,
     neighbours,
-    flattenMatix
+    flattenMatrix
 } from '../../utils/helpers';
 
 
@@ -57,7 +57,7 @@ const histogramTransformation = rule => image => {
                     } else if (rule === 'random') {
                         pixelAfterChange = leftValues[pixelBeforeChange] + Math.random() * newValues[pixelBeforeChange];
                     } else if (rule === 'neighbours') {
-                        const neighboursArr = flattenMatix(neighbours(image, i, j, channel)).filter(x => x !== null);
+                        const neighboursArr = flattenMatrix(neighbours(image, i, j, channel)).filter(x => x !== null);
                         const neighboursMean = _.mean(neighboursArr);
                         if (neighboursMean > rightValues[pixelBeforeChange]) {
                             pixelAfterChange = rightValues[pixelBeforeChange];

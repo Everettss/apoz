@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import './Menu.css';
 import Dropdown, { DropdownTrigger, DropdownContent } from 'react-simple-dropdown';
-import Lighten from '../Transformations/Lighten/Lighten';
+import ImportImage from '../ImportImage/ImportImage';
 import Greyscale from '../Transformations/Greyscale/Greyscale';
 import HistogramTransformation from '../Transformations/Histogram/Histogram';
 import Negation from '../Transformations/Lab2/Negation/Negation';
+import LUT from '../Transformations/Lab2/LUT/LUT';
 import Threshold from '../Transformations/Lab2/Threshold/Threshold';
 import ThresholdGrayLevels from '../Transformations/Lab2/ThresholdGrayLevels/ThresholdGrayLevels';
 import ReductionOfGrayLevels from '../Transformations/Lab2/ReductionOfGrayLevels/ReductionOfGrayLevels';
@@ -13,7 +14,7 @@ import Arithmetic from '../Transformations/Lab2/Arithmetic/Arithmetic';
 import Logical from '../Transformations/Lab2/Logical/Logical';
 import Median from '../Transformations/Lab3/Median/Median';
 import Filter from '../Transformations/Lab3/Filter/Filter';
-import Sharpening from '../Transformations/Lab3/Sharpening/Sharpening';
+import Edges from '../Transformations/Lab3/Edges/Edges';
 import UniversalLogicalSmooth from '../Transformations/Lab3/UniversalLogicalSmooth/UniversalLogicalSmooth';
 
 class Menu extends Component {
@@ -41,20 +42,27 @@ class Menu extends Component {
     render() {
         return (
             <div className="menu__inner-wrapper">
-                <a
-                    onClick={this.handleMenuClick(<HistogramTransformation updateImage={this.props.updateImage} />)}
-                >
-                    histogram
-                </a>
-                <a
-                    onClick={this.handleMenuClick(<Lighten updateImage={this.props.updateImage} />)}
-                >
-                    lighten
-                </a>
+                <Dropdown ref={dropdown => { dropdown && this.dropdowns.set(1, dropdown); }}>
+                    <DropdownTrigger>add image</DropdownTrigger>
+                    <DropdownContent className="dropdown__content--image">
+                        <div className="aside__item aside__item--upload">
+                            <h3 className="aside__item__title">Upload image</h3>
+                            <ImportImage
+                                importImageOnBoostrap={true}
+                                importHandler={this.props.importFirstImageHandler}
+                            />
+                        </div>
+                    </DropdownContent>
+                </Dropdown>
                 <a
                     onClick={this.handleMenuClick(<Greyscale updateImage={this.props.updateImage} />)}
                 >
                     greyscale
+                </a>
+                <a
+                    onClick={this.handleMenuClick(<HistogramTransformation updateImage={this.props.updateImage} />)}
+                >
+                    histogram
                 </a>
 
                 <Dropdown ref={dropdown => { dropdown && this.dropdowns.set(1, dropdown); }}>
@@ -66,6 +74,13 @@ class Menu extends Component {
                             }
                         >
                             negation
+                        </a>
+                        <a
+                            onClick={
+                                this.handleMenuClick(<LUT updateImage={this.props.updateImage} />)
+                            }
+                        >
+                            LUT
                         </a>
                         <a
                             onClick={
@@ -143,17 +158,17 @@ class Menu extends Component {
                         </a>
                         <a
                             onClick={
-                                this.handleMenuClick(<Sharpening updateImage={this.props.updateImage} />)
-                            }
-                        >
-                            sharpening
-                        </a>
-                        <a
-                            onClick={
                                 this.handleMenuClick(<UniversalLogicalSmooth updateImage={this.props.updateImage} />)
                             }
                         >
                             universal logical smooth
+                        </a>
+                        <a
+                            onClick={
+                                this.handleMenuClick(<Edges updateImage={this.props.updateImage} />)
+                            }
+                        >
+                            edges
                         </a>
                     </DropdownContent>
                 </Dropdown>

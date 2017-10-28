@@ -3,7 +3,6 @@ import './App.css';
 import 'font-awesome/css/font-awesome.css';
 import Histogram from './Histogram/Histogram';
 import Image from './Image/Image';
-import ImportImage from './ImportImage/ImportImage';
 import Menu from './Menu/Menu';
 import { cloneImage } from './utils/helpers';
 
@@ -108,6 +107,7 @@ class App extends Component {
                     <Menu
                         handleMenu={this.handleMenu}
                         updateImage={this.updateImage}
+                        importFirstImageHandler={this.importImageHandler}
                         importSecondImageHandler={this.importSecondImageHandler}
                         secondImage={this.state.secondPicture}
                     />
@@ -162,10 +162,6 @@ class App extends Component {
                                     }
                                 </div>
                             })}
-                        </div>
-                        <div className="aside__item aside__item--upload">
-                            <h3 className="aside__item__title">Upload image</h3>
-                            <ImportImage importImageOnBoostrap={true} importHandler={this.importImageHandler}/>
                         </div>
                     </div>
                 </div>

@@ -131,6 +131,94 @@ describe('helpers', () => {
                 });
             });
         });
+        // [
+        //     [ 11, 15,  0,  3,  2 ],
+        //     [ 12, 13, 15,  0,  1 ],
+        //     [  0,  4,  7, 14, 14 ],
+        //     [  2,  1,  2,  3,  4 ],
+        // ];
+        describe('2x2', () => {
+            describe('ommit', () => {
+                it('get form center', () => {
+                    const expectedOutput =
+                        [
+                            [15, 0],
+                            [7, 14]
+                        ];
+                    const inputPicture = makeTestPicture(input);
+                    const outputNeighbours = neighbours(inputPicture, 1, 2, 0, { maskWidth: 2, maskHeight: 2 });
+                    expect(outputNeighbours).toEqual(expectedOutput);
+                });
+
+                it('get bottom right', () => {
+                    const expectedOutput =
+                        [
+                            [    4, null ],
+                            [ null, null ]
+                        ];
+                    const inputPicture = makeTestPicture(input);
+                    const outputNeighbours = neighbours(inputPicture, 3, 4, 0, { maskWidth: 2, maskHeight: 2 });
+                    expect(outputNeighbours).toEqual(expectedOutput);
+                });
+            });
+
+            // [
+            //     [ 11, 15,  0,  3,  2 ],
+            //     [ 12, 13, 15,  0,  1 ],
+            //     [  0,  4,  7, 14, 14 ],
+            //     [  2,  1,  2,  3,  4 ],
+            // ];
+
+            describe('duplicate', () => {
+                it('get form center', () => {
+                    const expectedOutput =
+                        [
+                            [15, 0],
+                            [7, 14]
+                        ];
+                    const inputPicture = makeTestPicture(input);
+                    const outputNeighbours =
+                        neighbours(inputPicture, 1, 2, 0, { maskWidth: 2, maskHeight: 2, type: 'duplicate' });
+                    expect(outputNeighbours).toEqual(expectedOutput);
+                });
+
+                it('get top right', () => {
+                    const expectedOutput =
+                        [
+                            [ 2, 2 ],
+                            [ 1, 1 ]
+                        ];
+                    const inputPicture = makeTestPicture(input);
+                    const outputNeighbours =
+                        neighbours(inputPicture, 0, 4, 0, { maskWidth: 2, maskHeight: 2, type: 'duplicate' });
+                    expect(outputNeighbours).toEqual(expectedOutput);
+                });
+
+                it('get bottom left', () => {
+                    const expectedOutput =
+                        [
+                            [ 2, 1 ],
+                            [ 2, 1 ]
+                        ];
+                    const inputPicture = makeTestPicture(input);
+                    const outputNeighbours =
+                        neighbours(inputPicture, 3, 0, 0, { maskWidth: 2, maskHeight: 2, type: 'duplicate' });
+                    expect(outputNeighbours).toEqual(expectedOutput);
+                });
+
+                it('get bottom right', () => {
+                    const expectedOutput =
+                        [
+                            [ 4, 4 ],
+                            [ 4, 4 ]
+                        ];
+                    const inputPicture = makeTestPicture(input);
+                    const outputNeighbours =
+                        neighbours(inputPicture, 3, 4, 0, { maskWidth: 2, maskHeight: 2, type: 'duplicate' });
+                    expect(outputNeighbours).toEqual(expectedOutput);
+                });
+            });
+        });
 
         describe('3x5', () => {
             // [
