@@ -47,9 +47,14 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                     break;
 
                 case 'dim-with-duplicate':
-                    neighboursTable[k][l] = Math.round (picture.get(i + yAwayFromMiddle + shift.shiftY,
+                    let pixelAtPoint = picture.get(i + yAwayFromMiddle + shift.shiftY,
                         j + xAwayFromMiddle + shift.shiftX,
-                        channel) / 1,1 );
+                        channel);
+                    if (shift.shiftX !== 0 || shift.shiftY !== 0) {
+                        neighboursTable[k][l] = Math.round(pixelAtPoint / 1.5);
+                    } else {
+                        neighboursTable[k][l] = pixelAtPoint;
+                    }
                     break;
 
                 default:
