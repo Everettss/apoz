@@ -12,7 +12,7 @@ describe('universal-logical-smooth', () => {
             [  1,  0,  2,  1, 12 ],
         ];
 
-    describe('0', () => {
+    describe(0, () => {
 
         describe('not-modify', () => {
 
@@ -26,7 +26,7 @@ describe('universal-logical-smooth', () => {
                 ];
 
             const inputPicture = makeTestPicture(input);
-            const { picture, title } = universalLogicalSmoothTransformation('not-modify', '0', 16)(inputPicture);
+            const { picture, title } = universalLogicalSmoothTransformation('not-modify', 0, 16)(inputPicture);
             const outputPicture = getOneChannelArr(picture);
 
             it('algorithm', () => {
@@ -50,7 +50,7 @@ describe('universal-logical-smooth', () => {
                 ];
 
             const inputPicture = makeTestPicture(input);
-            const { picture, title } = universalLogicalSmoothTransformation('dim-with-duplicate', '0', 16)(inputPicture);
+            const { picture, title } = universalLogicalSmoothTransformation('dim-with-duplicate', 0, 16)(inputPicture);
             const outputPicture = getOneChannelArr(picture);
 
             it('algorithm', () => {
@@ -63,7 +63,7 @@ describe('universal-logical-smooth', () => {
         });
     });
 
-    describe('90', () => {
+    describe(90, () => {
 
         // [
         //     [ 15, 14, 15, 13, 15 ],
@@ -85,7 +85,7 @@ describe('universal-logical-smooth', () => {
                 ];
 
                 const inputPicture = makeTestPicture(input);
-            const { picture, title } = universalLogicalSmoothTransformation('not-modify', '90', 16)(inputPicture);
+            const { picture, title } = universalLogicalSmoothTransformation('not-modify', 90, 16)(inputPicture);
             const outputPicture = getOneChannelArr(picture);
 
             it('algorithm', () => {
@@ -109,7 +109,7 @@ describe('universal-logical-smooth', () => {
                 ];
 
             const inputPicture = makeTestPicture(input);
-            const { picture, title } = universalLogicalSmoothTransformation('dim-with-duplicate', '90', 16)(inputPicture);
+            const { picture, title } = universalLogicalSmoothTransformation('dim-with-duplicate', 90, 16)(inputPicture);
             const outputPicture = getOneChannelArr(picture);
 
             it('algorithm', () => {
