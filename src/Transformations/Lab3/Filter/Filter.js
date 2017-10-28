@@ -3,7 +3,7 @@ import _ from 'lodash';
 import NumericInput from 'react-numeric-input';
 import './Filter.css';
 import * as preselected from './preselected';
-import { forEachPixel, flattenMatrix, cloneImage } from '../../../utils/helpers';
+import { forEachPixel, flattenMatrix, cloneImage, fitToRange } from '../../../utils/helpers';
 
 const detectMinusValInFilter = arr => !!flattenMatrix(arr).filter(x => x < 0).length;
 
@@ -15,6 +15,17 @@ const filterTransformation = (edgeRule, scaleRule, filter, type, M = 256) => ima
 
     const newImage = cloneImage(image); // you can't mutate image during computation
 
+    let algorithm = arr => {
+         let outputValue = 0;
+                let filterTotal = flattenMatrix(filter).reduce((acc, x) => acc + x, 0);
+                for (let x = 0; x < 3; x++) {
+                    for (let y = 0; y < 3; y++) {
+                        outputValue += arr[x][y] * filter[x][y] / (filterTotal ? filterTotal : 1);
+                    }
+                }
+                return Math.round(fitToRange(outputValue, 0, M - 1) );
+    };
+
     let operationOnPixelNeighbours;
     if (edgeRule === 'not-modify') {
         operationOnPixelNeighbours = arr => {
@@ -22,20 +33,12 @@ const filterTransformation = (edgeRule, scaleRule, filter, type, M = 256) => ima
             if (flattenMask.filter(x => x !== null).length < 9) { // missing
                 return arr[1][1]; // get center pixel
             } else {
-                var outputValue = 0;
-                let filterTotal = flattenMatix(filter).reduce((acc, x) => acc + x, 0);
-                for (let x = 0; x < 3; x++) {
-                    for (let y = 0; y < 3; y++) {
-                        outputValue += arr[x][y] * filter[x][y] / filterTotal;
-                    }
-
-                }
-                return Math.round(outputValue);
+               return algorithm(arr);
             }
         };
     } else {
         operationOnPixelNeighbours = arr => {
-            return arr[1][1]; // TODO implement
+            return algorithm(arr);
         };
     }
 
