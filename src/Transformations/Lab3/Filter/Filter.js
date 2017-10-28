@@ -22,7 +22,15 @@ const filterTransformation = (edgeRule, scaleRule, filter, type, M = 256) => ima
             if (flattenMask.filter(x => x !== null).length < 9) { // missing
                 return arr[1][1]; // get center pixel
             } else {
-                return arr[1][1]; // TODO implement
+                var outputValue = 0;
+                let filterTotal = flattenMatix(filter).reduce((acc, x) => acc + x, 0);
+                for (let x = 0; x < 3; x++) {
+                    for (let y = 0; y < 3; y++) {
+                        outputValue += arr[x][y] * filter[x][y] / filterTotal;
+                    }
+
+                }
+                return Math.round(outputValue);
             }
         };
     } else {
