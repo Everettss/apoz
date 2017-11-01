@@ -3,7 +3,7 @@ import _ from 'lodash';
 import NumericInput from 'react-numeric-input';
 import './Filter.css';
 import * as preselected from './preselected';
-import { forEachPixel, flattenMatrix, cloneImage, fitToRange, scale } from '../../../utils/helpers';
+import { forEachPixel, flattenMatrix, cloneImage, scale } from '../../../utils/helpers';
 
 const detectMinusValInFilter = arr => !!flattenMatrix(arr).filter(x => x < 0).length;
 
@@ -23,7 +23,6 @@ const filterTransformation = (edgeRule, scaleRule, filter, type, M = 256) => ima
                         outputValue += arr[x][y] * filter[x][y] / (filterTotal ? filterTotal : 1);
                     }
                 }
-                // return Math.round(fitToRange(outputValue, 0, M - 1) );
                 return Math.round(scale(scaleRule, outputValue, 0, M - 1) );
     };
 
