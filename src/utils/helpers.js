@@ -143,6 +143,38 @@ const fitToRange = (val, start, end) => {
     }
     return newVal;
 };
+const scale = (scaleRule, pixelValue, min = 0, M = 256)  => {
+    let output;
+    switch (scaleRule) {
+        case 'proportional':
+            // because this algoritm does not work on values < 0
+            output = fitToRange( ( (pixelValue - min) / (M - 1 - min) ) * (M - 1), min, M);
+            break;
+
+        case 'trivalent':
+            if (pixelValue < 0) {
+                output = 0;
+            } else if (pixelValue > 0) {
+                output = M - 1;
+            } else {
+                output = Math.round( (M - 1) / 2);
+            }
+            break;
+
+        default: // trimming
+            if (pixelValue < 0) {
+                output = 0;
+            } else if (pixelValue > M - 1) {
+                output = M - 1;
+            } else {
+                output = pixelValue;
+            }
+            break;
+
+    }
+
+    return output;
+};
 
 
 export {
@@ -153,4 +185,5 @@ export {
     flattenMatrix,
     cloneImage,
     fitToRange,
+    scale,
 }
