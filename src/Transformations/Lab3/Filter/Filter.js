@@ -4,6 +4,7 @@ import NumericInput from 'react-numeric-input';
 import './Filter.css';
 import * as preselected from './preselected';
 import { forEachPixel, flattenMatrix, cloneImage, scale } from '../../../utils/helpers';
+import Mask from "../../Mask/Mask";
 
 const detectMinusValInFilter = arr => !!flattenMatrix(arr).filter(x => x < 0).length;
 
@@ -103,17 +104,6 @@ class Filter extends Component {
         );
     }
 
-    inputFilter(i, j) {
-        return <NumericInput
-            className="filter-inputs__input"
-            style={false}
-            min={-256 + 1}
-            max={256 - 1}
-            value={this.state.filter[i][j]}
-            onChange={this.filterInputHandler(i, j)}
-        />
-    };
-
     preselectedLink(filter, type, name) {
         return (
             <a
@@ -132,23 +122,7 @@ class Filter extends Component {
                 <form action="#" onSubmit={this.formHandler}>
                     <div className="form-wrapper">
                         <div className="form-col">
-                            <div className="filter-inputs">
-                                <div className="filter-inputs__row">
-                                    {this.inputFilter(0, 0)}
-                                    {this.inputFilter(0, 1)}
-                                    {this.inputFilter(0, 2)}
-                                </div>
-                                <div className="filter-inputs__row">
-                                    {this.inputFilter(1, 0)}
-                                    {this.inputFilter(1, 1)}
-                                    {this.inputFilter(1, 2)}
-                                </div>
-                                <div className="filter-inputs__row">
-                                    {this.inputFilter(2, 0)}
-                                    {this.inputFilter(2, 1)}
-                                    {this.inputFilter(2, 2)}
-                                </div>
-                            </div>
+                            <Mask filter={this.state.filter}/>
 
                             <br/><strong>Edge</strong>
                             <div onChange={this.radioEdgeHandler}>
