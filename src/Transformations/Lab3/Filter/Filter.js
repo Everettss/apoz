@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import NumericInput from 'react-numeric-input';
 import './Filter.css';
 import * as preselected from './preselected';
 import { forEachPixel, flattenMatrix, cloneImage, scale } from '../../../utils/helpers';
@@ -73,6 +72,7 @@ class Filter extends Component {
         this.radioEdgeHandler = this.radioEdgeHandler.bind(this);
         this.radioScaleHandler = this.radioScaleHandler.bind(this);
         this.formHandler = this.formHandler.bind(this);
+        this.filterUpdateCallback = this.filterUpdateCallback.bind(this);
     }
 
     radioEdgeHandler(event) {
@@ -115,6 +115,10 @@ class Filter extends Component {
         );
     };
 
+    filterUpdateCallback (newFilter) {
+        this.state.filter = newFilter;
+    }
+
     render() {
         return (
             <div>
@@ -122,7 +126,7 @@ class Filter extends Component {
                 <form action="#" onSubmit={this.formHandler}>
                     <div className="form-wrapper">
                         <div className="form-col">
-                            <Mask filter={this.state.filter}/>
+                            <Mask filter={this.state.filter} callback={this.filterUpdateCallback} />
 
                             <br/><strong>Edge</strong>
                             <div onChange={this.radioEdgeHandler}>
