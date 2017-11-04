@@ -1,6 +1,6 @@
 
 import { makeTestPicture } from './testHelpers';
-import { neighbours } from './helpers';
+import { neighbours, resize1DArray, resize2DArray } from './helpers';
 
 describe('helpers', () => {
     const input =
@@ -741,4 +741,106 @@ describe('helpers', () => {
             });
         });
     });
+
+    describe('arrayResize', () => {
+        describe('1D', () => {
+            const oneDimensionInput =
+                [
+                    15, 0, 3,
+                ];
+                it('bigger array', () => {
+                    const expectedOutput =
+                        [
+                            15, 0, 3, 0, 0,
+                        ];
+                    const outputArray = resize1DArray(oneDimensionInput, 5, 0);
+                    expect(outputArray).toEqual(expectedOutput);
+                });
+
+                it('smaller array', () => {
+                    const expectedOutput =
+                        [
+                            15, 0,
+                        ];
+                    const outputArray = resize1DArray(oneDimensionInput, 2, 0);
+                    expect(outputArray).toEqual(expectedOutput);
+                });
+
+                it('same size array', () => {
+                    const expectedOutput =
+                        [
+                            15, 0, 3,
+                        ];
+                    const outputArray = resize1DArray(oneDimensionInput, 3, 0);
+                    expect(outputArray).toEqual(expectedOutput);
+                });
+            });
+        describe('2D', () => {
+            const twoDimensionInput =
+                [
+                    [15, 0,  3, ],
+                    [ 4, 9,  7, ],
+                    [ 5, 4, 30, ],
+                ];
+            it('bigger array', () => {
+                const expectedOutput =
+                    [
+                        [15, 0,  3, 0, 0, ],
+                        [ 4, 9,  7, 0, 0, ],
+                        [ 5, 4, 30, 0, 0, ],
+                        [ 0, 0,  0, 0, 0, ],
+                        [ 0, 0,  0, 0, 0, ],
+                    ];
+                const outputArray = resize2DArray(twoDimensionInput, 5, 5, 0);
+                expect(outputArray).toEqual(expectedOutput);
+            });
+
+            it('smaller array', () => {
+                const expectedOutput =
+                    [
+                        [15, 0, ],
+                        [ 4, 9, ],
+                    ];
+                const outputArray = resize2DArray(twoDimensionInput, 2, 2, 0);
+                expect(outputArray).toEqual(expectedOutput);
+            });
+
+            it('same size array', () => {
+                const expectedOutput =
+                    [
+                        [15, 0,  3, ],
+                        [ 4, 9,  7, ],
+                        [ 5, 4, 30, ],
+                    ];
+                const outputArray = resize2DArray(twoDimensionInput, 3, 3, 0);
+                expect(outputArray).toEqual(expectedOutput);
+            });
+
+            it('irregular size array 1', () => {
+                const expectedOutput =
+                    [
+                        [15, 0,  3, 99, 99, ],
+                        [ 4, 9,  7, 99, 99, ],
+                        [ 5, 4, 30, 99, 99, ],
+                        [ 99, 99, 99, 99, 99, ],
+                    ];
+                const outputArray = resize2DArray(twoDimensionInput, 5, 4, 99);
+                expect(outputArray).toEqual(expectedOutput);
+            });
+
+            it('irregular size array 2', () => {
+                const expectedOutput =
+                    [
+                        [15, 0, ],
+                        [ 4, 9, ],
+                        [ 5, 4, ],
+                        [ 77, 77, ],
+                        [ 77, 77, ],
+                        [ 77, 77, ],
+                    ];
+                const outputArray = resize2DArray(twoDimensionInput, 2, 6, 77);
+                expect(outputArray).toEqual(expectedOutput);
+            });
+        });
+        });
 });

@@ -176,6 +176,27 @@ const scale = (scaleRule, pixelValue, min = 0, M = 256)  => {
     return output;
 };
 
+const resize2DArray = (array, width, height, defaultValue) => {
+    let newArray = new Array(height).fill(defaultValue).map(x => new Array(width).fill(defaultValue));
+    let maxHeight = Math.min(array.length, height);
+
+    for (let i = 0; i < maxHeight; i++) {
+        newArray[i] = resize1DArray(array[i], width, defaultValue);
+    }
+
+    return newArray;
+};
+
+const resize1DArray = (array, size, defaultValue) => {
+    let newArray = new Array(size).fill(defaultValue);
+    let maxLength = Math.min(array.length, size);
+
+    for (let i = 0; i < maxLength; i++) {
+        newArray[i] = array[i];
+    }
+
+    return newArray;
+};
 
 export {
     histogram,
@@ -186,4 +207,6 @@ export {
     cloneImage,
     fitToRange,
     scale,
+    resize1DArray,
+    resize2DArray,
 }
