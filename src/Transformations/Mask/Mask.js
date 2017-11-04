@@ -101,7 +101,11 @@ class Mask extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({filter: nextProps.filter})
+        this.setState({
+            filter: nextProps.filter,
+            maskHeight: nextProps.filter.length,
+            maskWidth: nextProps.filter[0].length,
+        })
     }
 
     inputFilter(i, j) {

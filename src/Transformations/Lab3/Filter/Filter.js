@@ -18,8 +18,8 @@ const filterTransformation = (edgeRule, scaleRule, filter, type, M = 256) => ima
     let algorithm = arr => {
          let outputValue = 0;
                 let filterTotal = flattenMatrix(filter).reduce((acc, x) => acc + x, 0);
-                for (let x = 0; x < 3; x++) {
-                    for (let y = 0; y < 3; y++) {
+                for (let x = 0; x < arr.length; x++) {
+                    for (let y = 0; y < arr[0].length; y++) {
                         outputValue += arr[x][y] * filter[x][y] / (filterTotal ? filterTotal : 1);
                     }
                 }
