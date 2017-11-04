@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import NumericInput from 'react-numeric-input';
 import './Mask.css';
+import { resize2DArray } from '../../utils/helpers';
 
 class Mask extends Component {
     constructor(props) {
@@ -27,18 +28,26 @@ class Mask extends Component {
     }
 
     maskSizeChangeHandler (dim) {
+        var isChange = false;
         return val => {
             if (dim === "w") {
-                if (val !== this.state.maskWidth) {
-                    const maskWidth = val;
-                    this.setState ({maskWidth});
-                }
+                const maskWidth = val;
+                var filter = _.cloneDeep(this.state.filter);
+                filter = resize2DArray(filter, val, this.state.maskHeight, 0);
+                this.setState ({ filter: filter, maskWidth: maskWidth });
+
+                isChange = true;
             } else {
                 if (val !== this.state.maskHeight) {
                     const maskHeight = val;
-                    this.setState ({maskHeight});
+                    var filter = _.cloneDeep(this.state.filter);
+                    filter = resize2DArray(filter, this.state.maskWidth, val, 0);
+                    this.setState ({filter: filter, maskHeight: maskHeight});
+                    isChange = true;
                 }
             }
+
+            if (isChange) this.render();
         }
     }
 
@@ -111,7 +120,7 @@ class Mask extends Component {
             <div>
                 <h4 className="aside__item__title">Mask</h4>
                 {this.prepareMaskControlPane()}
-                {this.prepareMask(3, 3)} //TODO change to editable size
+                {this.prepareMask(this.state.maskHeight, this.state.maskWidth)}
             </div>
         );
     }
