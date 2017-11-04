@@ -33,7 +33,7 @@ class Mask extends Component {
             if (dim === "w") {
                 const maskWidth = val;
                 var filter = _.cloneDeep(this.state.filter);
-                filter = resize2DArray(filter, val, this.state.maskHeight, 0);
+                filter = resize2DArray(filter, val, this.state.maskHeight, 0, true);
                 this.setState ({ filter: filter, maskWidth: maskWidth });
 
                 isChange = true;
@@ -41,7 +41,7 @@ class Mask extends Component {
                 if (val !== this.state.maskHeight) {
                     const maskHeight = val;
                     var filter = _.cloneDeep(this.state.filter);
-                    filter = resize2DArray(filter, this.state.maskWidth, val, 0);
+                    filter = resize2DArray(filter, this.state.maskWidth, val, 0, true);
                     this.setState ({filter: filter, maskHeight: maskHeight});
                     isChange = true;
                 }

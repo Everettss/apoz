@@ -841,6 +841,24 @@ describe('helpers', () => {
                 const outputArray = resize2DArray(twoDimensionInput, 2, 6, 77);
                 expect(outputArray).toEqual(expectedOutput);
             });
+
+            const inputWithEmptyValues =
+                [
+                    [15, 0,  '', ],
+                    [ 4, '',  7, ],
+                    [ null, 4, 30, ],
+                ];
+
+            it('same size array with swapping empty values', () => {
+                const expectedOutput =
+                    [
+                        [15, 0,  1, ],
+                        [ 4, 1,  7, ],
+                        [ 1, 4, 30, ],
+                    ];
+                const outputArray = resize2DArray(inputWithEmptyValues, 3, 3, 1, true);
+                expect(outputArray).toEqual(expectedOutput);
+            });
         });
-        });
+    });
 });

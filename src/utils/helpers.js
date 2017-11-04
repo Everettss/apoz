@@ -176,23 +176,25 @@ const scale = (scaleRule, pixelValue, min = 0, M = 256)  => {
     return output;
 };
 
-const resize2DArray = (array, width, height, defaultValue) => {
+const resize2DArray = (array, width, height, defaultValue, treatEmptyAsNotExistent = false) => {
     let newArray = new Array(height).fill(defaultValue).map(x => new Array(width).fill(defaultValue));
     let maxHeight = Math.min(array.length, height);
 
     for (let i = 0; i < maxHeight; i++) {
-        newArray[i] = resize1DArray(array[i], width, defaultValue);
+        newArray[i] = resize1DArray(array[i], width, defaultValue, treatEmptyAsNotExistent);
     }
 
     return newArray;
 };
 
-const resize1DArray = (array, size, defaultValue) => {
+const resize1DArray = (array, size, defaultValue, treatEmptyAsNotExistent = false) => {
     let newArray = new Array(size).fill(defaultValue);
     let maxLength = Math.min(array.length, size);
 
     for (let i = 0; i < maxLength; i++) {
-        newArray[i] = array[i];
+        newArray[i] = (array[i] === '' || array[i] === null) && treatEmptyAsNotExistent
+            ? defaultValue
+            : array[i];
     }
 
     return newArray;
