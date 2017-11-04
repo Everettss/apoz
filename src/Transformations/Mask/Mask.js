@@ -8,10 +8,13 @@ class Mask extends Component {
         super(props);
 
         this.state = {
-            filter: props.filter
+            filter: props.filter,
+            maskHeight: props.filter.length,
+            maskWidth: props.filter[0].length
         };
 
         this.filterInputHandler = this.filterInputHandler.bind(this);
+        this.maskSizeChangeHandler = this.maskSizeChangeHandler.bind(this);
     }
 
     filterInputHandler(i, j) {
@@ -21,6 +24,47 @@ class Mask extends Component {
             this.setState({ filter });
             this.props.callback(filter);
         }
+    }
+
+    maskSizeChangeHandler (dim) {
+        return val => {
+            if (dim === "w") {
+                if (val !== this.state.maskWidth) {
+                    const maskWidth = val;
+                    this.setState ({maskWidth});
+                }
+            } else {
+                if (val !== this.state.maskHeight) {
+                    const maskHeight = val;
+                    this.setState ({maskHeight});
+                }
+            }
+        }
+    }
+
+    prepareMaskControlPane () {
+
+        return (<div
+                className="filter-inputs__row">
+                <span><b>H: </b></span>
+                <NumericInput
+                    className="filter-inputs__input"
+                    style={false}
+                    min={2}
+                    max={9}
+                    value={this.state.maskHeight}
+                    onChange={this.maskSizeChangeHandler("h")}
+                />
+                <span><b> W: </b></span>
+                <NumericInput
+                    className="filter-inputs__input"
+                    style={false}
+                    min={2}
+                    max={9}
+                    value={this.state.maskWidth}
+                    onChange={this.maskSizeChangeHandler("w")}
+                /></div>
+        )
     }
 
     prepareMask(x, y) {
@@ -66,6 +110,7 @@ class Mask extends Component {
         return (
             <div>
                 <h4 className="aside__item__title">Mask</h4>
+                {this.prepareMaskControlPane()}
                 {this.prepareMask(3, 3)} //TODO change to editable size
             </div>
         );
