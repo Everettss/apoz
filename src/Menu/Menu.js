@@ -16,6 +16,7 @@ import Median from '../Transformations/Lab3/Median/Median';
 import Filter from '../Transformations/Lab3/Filter/Filter';
 import Edges from '../Transformations/Lab3/Edges/Edges';
 import UniversalLogicalSmooth from '../Transformations/Lab3/UniversalLogicalSmooth/UniversalLogicalSmooth';
+import Morphological from "../Transformations/Lab4/Morphological/Morphological";
 
 class Menu extends Component {
     constructor(props) {
@@ -169,6 +170,33 @@ class Menu extends Component {
                             }
                         >
                             edges
+                        </a>
+                    </DropdownContent>
+                </Dropdown>
+
+                <Dropdown ref={dropdown => { dropdown && this.dropdowns.set(3, dropdown); }}>
+                    <DropdownTrigger>lab4</DropdownTrigger>
+                    <DropdownContent>
+                        <a
+                            onClick={
+                                this.handleMenuClick(<Filter updateImage={this.props.updateImage} />)
+                            }
+                        >
+                            zad1
+                        </a>
+                        <a
+                            onClick={
+                                this.handleMenuClick(<Median updateImage={this.props.updateImage} />)
+                            }
+                        >
+                            skeletonize
+                        </a>
+                        <a
+                            onClick={
+                                this.handleMenuClick(<Morphological updateImage={this.props.updateImage} />)
+                            }
+                        >
+                            morphological
                         </a>
                     </DropdownContent>
                 </Dropdown>
