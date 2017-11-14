@@ -3,11 +3,8 @@ import { forEachPixel, cloneImage, filterOutNullsFrom } from '../../../utils/hel
 
 const morphologicalTransformation = (edgeRule, maskShape, operation, M = 256) => image => {
     const newImage = cloneImage(image); // you can't mutate image during computation
-    console.log(edgeRule);
-    console.log(maskShape);
-    console.log(operation);
 
-    let dillate = arr => {
+    let dilate = arr => {
         return Math.max(...arr);
     };
     let erode = arr => {
@@ -17,9 +14,9 @@ const morphologicalTransformation = (edgeRule, maskShape, operation, M = 256) =>
     let morph = (inputImg, outputImg, operation) => {
         let operationOnPixelNeighbours = arr => {
             if (operation === 'erode') {
-                    return erode(filterOutNullsFrom(arr));
-            } else if (operation === 'dillate') {
-                    return dillate(filterOutNullsFrom(arr));
+                return erode(filterOutNullsFrom(arr));
+            } else if (operation === 'dilate') {
+                return dilate(filterOutNullsFrom(arr));
             }
         };
 
@@ -37,11 +34,11 @@ const morphologicalTransformation = (edgeRule, maskShape, operation, M = 256) =>
         case 'open':
             temporaryImage = cloneImage(image);
             morph(image, temporaryImage, 'erode');
-            morph(temporaryImage, newImage, 'dillate');
+            morph(temporaryImage, newImage, 'dilate');
             break;
         case 'close':
             temporaryImage = cloneImage(image);
-            morph(temporaryImage, newImage, 'dillate');
+            morph(temporaryImage, newImage, 'dilate');
             morph(image, temporaryImage, 'erode');
             break;
         default:
@@ -49,7 +46,7 @@ const morphologicalTransformation = (edgeRule, maskShape, operation, M = 256) =>
     }
 
     return {
-        title: `operation ${operation}`,
+        title: `operation ${operation} shape ${maskShape}`,
         picture: newImage
     };
 };
@@ -61,7 +58,7 @@ class Morphological extends Component {
         this.state = {
             edgeRule: 'not-modify',
             maskShape: 'diamond',
-            operation: 'dillate'
+            operation: 'dilate'
         };
 
         this.radioEdgeHandler = this.radioEdgeHandler.bind(this);
@@ -96,10 +93,10 @@ class Morphological extends Component {
                     <div onChange={this.radioOperationHandler}>
                         <input
                             type="radio"
-                            value="dillate"
+                            value="dilate"
                             name="operation"
-                            defaultChecked={this.state.operation === 'dillate'}
-                        /> Dillate <br />
+                            defaultChecked={this.state.operation === 'dilate'}
+                        /> Dilate <br />
                         <input
                             type="radio"
                             value="erode"
