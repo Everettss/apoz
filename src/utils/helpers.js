@@ -18,7 +18,7 @@ const histogram = (picture, channel) => {
     return hist;
 };
 
-const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, type = 'omit' } = {}) => {
+const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, type = 'omit', shape = 'square' } = {}) => {
     const height = picture.shape[0];
     const width = picture.shape[1];
     let midX = (maskWidth - (maskWidth % 2)) / 2 - ((maskWidth + 1) % 2);
@@ -63,6 +63,18 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
                     } else {
                         neighboursTable[k][l] = picture.get (i + yAwayFromMiddle, j + xAwayFromMiddle, channel);
                     }
+            }
+
+            switch (shape) {
+                case 'diamond':
+                    if (xAwayFromMiddle !== 0 && yAwayFromMiddle !== 0) {
+                        //for diamond shape we want to have only neighbours on X or Y axis
+                        neighboursTable[k][l] = null;
+                    }
+                    break;
+
+                default:
+                    //do nothing
             }
 
         }
@@ -200,6 +212,10 @@ const resize1DArray = (array, size, defaultValue, treatEmptyAsNotExistent = fals
     return newArray;
 };
 
+const filterOutNullsFrom = arr => {
+    return flattenMatrix(arr).filter(elem => elem !== null);
+};
+
 export {
     histogram,
     forEachPixel,
@@ -211,4 +227,5 @@ export {
     scale,
     resize1DArray,
     resize2DArray,
+    filterOutNullsFrom,
 }

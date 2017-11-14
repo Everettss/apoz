@@ -1,52 +1,25 @@
 import React, { Component } from 'react';
-import { forEachPixel, flattenMatrix, cloneImage, fitToRange } from '../../../utils/helpers';
+import { forEachPixel, cloneImage, filterOutNullsFrom } from '../../../utils/helpers';
 
-const edgesTransformation = (edgeRule, elementShape, M = 256) => image => {
+const morphologicalTransformation = (edgeRule, maskShape, operation, M = 256) => image => {
     const newImage = cloneImage(image); // you can't mutate image during computation
-    const masks = [];
-    const Gx = masks.x;
-    const Gy = masks.y;
-    const maskHeight = Gx[0].length;
-    const maskWidth = Gx.length;
-    let midMaskX = (maskWidth - (maskWidth % 2)) / 2 - ((maskWidth + 1) % 2);
-    let midMaskY = (maskHeight - (maskHeight % 2)) / 2 - ((maskHeight + 1) % 2);
 
-    let algorithmSum;
-
-    if (elementShape === 'roberts') { // I deduced that Roberts is a special case
-        algorithmSum = (x, y) => Math.abs(x) + Math.abs(y);
-    } else {
-        algorithmSum = (x, y) => Math.round(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
-    }
-
-    const algorithm = arr => {
-        let x = 0;
-        let y = 0;
-
-        for (let i = 0; i < maskHeight; i++) {
-            for (let j = 0; j < maskHeight; j++) {
-                x += Gx[i][j] * arr[i][j];
-                y += Gy[i][j] * arr[i][j];
-            }
-        }
-
-        const res = algorithmSum(x, y);
-        return fitToRange(res, 0, M - 1);
+    let dillate = arr => {
+        return Math.max(...arr);
+    };
+    let erode = arr => {
+        return Math.min(...arr);
     };
 
     let operationOnPixelNeighbours;
-    if (edgeRule === 'not-modify') {
+
+    if (operation === 'erode') {
         operationOnPixelNeighbours = arr => {
-            const flattenMask = flattenMatrix(arr);
-            if (flattenMask.filter(x => x !== null).length < maskHeight * maskWidth) { // missing some data
-                return arr[midMaskY][midMaskX]; // get center pixel
-            } else {
-                return algorithm(arr);
-            }
+            return erode(filterOutNullsFrom(arr));
         };
-    } else {
+    } else if (operation === 'dillate') {
         operationOnPixelNeighbours = arr => {
-            return algorithm(arr);
+            return dillate(filterOutNullsFrom(arr));
         };
     }
 
@@ -54,11 +27,11 @@ const edgesTransformation = (edgeRule, elementShape, M = 256) => image => {
         image,
         operationOnPixelNeighbours,
         newImage,
-        { maskWidth, maskHeight, type: edgeRule }
+        { maskWidth: 3, maskHeight: 3, type: edgeRule, shape: maskShape }
     );
 
     return {
-        title: `shape ${elementShape}`,
+        title: `operation ${operation}`,
         picture: newImage
     };
 };
@@ -69,7 +42,7 @@ class Morphological extends Component {
 
         this.state = {
             edgeRule: 'not-modify',
-            elementShape: 'diamond',
+            maskShape: 'diamond',
             operation: 'dillate'
         };
 
@@ -84,7 +57,7 @@ class Morphological extends Component {
     }
 
     radioElementShapeHandler(event) {
-        this.setState({ elementShape: event.target.value });
+        this.setState({ maskShape: event.target.value });
     }
 
     radioOperationHandler(event) {
@@ -93,7 +66,7 @@ class Morphological extends Component {
 
     formHandler(e) {
         e.preventDefault();
-        this.props.updateImage(edgesTransformation(this.state.edgeRule, this.state.elementShape));
+        this.props.updateImage(morphologicalTransformation(this.state.edgeRule, this.state.maskShape, this.state.operation));
     }
 
     render() {
@@ -134,14 +107,14 @@ class Morphological extends Component {
                         <input
                             type="radio"
                             value="universal"
-                            name="elementShape"
-                            defaultChecked={this.state.elementShape === 'diamond'}
+                            name="maskShape"
+                            defaultChecked={this.state.maskShape === 'diamond'}
                         /> Diamond <br />
                         <input
                             type="radio"
                             value="roberts"
-                            name="elementShape"
-                            defaultChecked={this.state.elementShape === 'square'}
+                            name="maskShape"
+                            defaultChecked={this.state.maskShape === 'square'}
                         /> Square <br />
                     </div>
                     <br/>Edge
@@ -173,4 +146,4 @@ class Morphological extends Component {
 }
 
 export default Morphological;
-export { edgesTransformation };
+export { morphologicalTransformation };
