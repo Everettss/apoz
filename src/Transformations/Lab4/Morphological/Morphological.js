@@ -3,6 +3,9 @@ import { forEachPixel, cloneImage, filterOutNullsFrom } from '../../../utils/hel
 
 const morphologicalTransformation = (edgeRule, maskShape, operation, M = 256) => image => {
     const newImage = cloneImage(image); // you can't mutate image during computation
+    console.log(edgeRule);
+    console.log(maskShape);
+    console.log(operation);
 
     let dillate = arr => {
         return Math.max(...arr);
@@ -11,24 +14,39 @@ const morphologicalTransformation = (edgeRule, maskShape, operation, M = 256) =>
         return Math.min(...arr);
     };
 
-    let operationOnPixelNeighbours;
+    let morph = (inputImg, outputImg, operation) => {
+        let operationOnPixelNeighbours = arr => {
+            if (operation === 'erode') {
+                    return erode(filterOutNullsFrom(arr));
+            } else if (operation === 'dillate') {
+                    return dillate(filterOutNullsFrom(arr));
+            }
+        };
 
-    if (operation === 'erode') {
-        operationOnPixelNeighbours = arr => {
-            return erode(filterOutNullsFrom(arr));
-        };
-    } else if (operation === 'dillate') {
-        operationOnPixelNeighbours = arr => {
-            return dillate(filterOutNullsFrom(arr));
-        };
+        forEachPixel(
+            inputImg,
+            operationOnPixelNeighbours,
+            outputImg,
+            { maskWidth: 3, maskHeight: 3, type: edgeRule, shape: maskShape }
+        );
+    };
+
+
+    let temporaryImage;
+    switch (operation) {
+        case 'open':
+            temporaryImage = cloneImage(image);
+            morph(image, temporaryImage, 'erode');
+            morph(temporaryImage, newImage, 'dillate');
+            break;
+        case 'close':
+            temporaryImage = cloneImage(image);
+            morph(temporaryImage, newImage, 'dillate');
+            morph(image, temporaryImage, 'erode');
+            break;
+        default:
+            morph(image, newImage, operation);
     }
-
-    forEachPixel(
-        image,
-        operationOnPixelNeighbours,
-        newImage,
-        { maskWidth: 3, maskHeight: 3, type: edgeRule, shape: maskShape }
-    );
 
     return {
         title: `operation ${operation}`,
@@ -47,7 +65,7 @@ class Morphological extends Component {
         };
 
         this.radioEdgeHandler = this.radioEdgeHandler.bind(this);
-        this.radioEdgeHandler = this.radioEdgeHandler.bind(this);
+        this.radioElementShapeHandler = this.radioElementShapeHandler.bind(this);
         this.radioOperationHandler = this.radioOperationHandler.bind(this);
         this.formHandler = this.formHandler.bind(this);
     }
@@ -106,13 +124,13 @@ class Morphological extends Component {
                     <div onChange={this.radioElementShapeHandler}>
                         <input
                             type="radio"
-                            value="universal"
+                            value="diamond"
                             name="maskShape"
                             defaultChecked={this.state.maskShape === 'diamond'}
                         /> Diamond <br />
                         <input
                             type="radio"
-                            value="roberts"
+                            value="square"
                             name="maskShape"
                             defaultChecked={this.state.maskShape === 'square'}
                         /> Square <br />
