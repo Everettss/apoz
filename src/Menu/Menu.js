@@ -17,6 +17,7 @@ import Filter from '../Transformations/Lab3/Filter/Filter';
 import Edges from '../Transformations/Lab3/Edges/Edges';
 import UniversalLogicalSmooth from '../Transformations/Lab3/UniversalLogicalSmooth/UniversalLogicalSmooth';
 import Morphological from "../Transformations/Lab4/Morphological/Morphological";
+import Skeletonize from "../Transformations/Lab4/Skeletonize/Skeletonize";
 
 class Menu extends Component {
     constructor(props) {
@@ -186,7 +187,7 @@ class Menu extends Component {
                         </a>
                         <a
                             onClick={
-                                this.handleMenuClick(<Median updateImage={this.props.updateImage} />)
+                                this.handleMenuClick(<Skeletonize updateImage={this.props.updateImage} />)
                             }
                         >
                             skeletonize
