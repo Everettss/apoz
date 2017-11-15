@@ -1,38 +1,50 @@
 import React, { Component } from 'react';
-import { forEachPixel, cloneImage, filterOutNullsFrom } from '../../../utils/helpers';
+import { forEachPixel, cloneImage } from '../../../utils/helpers';
 
 // algorithm: http://yadda.icm.edu.pl/baztech/download/import/contents/BPB2-0005-0099-httpwww_wi_pb_edu_plplikinaukazeszytyz114-saeedrybniktabedzkiadamski.pdf
-const skeletonizeTransformation = (edgeRule, maskShape, operation, M = 256) => image => {
+const skeletonizeTransformation = (edgeRule, M = 256) => image => {
     const newImage = cloneImage(image); // you can't mutate image during computation
 
-    let morph = (inputImg, outputImg, operation) => {
+    let getMaxValueFromImage = image => {
+        const width = image.shape[0];
+        const height = image.shape[1];
+        var max = -1;
+        for (let i = 0; i < width; ++i) {
+            for (let j = 0; j < height; ++j) {
+                for (let k = 0; k < 3; ++k) {
+                    let currentPixel = image.get(i, j, k);
+                    if (currentPixel > max)
+                        max = currentPixel;
+                }
+            }
+        }
+        return max;
+    };
+
+    let morph = (inputImg, outputImg, edgeRule) => {
+
         let operationOnPixelNeighbours = arr => {
+            return 1;
         };
 
         forEachPixel(
             inputImg,
             operationOnPixelNeighbours,
             outputImg,
-            { maskWidth: 3, maskHeight: 3, type: edgeRule }
+            {maskWidth: 3, maskHeight: 3, type: edgeRule}
         );
+
+        do {
+            forEachPixel(
+                inputImg,
+                operationOnPixelNeighbours,
+                outputImg,
+                {maskWidth: 3, maskHeight: 3, type: edgeRule}
+            );
+        } while (getMaxValueFromImage(outputImg) > 1);
     };
 
-
-    let temporaryImage;
-    switch (operation) {
-        case 'open':
-            temporaryImage = cloneImage(image);
-            morph(image, temporaryImage, 'erode');
-            morph(temporaryImage, newImage, 'dilate');
-            break;
-        case 'close':
-            temporaryImage = cloneImage(image);
-            morph(temporaryImage, newImage, 'dilate');
-            morph(image, temporaryImage, 'erode');
-            break;
-        default:
-            morph(image, newImage, operation);
-    }
+    morph (image, newImage, edgeRule);
 
     return {
         title: `skeletonize`,
