@@ -21,6 +21,7 @@ const skeletonizeTransformation = (edgeRule, M = 256) => image => {
         return max;
     };
 
+    //TODO create algorithm as in link above
     let morph = (inputImg, outputImg, edgeRule) => {
 
         let operationOnPixelNeighbours = arr => {
