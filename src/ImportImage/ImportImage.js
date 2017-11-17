@@ -7,6 +7,7 @@ import coffe from '../img/Cwicz2Obraz.bmp';
 import a from '../img/A.png';
 import b from '../img/B.png';
 import paint from '../img/paint.png';
+import apozinitials from '../img/apoz-initials.png';
 
 class ImportImage extends Component {
     constructor(props) {
@@ -85,6 +86,11 @@ class ImportImage extends Component {
                         className="download__image"
                         style={{ backgroundImage: `url(${paint}` }}
                         onClick={this.handlePreloadedImage(paint)}
+                    />
+                    <div
+                        className="download__image"
+                        style={{ backgroundImage: `url(${apozinitials}` }}
+                        onClick={this.handlePreloadedImage(apozinitials)}
                     />
                 </div>
 

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import {forEachPixel, cloneImage, flattenMatrix} from '../../../utils/helpers';
-import { patternB270, patternB180, patternB90, patternB, patternA, patternA90 } from './neighbourhoodPatterns';
+import {forEachPixel, cloneImage, flattenMatrix, neighbours} from '../../../utils/helpers';
+import {
+    patternB270, patternB180, patternB90, patternB, patternA, patternA90
+} from './neighbourhoodPatterns';
+import {getOneChannelArr} from "../../../utils/testHelpers";
 
 
 ////
@@ -34,22 +37,6 @@ import { patternB270, patternB180, patternB90, patternB, patternA, patternA90 } 
 
 const skeletonizeTransformation = (edgeRule, M = 256) => image => {
     const newImage = cloneImage(image); // you can't mutate image during computation
-
-    let getMaxValueFromImage = image => {
-        const width = image.shape[0];
-        const height = image.shape[1];
-        var max = -1;
-        for (let i = 0; i < width; ++i) {
-            for (let j = 0; j < height; ++j) {
-                for (let k = 0; k < 3; ++k) {
-                    let currentPixel = image.get(i, j, k);
-                    if (currentPixel > max)
-                        max = currentPixel;
-                }
-            }
-        }
-        return max;
-    };
 
     let checkIfArrayMatchesNeighbourPattern = (arr, pattern) => {
         if (arr.length !== pattern.length || arr[0].length !== pattern[0].length)
@@ -117,26 +104,6 @@ const skeletonizeTransformation = (edgeRule, M = 256) => image => {
         return matchesPattern && !constantsNotMatched;
     };
 
-    let operationOnPixelNeighbours = arr => {
-        let output = arr[1][1];
-        let flattenImage = flattenMatrix(arr);
-        if (output > 0) {
-            if ([flattenImage[0], flattenImage[2], flattenImage[4], flattenImage[6]].filter(x => x === 0).length > 0) {
-                if (checkIfArrayMatchesNeighbourPattern(arr, patternB) ||
-                    checkIfArrayMatchesNeighbourPattern(arr, patternB90) ||
-                    checkIfArrayMatchesNeighbourPattern(arr, patternB180) ||
-                    checkIfArrayMatchesNeighbourPattern(arr, patternB270)
-                ) {
-                    output = 2;
-                } else {
-                    output = 3;
-                }
-            }
-        }
-
-        return output;
-    };
-
     let morph = (inputImg, outputImg, edgeRule, M) => {
 
         let convertToBinary = arr => {
@@ -153,28 +120,55 @@ const skeletonizeTransformation = (edgeRule, M = 256) => image => {
             {maskWidth: 3, maskHeight: 3, type: edgeRule}
         );
 
-        var shouldContinue = false;
-        do {
-            forEachPixel(
-                binaryImg,
-                operationOnPixelNeighbours,
-                outputImg,
-                {maskWidth: 3, maskHeight: 3, type: edgeRule, shape: 'square'}
-            );
 
-            binaryImg = outputImg;
+        var remain = true; // 1
+        const width = binaryImg.shape[0];
+        const height = binaryImg.shape[1];
+        var runs = 0;
+        while (remain ===  true) { // 2
+            remain = false; // 3
+            runs++;
+            [0, 2, 4 ,6].map (function (neigh) { // 4
+                for (let i = 0; i < width; ++i) {        //
+                    for (let j = 0; j < height; ++j) {   // 5
+                        for (let k = 3; k < 4; ++k) {    //
+                            let p = binaryImg.get(i, j, k);
+                            let neighMask = neighbours(binaryImg, i, j, k, {});
+                            let flattenedMatrix = flattenMatrix(neighMask);
+                            let currNeigh = flattenedMatrix[neigh];
+                            if (p === 1 && currNeigh === 0) { // 6
+                                var skel = false;  // 7
+                                    [
+                                        patternA,
+                                        patternA90,
+                                        patternB,
+                                        patternB90,
+                                        patternB180,
+                                        patternB270
+                                    ].map(function (neighPattern)
+                                { // 8
+                                    let newNeighMask = neighbours(binaryImg, i, j, k, {maskWidth: neighPattern[0].length, maskHeight: neighPattern.length});
+                                    if (checkIfArrayMatchesNeighbourPattern(newNeighMask, neighPattern)) // 9
+                                    {
+                                        skel = true;
+                                    }
+                                });
 
-            shouldContinue = getMaxValueFromImage(outputImg) > 2;
+                                if (skel === true) { //10
+                                    binaryImg.set(i, j, k, 2);
+                                } else {
+                                    binaryImg.set(i, j, k, 0);
+                                    remain = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
 
-            if (shouldContinue) {
-                forEachPixel(
-                    binaryImg,
-                    function (arr) {return arr[0][0] === 3 ? 0 : arr[0][0]},
-                    outputImg,
-                    {maskWidth: 1, maskHeight: 1}
-                );
-            }
-        } while (shouldContinue);
+            if (runs > 100)
+                remain = false;
+        } // 13
 
         forEachPixel(
             binaryImg,
