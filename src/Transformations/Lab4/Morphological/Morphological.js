@@ -38,8 +38,8 @@ const morphologicalTransformation = (edgeRule, maskShape, operation, M = 256) =>
             break;
         case 'close':
             temporaryImage = cloneImage(image);
-            morph(temporaryImage, newImage, 'dilate');
-            morph(image, temporaryImage, 'erode');
+            morph(image, temporaryImage, 'dilate');
+            morph(temporaryImage, newImage, 'erode');
             break;
         default:
             morph(image, newImage, operation);

@@ -66,9 +66,15 @@ const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, typ
             }
 
             switch (shape) {
+                case 'cross':
+                    if ((xAwayFromMiddle === 0 && yAwayFromMiddle !== 0) || (xAwayFromMiddle !== 0 && yAwayFromMiddle === 0)) {
+                        //for diamond shape we want to have only neighbours on X or Y axis
+                        neighboursTable[k][l] = null;
+                    }
+                    break;
                 case 'diamond':
                     if (xAwayFromMiddle !== 0 && yAwayFromMiddle !== 0) {
-                        //for diamond shape we want to have only neighbours on X or Y axis
+                        // for cross share we want only edge pixels
                         neighboursTable[k][l] = null;
                     }
                     break;
@@ -220,8 +226,6 @@ const transposeArray = (arr, degree) => {
     let newArr;
     let newArrayWidth;
     let newArrayHeight;
-    let oldArrayHeight = arr.length;
-    let oldArrayWidth = arr[0].length;
 
     switch (degree) {
         case 90:

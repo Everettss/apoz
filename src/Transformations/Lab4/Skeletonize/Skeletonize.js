@@ -1,7 +1,37 @@
 import React, { Component } from 'react';
-import { forEachPixel, cloneImage } from '../../../utils/helpers';
+import {forEachPixel, cloneImage, flattenMatrix} from '../../../utils/helpers';
+import { patternB270, patternB180, patternB90, patternB, patternA, patternA90 } from './neighbourhoodPatterns';
 
-// algorithm: http://yadda.icm.edu.pl/baztech/download/import/contents/BPB2-0005-0099-httpwww_wi_pb_edu_plplikinaukazeszytyz114-saeedrybniktabedzkiadamski.pdf
+
+////
+//// algorithm pseudo code
+//remain = true;
+//pixels; // original image
+//skel; // does match neighbour pattern
+//patterns; /// all neighbour patterns
+//while remain {
+//    remain = false;
+//    for (var j in [0, 2, 4 ,6]) {
+//        for (var p in pixels) {
+//            if (p === 1 && j === 0) {
+//                skel = false;
+//                for (var neighPattern in patterns) {
+//                    if (getNeighbours (p) match neighPattern) {
+//                        skel = true;
+//                        break;
+//                    }
+//                }
+//
+//                p = (skel ? 2 : 3); // for 3 also set remain = true;
+//            }
+//        }
+//        for (var p in pixels) {
+//            if (p === 3)
+//                p = 0;
+//        }
+//    }
+//}
+
 const skeletonizeTransformation = (edgeRule, M = 256) => image => {
     const newImage = cloneImage(image); // you can't mutate image during computation
 
@@ -21,31 +51,130 @@ const skeletonizeTransformation = (edgeRule, M = 256) => image => {
         return max;
     };
 
-    //TODO create algorithm as in link above
-    let morph = (inputImg, outputImg, edgeRule) => {
+    let checkIfArrayMatchesNeighbourPattern = (arr, pattern) => {
+        if (arr.length !== pattern.length || arr[0].length !== pattern[0].length)
+            return false;
+        var aNonZeroElems = 0;
+        var bNonZeroElems =  0;
+        var cNonZeroElems =  0;
+        var matchesPattern = false;
+        var constantsNotMatched = false;
 
-        let operationOnPixelNeighbours = arr => {
-            return 1;
+        mainLoop:
+        for (var i = 0; i < arr.length; i++) {
+            for (var j = 0; j < arr[0].length; j++) {
+                let currValue = arr[i][j];
+                switch (pattern[i][j]) {
+                    case '0':
+                        if (currValue !== 0) {
+                            constantsNotMatched = true;
+                            break mainLoop;
+                        }
+                        break;
+                    case '2':
+                        if (currValue !== 2) {
+                            constantsNotMatched = true;
+                            break mainLoop;
+                        }
+                        break;
+                    case '2+':
+                        if (currValue < 2) {
+                            constantsNotMatched = true;
+                            break mainLoop;
+                        }
+                        break;
+                    case 'A':
+                        if (currValue > 0) {
+                            aNonZeroElems++;
+                        }
+                        break;
+                    case 'B':
+                        if (currValue > 0) {
+                            bNonZeroElems++;
+                        }
+                        break;
+                    case 'C':
+                        if (currValue > 0) {
+                            cNonZeroElems++;
+                        }
+                        break;
+                    default:
+                        // do nothing, we are at P - center pixel
+                }
+            }
+        }
+
+        if (cNonZeroElems > 0) {
+            if ( cNonZeroElems === 2 ) {
+                matchesPattern = true;
+            } else {
+                matchesPattern = (aNonZeroElems > 0 && bNonZeroElems > 0);
+            }
+        } else {
+            matchesPattern = (aNonZeroElems > 0 && bNonZeroElems > 0);
+        }
+
+        return matchesPattern && !constantsNotMatched;
+    };
+
+    let operationOnPixelNeighbours = arr => {
+        let output = arr[1][1];
+        let flattenImage = flattenMatrix(arr);
+        if (output > 1) {
+            if (flattenImage.filter(x => x === 0).length > 0) {
+                if (checkIfArrayMatchesNeighbourPattern(arr, patternB) ||
+                    checkIfArrayMatchesNeighbourPattern(arr, patternB90) ||
+                    checkIfArrayMatchesNeighbourPattern(arr, patternB180) ||
+                    checkIfArrayMatchesNeighbourPattern(arr, patternB270)
+                ) {
+                    output = 2;
+                } else {
+                    output = 3;
+                }
+            }
+        }
+
+        return output;
+    };
+
+    let morph = (inputImg, outputImg, edgeRule, M) => {
+
+        let convertToBinary = arr => {
+            return arr[1][1] > M / 2 ? 1 : 0;
         };
 
+        var binaryImg = cloneImage(inputImg);
+
+        // create binary image
         forEachPixel(
             inputImg,
-            operationOnPixelNeighbours,
-            outputImg,
+            convertToBinary,
+            binaryImg,
             {maskWidth: 3, maskHeight: 3, type: edgeRule}
         );
 
         do {
             forEachPixel(
-                inputImg,
+                binaryImg,
                 operationOnPixelNeighbours,
                 outputImg,
-                {maskWidth: 3, maskHeight: 3, type: edgeRule}
+                {maskWidth: 3, maskHeight: 3, type: edgeRule, shape: 'cross'}
             );
-        } while (getMaxValueFromImage(outputImg) > 1);
+
+            binaryImg = outputImg;
+        } while (getMaxValueFromImage(outputImg) > 2);
+
+        forEachPixel(
+            binaryImg,
+            function (arr) {return arr[1][1] > 0 ? M - 1 : 0},
+            outputImg,
+            {maskWidth: 3, maskHeight: 3}
+        );
     };
 
-    morph (image, newImage, edgeRule);
+    morph (image, newImage, edgeRule, M);
+
+
 
     return {
         title: `skeletonize`,

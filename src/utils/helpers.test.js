@@ -26,6 +26,30 @@ describe('helpers', () => {
                     expect(outputNeighbours).toEqual(expectedOutput);
                 });
 
+                it('get form center shape cross', () => {
+                    const expectedOutput =
+                        [
+                            [15, null, 3],
+                            [null, 15, null],
+                            [4, null, 14]
+                        ];
+                    const inputPicture = makeTestPicture(input);
+                    const outputNeighbours = neighbours(inputPicture, 1, 2, 0, {shape: 'cross'});
+                    expect(outputNeighbours).toEqual(expectedOutput);
+                });
+
+                it('get form center  shape diamond', () => {
+                    const expectedOutput =
+                        [
+                            [null, 0, null],
+                            [13, 15, 0],
+                            [null, 7, null]
+                        ];
+                    const inputPicture = makeTestPicture(input);
+                    const outputNeighbours = neighbours(inputPicture, 1, 2, 0, {shape: 'diamond'});
+                    expect(outputNeighbours).toEqual(expectedOutput);
+                });
+
                 it('get top left', () => {
                     const expectedOutput =
                         [
