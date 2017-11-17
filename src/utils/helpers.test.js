@@ -878,26 +878,51 @@ describe('helpers', () => {
                 [  2, 0, 8, ],
             ];
 
+        describe('180 degrees', () => {
+            it('3x3', () => {
+                const expectedoutput =
+                    [
+                        [  2, 0, 8, ],
+                        [  5, 3, 7, ],
+                        [ 15, 0, 3, ],
+                    ];
+                const outputarray = transposeArray(evenSizeInput, 180);
+                expect(outputarray).toEqual(expectedoutput);
+            });
+            it('3x5', () => {
+                const expectedoutput =
+                    [
+                        [  2, 0, 8, ],
+                        [ 12, 3, 1, ],
+                        [  6, 7, 9, ],
+                        [  5, 3, 7, ],
+                        [ 15, 0, 3, ],
+                    ];
+                const outputarray = transposeArray(unevenSizeInput, 180);
+                expect(outputarray).toEqual(expectedoutput);
+            });
+        });
+
         describe('90 degrees', () => {
             it('3x3', () => {
-                const expectedOutput =
+                const expectedoutput =
                     [
                         [ 15, 5, 2, ],
                         [  0, 3, 0, ],
                         [  3, 7, 8, ],
                     ];
-                const outputArray = transposeArray(evenSizeInput, 90);
-                expect(outputArray).toEqual(expectedOutput);
+                const outputarray = transposeArray(evenSizeInput, 90);
+                expect(outputarray).toEqual(expectedoutput);
             });
             it('3x5', () => {
-                const expectedOutput =
+                const expectedoutput =
                     [
                         [ 15, 5, 6, 12, 2, ],
                         [  0, 3, 7,  3, 0, ],
                         [  3, 7, 9,  1, 8, ],
                     ];
-                const outputArray = transposeArray(unevenSizeInput, 90);
-                expect(outputArray).toEqual(expectedOutput);
+                const outputarray = transposeArray(unevenSizeInput, 90);
+                expect(outputarray).toEqual(expectedoutput);
             });
         });
     });
