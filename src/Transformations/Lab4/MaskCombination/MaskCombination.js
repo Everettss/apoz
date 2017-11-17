@@ -3,6 +3,8 @@ import _ from 'lodash';
 import './MaskCombination.css';
 import * as preselected from '../../Lab3/Filter/preselected';
 import { forEachPixel, flattenMatrix, cloneImage, scale } from '../../../utils/helpers';
+import { getOneChannelArr, makeTestPicture } from '../../../utils/testHelpers';
+import { filterTransformation } from '../../Lab3/Filter/Filter';
 import Mask from "../../Mask/Mask";
 
 const detectMinusValInFilter = arr => !!flattenMatrix(arr).filter(x => x < 0).length;
@@ -59,21 +61,21 @@ class MaskCombination extends Component {
             scaleRule: 'proportional',
             showScaleMethod: false,
             ffilter: [
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', ''],
+                [0, 0, 0],
+                [0, 0, 0],
+                [0, 0, 0],
             ],
             gfilter: [
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', ''],
+                [0, 0, 0],
+                [0, 0, 0],
+                [0, 0, 0],
             ],
             combinedFilter: [
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
-                ['', '', '', '', ''],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
             ]
         };
 
@@ -86,9 +88,14 @@ class MaskCombination extends Component {
         this.gfilterUpdateCallback = this.gfilterUpdateCallback.bind(this);
     }
 
+    // TODO  fix this, always  returns array of 1s
     calculateCombinedFilter = (ffilter, gfilter) => {
-        let newCombinedFilter = new Array(5).fill(0).map(x => new Array(5).fill(0));
-        this.setState({combinedFilter: newCombinedFilter, showScaleMethod: detectMinusValInFilter(gfilter)});
+        let newCombinedFilter = new Array(5).fill(1).map(x => new Array(5).fill(1));
+        const inputPicture = makeTestPicture(newCombinedFilter);
+        var tempOutput = filterTransformation(this.state.edgeRule, this.state.scaleRule, ffilter, 'custom') (inputPicture);
+        tempOutput = filterTransformation(this.state.edgeRule, this.state.scaleRule, gfilter, 'custom') (tempOutput.picture);
+        const outputFilter = getOneChannelArr(tempOutput.picture);
+        this.setState({combinedFilter: outputFilter, showScaleMethod: detectMinusValInFilter(gfilter)});
     };
 
     radioEdgeHandler(event) {
