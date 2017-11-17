@@ -882,9 +882,9 @@ describe('helpers', () => {
             it('3x3', () => {
                 const expectedOutput =
                     [
-                        [ 15, 0, 3, ],
-                        [  5, 3, 7, ],
-                        [  2, 0, 8, ],
+                        [ 15, 5, 2, ],
+                        [  0, 3, 0, ],
+                        [  3, 7, 8, ],
                     ];
                 const outputArray = transposeArray(evenSizeInput, 90);
                 expect(outputArray).toEqual(expectedOutput);
@@ -892,11 +892,11 @@ describe('helpers', () => {
             it('3x5', () => {
                 const expectedOutput =
                     [
-                        [ 15, 0, 3, ],
-                        [  5, 3, 7, ],
-                        [  2, 0, 8, ],
+                        [ 15, 5, 6, 12, 2, ],
+                        [  0, 3, 7,  3, 0, ],
+                        [  3, 7, 9,  1, 8, ],
                     ];
-                const outputArray = transposeArray(evenSizeInput, 90);
+                const outputArray = transposeArray(unevenSizeInput, 90);
                 expect(outputArray).toEqual(expectedOutput);
             });
         });

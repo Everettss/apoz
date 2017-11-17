@@ -217,17 +217,37 @@ const filterOutNullsFrom = arr => {
 };
 
 const transposeArray = (arr, degree) => {
-    var newArr;
+    let newArr;
+    let newArrayWidth;
+    let newArrayHeight;
+    let oldArrayHeight = arr.length;
+    let oldArrayWidth = arr[0].length;
+
     switch (degree) {
         case 90:
+            newArrayHeight = arr[0].length;
+            newArrayWidth = arr.length;
+            newArr = new Array(newArrayHeight).fill(0).map(x => new Array(newArrayWidth).fill(0));
+            for (var i = 0; i < newArrayHeight; i++) {
+                for (var j = 0; j < newArrayWidth; j++) {
+                    newArr [i][j] = arr[j][i];
+                }
+            }
             break;
         case 180:
+            newArrayHeight = arr.length;
+            newArrayWidth = arr[0].length;
+            newArr = new Array(newArrayHeight).fill(0).map(x => new Array(newArrayWidth).fill(0));
             break;
         case 270:
+            newArrayHeight = arr[0].length;
+            newArrayWidth = arr.length;
+            newArr = new Array(newArrayHeight).fill(0).map(x => new Array(newArrayWidth).fill(0));
             break;
         default:
             newArr = arr;
     }
+    return newArr;
 };
 
 export {
