@@ -57,10 +57,22 @@ class MaskCombination extends Component {
             type: 'custom',
             scaleRule: 'proportional',
             showScaleMethod: false,
-            filter: [
+            ffilter: [
                 ['', '', ''],
                 ['', '', ''],
                 ['', '', ''],
+            ],
+            gfilter: [
+                ['', '', ''],
+                ['', '', ''],
+                ['', '', ''],
+            ],
+            combinedFilter: [
+                ['', '', '', '', ''],
+                ['', '', '', '', ''],
+                ['', '', '', '', ''],
+                ['', '', '', '', ''],
+                ['', '', '', '', ''],
             ]
         };
 
@@ -68,7 +80,8 @@ class MaskCombination extends Component {
         this.radioEdgeHandler = this.radioEdgeHandler.bind(this);
         this.radioScaleHandler = this.radioScaleHandler.bind(this);
         this.formHandler = this.formHandler.bind(this);
-        this.filterUpdateCallback = this.filterUpdateCallback.bind(this);
+        this.ffilterUpdateCallback = this.ffilterUpdateCallback.bind(this);
+        this.gfilterUpdateCallback = this.gfilterUpdateCallback.bind(this);
     }
 
     radioEdgeHandler(event) {
@@ -81,7 +94,7 @@ class MaskCombination extends Component {
 
     filterInputHandler(i, j) {
         return val => {
-            const filter = _.cloneDeep(this.state.filter);
+            const filter = _.cloneDeep(this.state.ffilter);
             filter[i][j] = val;
             this.setState({ filter, type: 'custom', showScaleMethod: detectMinusValInFilter(filter) });
         }
@@ -89,7 +102,10 @@ class MaskCombination extends Component {
     handlePreselect(filter, type) {
         return e => {
             e.preventDefault();
-            this.setState({ filter, type, showScaleMethod: detectMinusValInFilter(filter) });
+            if (type === 'smooth') {
+                this.setState({ffilter: filter, type, showScaleMethod: detectMinusValInFilter(filter)});
+            }  else
+                this.setState({gfilter: filter, type, showScaleMethod: detectMinusValInFilter(filter) });
         }
     }
 
@@ -111,8 +127,12 @@ class MaskCombination extends Component {
         );
     };
 
-    filterUpdateCallback (newFilter) {
-        this.state.filter = newFilter;
+    ffilterUpdateCallback (newFilter) {
+        this.state.ffilter = newFilter;
+    }
+
+    gfilterUpdateCallback (newFilter) {
+        this.state.gfilter = newFilter;
     }
 
     render() {
@@ -122,8 +142,9 @@ class MaskCombination extends Component {
                 <form action="#" onSubmit={this.formHandler}>
                     <div className="form-wrapper">
                         <div className="form-col">
-                            <Mask filter={this.state.filter} callback={this.filterUpdateCallback} />
-                            <Mask filter={this.state.filter} callback={this.filterUpdateCallback} />
+                            <Mask filter={this.state.ffilter} callback={this.ffilterUpdateCallback} />
+                            <Mask filter={this.state.gfilter} callback={this.gfilterUpdateCallback} />
+                            <Mask filter={this.state.combinedFilter} callback={this.filterUpdateCallback} />
 
                             <br/><strong>Edge</strong>
                             <div onChange={this.radioEdgeHandler}>
