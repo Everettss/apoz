@@ -18,6 +18,7 @@ import Edges from '../Transformations/Lab3/Edges/Edges';
 import UniversalLogicalSmooth from '../Transformations/Lab3/UniversalLogicalSmooth/UniversalLogicalSmooth';
 import Morphological from "../Transformations/Lab4/Morphological/Morphological";
 import Skeletonize from "../Transformations/Lab4/Skeletonize/Skeletonize";
+import MaskCombination from "../Transformations/Lab4/MaskCombination/MaskCombination";
 
 class Menu extends Component {
     constructor(props) {
@@ -180,10 +181,10 @@ class Menu extends Component {
                     <DropdownContent>
                         <a
                             onClick={
-                                this.handleMenuClick(<Filter updateImage={this.props.updateImage} />)
+                                this.handleMenuClick(<MaskCombination updateImage={this.props.updateImage} />)
                             }
                         >
-                            zad1
+                            mask combination
                         </a>
                         <a
                             onClick={
