@@ -99,7 +99,7 @@ const skeletonizeTransformation = (edgeRule, M = 256) => image => {
                         }
                         break;
                     default:
-                        // do nothing, we are at P - center pixel
+                        // do nothing, we are at P - center pixel, or null which is not taken into account
                 }
             }
         }
@@ -120,8 +120,8 @@ const skeletonizeTransformation = (edgeRule, M = 256) => image => {
     let operationOnPixelNeighbours = arr => {
         let output = arr[1][1];
         let flattenImage = flattenMatrix(arr);
-        if (output > 1) {
-            if (flattenImage.filter(x => x === 0).length > 0) {
+        if (output > 0) {
+            if ([flattenImage[0], flattenImage[2], flattenImage[4], flattenImage[6]].filter(x => x === 0).length > 0) {
                 if (checkIfArrayMatchesNeighbourPattern(arr, patternB) ||
                     checkIfArrayMatchesNeighbourPattern(arr, patternB90) ||
                     checkIfArrayMatchesNeighbourPattern(arr, patternB180) ||
@@ -153,22 +153,34 @@ const skeletonizeTransformation = (edgeRule, M = 256) => image => {
             {maskWidth: 3, maskHeight: 3, type: edgeRule}
         );
 
+        var shouldContinue = false;
         do {
             forEachPixel(
                 binaryImg,
                 operationOnPixelNeighbours,
                 outputImg,
-                {maskWidth: 3, maskHeight: 3, type: edgeRule, shape: 'cross'}
+                {maskWidth: 3, maskHeight: 3, type: edgeRule, shape: 'square'}
             );
 
             binaryImg = outputImg;
-        } while (getMaxValueFromImage(outputImg) > 2);
+
+            shouldContinue = getMaxValueFromImage(outputImg) > 2;
+
+            if (shouldContinue) {
+                forEachPixel(
+                    binaryImg,
+                    function (arr) {return arr[0][0] === 3 ? 0 : arr[0][0]},
+                    outputImg,
+                    {maskWidth: 1, maskHeight: 1}
+                );
+            }
+        } while (shouldContinue);
 
         forEachPixel(
             binaryImg,
-            function (arr) {return arr[1][1] > 0 ? M - 1 : 0},
+            function (arr) {return arr[0][0] > 0 ? M - 1 : 0},
             outputImg,
-            {maskWidth: 3, maskHeight: 3}
+            {maskWidth: 1, maskHeight: 1}
         );
     };
 

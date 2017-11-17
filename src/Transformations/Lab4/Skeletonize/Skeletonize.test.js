@@ -29,7 +29,7 @@ describe('skeletonize', () => {
         ];
 
     const inputPicture = makeTestPicture(input);
-    const {picture, title} = skeletonizeTransformation('not-modify', 16)(inputPicture);
+    const {picture, title} = skeletonizeTransformation('duplicate', 16)(inputPicture);
     const outputPicture = getOneChannelArr(picture);
 
     it('algorithm', () => {
