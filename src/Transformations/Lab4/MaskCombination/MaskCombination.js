@@ -7,6 +7,7 @@ import Mask from "../../Mask/Mask";
 
 const detectMinusValInFilter = arr => !!flattenMatrix(arr).filter(x => x < 0).length;
 
+
 const maskCombinationTransformation = (edgeRule, scaleRule, filter, type, M = 256) => image => {
 
     const newImage = cloneImage(image); // you can't mutate image during computation
@@ -80,9 +81,15 @@ class MaskCombination extends Component {
         this.radioEdgeHandler = this.radioEdgeHandler.bind(this);
         this.radioScaleHandler = this.radioScaleHandler.bind(this);
         this.formHandler = this.formHandler.bind(this);
+        this.calculateCombinedFilter = this.calculateCombinedFilter.bind(this);
         this.ffilterUpdateCallback = this.ffilterUpdateCallback.bind(this);
         this.gfilterUpdateCallback = this.gfilterUpdateCallback.bind(this);
     }
+
+    calculateCombinedFilter = (ffilter, gfilter) => {
+        let newCombinedFilter = new Array(5).fill(0).map(x => new Array(5).fill(0));
+        this.setState({combinedFilter: newCombinedFilter, showScaleMethod: detectMinusValInFilter(gfilter)});
+    };
 
     radioEdgeHandler(event) {
         this.setState({ edgeRule: event.target.value });
@@ -104,15 +111,18 @@ class MaskCombination extends Component {
             e.preventDefault();
             if (type === 'smooth') {
                 this.setState({ffilter: filter, type, showScaleMethod: detectMinusValInFilter(filter)});
-            }  else
-                this.setState({gfilter: filter, type, showScaleMethod: detectMinusValInFilter(filter) });
+            }  else {
+                this.setState({gfilter: filter, type, showScaleMethod: detectMinusValInFilter(filter)});
+            }
+
+            this.calculateCombinedFilter(this.state.ffilter, this.state.gfilter);
         }
     }
 
     formHandler(e) {
         e.preventDefault();
         this.props.updateImage(
-            maskCombinationTransformation(this.state.edgeRule, this.state.scaleRule, this.state.filter, this.state.type)
+            maskCombinationTransformation(this.state.edgeRule, this.state.scaleRule, this.state.combinedFilter, this.state.type)
         );
     }
 
