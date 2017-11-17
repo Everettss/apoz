@@ -238,11 +238,21 @@ const transposeArray = (arr, degree) => {
             newArrayHeight = arr.length;
             newArrayWidth = arr[0].length;
             newArr = new Array(newArrayHeight).fill(0).map(x => new Array(newArrayWidth).fill(0));
+            for (var i = 0; i < newArrayHeight; i++) {
+                for (var j = 0; j < newArrayWidth; j++) {
+                    newArr [i][j] = arr[newArrayHeight - 1 - i][j];
+                }
+            }
             break;
         case 270:
-            newArrayHeight = arr[0].length;
-            newArrayWidth = arr.length;
+            newArrayHeight = arr.length;
+            newArrayWidth = arr[0].length;
             newArr = new Array(newArrayHeight).fill(0).map(x => new Array(newArrayWidth).fill(0));
+            for (var i = 0; i < newArrayHeight; i++) {
+                for (var j = 0; j < newArrayWidth; j++) {
+                    newArr [i][j] = arr[newArrayHeight - i - 1][newArrayWidth - j - 1];
+                }
+            }
             break;
         default:
             newArr = arr;

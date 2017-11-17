@@ -878,6 +878,30 @@ describe('helpers', () => {
                 [  2, 0, 8, ],
             ];
 
+        describe('270 degrees', () => {
+            it('3x3', () => {
+                const expectedoutput =
+                    [
+                        [  8, 0, 2, ],
+                        [  7, 3, 5, ],
+                        [  3, 0,15, ],
+                    ];
+                const outputarray = transposeArray(evenSizeInput, 270);
+                expect(outputarray).toEqual(expectedoutput);
+            });
+            it('3x5', () => {
+                const expectedoutput =
+                    [
+                        [  8, 0, 2, ],
+                        [  1, 3,12, ],
+                        [  9, 7, 6, ],
+                        [  7, 3, 5, ],
+                        [  3, 0, 15, ],
+                    ];
+                const outputarray = transposeArray(unevenSizeInput, 270);
+                expect(outputarray).toEqual(expectedoutput);
+            });
+        });
         describe('180 degrees', () => {
             it('3x3', () => {
                 const expectedoutput =
