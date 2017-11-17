@@ -216,6 +216,20 @@ const filterOutNullsFrom = arr => {
     return flattenMatrix(arr).filter(elem => elem !== null);
 };
 
+const transposeArray = (arr, degree) => {
+    var newArr;
+    switch (degree) {
+        case 90:
+            break;
+        case 180:
+            break;
+        case 270:
+            break;
+        default:
+            newArr = arr;
+    }
+};
+
 export {
     histogram,
     forEachPixel,
@@ -228,4 +242,5 @@ export {
     resize1DArray,
     resize2DArray,
     filterOutNullsFrom,
+    transposeArray,
 }

@@ -1,6 +1,6 @@
 
 import { makeTestPicture } from './testHelpers';
-import { neighbours, resize1DArray, resize2DArray } from './helpers';
+import { neighbours, resize1DArray, resize2DArray, transposeArray } from './helpers';
 
 describe('helpers', () => {
     const input =
@@ -857,6 +857,46 @@ describe('helpers', () => {
                         [ 1, 4, 30, ],
                     ];
                 const outputArray = resize2DArray(inputWithEmptyValues, 3, 3, 1, true);
+                expect(outputArray).toEqual(expectedOutput);
+            });
+        });
+    });
+
+    describe('transposeArray', () => {
+        const unevenSizeInput =
+            [
+                [ 15, 0, 3, ],
+                [  5, 3, 7, ],
+                [  6, 7, 9, ],
+                [ 12, 3, 1, ],
+                [  2, 0, 8, ],
+            ];
+        const evenSizeInput =
+            [
+                [ 15, 0, 3, ],
+                [  5, 3, 7, ],
+                [  2, 0, 8, ],
+            ];
+
+        describe('90 degrees', () => {
+            it('3x3', () => {
+                const expectedOutput =
+                    [
+                        [ 15, 0, 3, ],
+                        [  5, 3, 7, ],
+                        [  2, 0, 8, ],
+                    ];
+                const outputArray = transposeArray(evenSizeInput, 90);
+                expect(outputArray).toEqual(expectedOutput);
+            });
+            it('3x5', () => {
+                const expectedOutput =
+                    [
+                        [ 15, 0, 3, ],
+                        [  5, 3, 7, ],
+                        [  2, 0, 8, ],
+                    ];
+                const outputArray = transposeArray(evenSizeInput, 90);
                 expect(outputArray).toEqual(expectedOutput);
             });
         });
