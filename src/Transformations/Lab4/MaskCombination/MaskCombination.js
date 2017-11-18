@@ -30,7 +30,7 @@ const maskCombinationTransformation = (edgeRule, scaleRule, filter, type, M = 25
         operationOnPixelNeighbours = arr => {
             const flattenMask = flattenMatrix(arr);
             if (flattenMask.filter(x => x !== null).length < 9) { // missing
-                return arr[1][1]; // get center pixel
+                return arr[2][2]; // get center pixel
             } else {
                return algorithm(arr);
             }
@@ -41,7 +41,7 @@ const maskCombinationTransformation = (edgeRule, scaleRule, filter, type, M = 25
         };
     }
 
-    forEachPixel(image, operationOnPixelNeighbours, newImage, { type: edgeRule });
+    forEachPixel(image, operationOnPixelNeighbours, newImage, {maskHeight: 5, maskWidth:5, type: edgeRule });
 
     return {
         title: `mask combination`,
@@ -86,6 +86,7 @@ class MaskCombination extends Component {
         this.calculateCombinedFilter = this.calculateCombinedFilter.bind(this);
         this.ffilterUpdateCallback = this.ffilterUpdateCallback.bind(this);
         this.gfilterUpdateCallback = this.gfilterUpdateCallback.bind(this);
+        this.combinedFilterUpdateCallback = this.combinedFilterUpdateCallback.bind(this);
     }
 
     // TODO fix implementation
@@ -161,10 +162,16 @@ class MaskCombination extends Component {
 
     ffilterUpdateCallback (newFilter) {
         this.state.ffilter = newFilter;
+        this.calculateCombinedFilter(newFilter, this.state.gfilter);
     }
 
     gfilterUpdateCallback (newFilter) {
         this.state.gfilter = newFilter;
+        this.calculateCombinedFilter(this.state.ffilter, newFilter);
+    }
+
+    combinedFilterUpdateCallback (newFilter) {
+        this.state.combinedFilter = newFilter;
     }
 
     render() {
@@ -176,7 +183,7 @@ class MaskCombination extends Component {
                         <div className="form-col">
                             <Mask filter={this.state.ffilter} callback={this.ffilterUpdateCallback} />
                             <Mask filter={this.state.gfilter} callback={this.gfilterUpdateCallback} />
-                            <Mask filter={this.state.combinedFilter} callback={this.filterUpdateCallback} />
+                            <Mask filter={this.state.combinedFilter} callback={this.combinedFilterUpdateCallback} />
 
                             <br/><strong>Edge</strong>
                             <div onChange={this.radioEdgeHandler}>
