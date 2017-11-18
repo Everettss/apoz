@@ -8,11 +8,11 @@ import Mask from "../../Mask/Mask";
 const detectMinusValInFilter = arr => !!flattenMatrix(arr).filter(x => x < 0).length;
 
 
-const maskCombinationTransformation = (edgeRule, scaleRule, filter, type, M = 256) => image => {
+const maskCombinationTransformation = (edgeRule, scaleRule, ffilter, gfilter, combinedFilter, processingOrder, type, M = 256) => image => {
 
     const newImage = cloneImage(image); // you can't mutate image during computation
 
-    let algorithm = arr => {
+    let algorithm = filter => arr => {
          let outputValue = 0;
                 let filterTotal = flattenMatrix(filter).reduce((acc, x) => acc + x, 0);
                 for (let x = 0; x < arr.length; x++) {
@@ -25,24 +25,42 @@ const maskCombinationTransformation = (edgeRule, scaleRule, filter, type, M = 25
 
     let operationOnPixelNeighbours;
     if (edgeRule === 'not-modify') {
-        operationOnPixelNeighbours = arr => {
+        operationOnPixelNeighbours = filter => arr => {
             const flattenMask = flattenMatrix(arr);
             if (flattenMask.filter(x => x !== null).length < arr.length * arr[0].length) { // missing
                 return arr[2][2]; // get center pixel
             } else {
-               return algorithm(arr);
+               return algorithm(filter)(arr);
             }
         };
     } else {
-        operationOnPixelNeighbours = arr => {
-            return algorithm(arr);
+        operationOnPixelNeighbours = filter => arr => {
+            return algorithm(filter)(arr);
         };
     }
 
-    forEachPixel(image, operationOnPixelNeighbours, newImage, {maskHeight: filter.length, maskWidth:filter[0].length, type: edgeRule });
+    if (processingOrder === 'at-once') {
+        forEachPixel(image, operationOnPixelNeighbours (combinedFilter), newImage, {
+            maskHeight: combinedFilter.length,
+            maskWidth: combinedFilter[0].length,
+            type: edgeRule
+        });
+    } else {
+        const tempImage = cloneImage(image);
+        forEachPixel(image, operationOnPixelNeighbours (ffilter), tempImage, {
+            maskHeight: ffilter.length,
+            maskWidth: ffilter[0].length,
+            type: edgeRule
+        });
+        forEachPixel(tempImage, operationOnPixelNeighbours (gfilter), newImage, {
+            maskHeight: gfilter.length,
+            maskWidth: gfilter[0].length,
+            type: edgeRule
+        });
+    }
 
     return {
-        title: `mask combination`,
+        title: `mask combination ${processingOrder}`,
         picture: newImage
     };
 };
@@ -58,6 +76,7 @@ class MaskCombination extends Component {
             type: 'custom',
             scaleRule: 'proportional',
             showScaleMethod: false,
+            processingOrder: 'one-by-one',
             ffilter: [
                 [0, 0, 0],
                 [0, 0, 0],
@@ -79,6 +98,7 @@ class MaskCombination extends Component {
 
         this.filterInputHandler = this.filterInputHandler.bind(this);
         this.radioEdgeHandler = this.radioEdgeHandler.bind(this);
+        this.radioProcessingOrderHandler = this.radioProcessingOrderHandler.bind(this);
         this.radioScaleHandler = this.radioScaleHandler.bind(this);
         this.formHandler = this.formHandler.bind(this);
         this.calculateCombinedFilter = this.calculateCombinedFilter.bind(this);
@@ -114,6 +134,10 @@ class MaskCombination extends Component {
         this.setState({ edgeRule: event.target.value });
     }
 
+    radioProcessingOrderHandler(event) {
+        this.setState({ processingOrder: event.target.value });
+    }
+
     radioScaleHandler(event) {
         this.setState({ scaleRule: event.target.value });
     }
@@ -141,7 +165,8 @@ class MaskCombination extends Component {
     formHandler(e) {
         e.preventDefault();
         this.props.updateImage(
-            maskCombinationTransformation(this.state.edgeRule, this.state.scaleRule, this.state.combinedFilter, this.state.type)
+            maskCombinationTransformation(this.state.edgeRule, this.state.scaleRule,
+                this.state.ffilter, this.state.gfilter, this.state.combinedFilter, this.state.processingOrder, this.state.type)
         );
     }
 
@@ -225,6 +250,7 @@ class MaskCombination extends Component {
                                         defaultChecked={this.state.scaleRule === 'trimming'}
                                     /> Trimming <br />
                                 </div>
+
                             </div>}
                         </div>
                         <div className="form-col">
@@ -239,6 +265,22 @@ class MaskCombination extends Component {
                             {this.preselectedLink(preselected.sharpenMedium, 'sharpen', 'medium')}
                             {this.preselectedLink(preselected.sharpenWeek, 'sharpen', 'week')}
                             {this.preselectedLink(preselected.sharpenVeryWeek, 'sharpen', 'very week')}
+
+                            <br/><strong>Processing order</strong>
+                            <div onChange={this.radioProcessingOrderHandler}>
+                                <input
+                                    type="radio"
+                                    value="at-once"
+                                    name="processingOrder"
+                                    defaultChecked={this.state.processingOrder === 'at-once'}
+                                /> run 5x5 <br />
+                                <input
+                                    type="radio"
+                                    value="one-by-one"
+                                    name="processingOrder"
+                                    defaultChecked={this.state.processingOrder === 'one-by-one'}
+                                /> run 3x3 one by one <br />
+                            </div>
 
                         </div>
                     </div>
