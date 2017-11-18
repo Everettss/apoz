@@ -88,14 +88,29 @@ class MaskCombination extends Component {
         this.gfilterUpdateCallback = this.gfilterUpdateCallback.bind(this);
     }
 
-    // TODO  fix this, always  returns array of 1s
+    // TODO fix implementation
     calculateCombinedFilter = (ffilter, gfilter) => {
         let newCombinedFilter = new Array(5).fill(1).map(x => new Array(5).fill(1));
-        const inputPicture = makeTestPicture(newCombinedFilter);
-        var tempOutput = filterTransformation(this.state.edgeRule, this.state.scaleRule, ffilter, 'custom') (inputPicture);
-        tempOutput = filterTransformation(this.state.edgeRule, this.state.scaleRule, gfilter, 'custom') (tempOutput.picture);
-        const outputFilter = getOneChannelArr(tempOutput.picture);
-        this.setState({combinedFilter: outputFilter, showScaleMethod: detectMinusValInFilter(gfilter)});
+        let ffilterReduced = flattenMatrix(ffilter);
+        let gfilterReduced = flattenMatrix(gfilter);
+        let ffilterTotal = ffilterReduced.reduce((acc, x) => acc + x, 0);
+        let gfilterTotal = gfilterReduced.reduce((acc, x) => acc + x, 0);
+        let combinedFilterTotal = ffilterTotal * gfilterTotal;
+        console.log (combinedFilterTotal);
+        for (var i = 0; i < newCombinedFilter[0].length; i++) {
+            for (var j = 0; j < newCombinedFilter.length; j++) {
+                // i* 3 + j
+                var currPointValue = 0;
+                let currgfilterStartIndex = - 8 + (i * 3 + j);
+                for (var k = 0; k < 9; k++) {
+                    var currG = gfilterReduced[currgfilterStartIndex + k];
+                    currPointValue += (currG ? currG : 0) * ffilterReduced[k];
+                }
+                newCombinedFilter[i][j] = currPointValue;
+            }
+
+        }
+        this.setState({combinedFilter: newCombinedFilter, showScaleMethod: detectMinusValInFilter(gfilter)});
     };
 
     radioEdgeHandler(event) {
