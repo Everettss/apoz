@@ -3,8 +3,6 @@ import _ from 'lodash';
 import './MaskCombination.css';
 import * as preselected from '../../Lab3/Filter/preselected';
 import { forEachPixel, flattenMatrix, cloneImage, scale } from '../../../utils/helpers';
-import { getOneChannelArr, makeTestPicture } from '../../../utils/testHelpers';
-import { filterTransformation } from '../../Lab3/Filter/Filter';
 import Mask from "../../Mask/Mask";
 
 const detectMinusValInFilter = arr => !!flattenMatrix(arr).filter(x => x < 0).length;
@@ -29,7 +27,7 @@ const maskCombinationTransformation = (edgeRule, scaleRule, filter, type, M = 25
     if (edgeRule === 'not-modify') {
         operationOnPixelNeighbours = arr => {
             const flattenMask = flattenMatrix(arr);
-            if (flattenMask.filter(x => x !== null).length < 9) { // missing
+            if (flattenMask.filter(x => x !== null).length < arr.length * arr[0].length) { // missing
                 return arr[2][2]; // get center pixel
             } else {
                return algorithm(arr);
@@ -41,7 +39,7 @@ const maskCombinationTransformation = (edgeRule, scaleRule, filter, type, M = 25
         };
     }
 
-    forEachPixel(image, operationOnPixelNeighbours, newImage, {maskHeight: 5, maskWidth:5, type: edgeRule });
+    forEachPixel(image, operationOnPixelNeighbours, newImage, {maskHeight: filter.length, maskWidth:filter[0].length, type: edgeRule });
 
     return {
         title: `mask combination`,
@@ -89,7 +87,6 @@ class MaskCombination extends Component {
         this.combinedFilterUpdateCallback = this.combinedFilterUpdateCallback.bind(this);
     }
 
-    // TODO fix implementation
     calculateCombinedFilter = (ffilter, gfilter) => {
         let newCombinedFilter = new Array(5).fill(1).map(x => new Array(5).fill(1));
         let ffilterReduced = flattenMatrix(ffilter);
@@ -100,7 +97,6 @@ class MaskCombination extends Component {
         console.log (combinedFilterTotal);
         for (var i = 0; i < newCombinedFilter[0].length; i++) {
             for (var j = 0; j < newCombinedFilter.length; j++) {
-                // i* 3 + j
                 var currPointValue = 0;
                 let currgfilterStartIndex = - 8 + (i * 3 + j);
                 for (var k = 0; k < 9; k++) {
