@@ -27,11 +27,15 @@ const filterTransformation = (edgeRule, scaleRule, filter, type, M = 256) => ima
     };
 
     let operationOnPixelNeighbours;
+    const maskHeight = filter[0].length;
+    const maskWidth = filter.length;
+    let midMaskX = (maskWidth - (maskWidth % 2)) / 2 - ((maskWidth + 1) % 2);
+    let midMaskY = (maskHeight - (maskHeight % 2)) / 2 - ((maskHeight + 1) % 2);
     if (edgeRule === 'not-modify') {
         operationOnPixelNeighbours = arr => {
             const flattenMask = flattenMatrix(arr);
-            if (flattenMask.filter(x => x !== null).length < 9) { // missing
-                return arr[1][1]; // get center pixel
+            if (flattenMask.filter(x => x !== null).length < filter.length * filter[0].length) { // missing
+                return arr[midMaskX][midMaskY]; // get center pixel
             } else {
                return algorithm(arr);
             }
@@ -42,7 +46,7 @@ const filterTransformation = (edgeRule, scaleRule, filter, type, M = 256) => ima
         };
     }
 
-    forEachPixel(image, operationOnPixelNeighbours, newImage, { type: edgeRule });
+    forEachPixel(image, operationOnPixelNeighbours, newImage, {maskHeight: filter.length, maskWidth: filter[0].length, type: edgeRule });
 
     return {
         title: `filter`,
