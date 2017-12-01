@@ -19,6 +19,7 @@ import UniversalLogicalSmooth from '../Transformations/Lab3/UniversalLogicalSmoo
 import Morphological from "../Transformations/Lab4/Morphological/Morphological";
 import Skeletonize from "../Transformations/Lab4/Skeletonize/Skeletonize";
 import MaskCombination from "../Transformations/Lab4/MaskCombination/MaskCombination";
+import Turtle from "../Transformations/Lab5/Turtle/Turtle";
 
 class Menu extends Component {
     constructor(props) {
@@ -199,6 +200,18 @@ class Menu extends Component {
                             }
                         >
                             morphological
+                        </a>
+                    </DropdownContent>
+                </Dropdown>
+                <Dropdown ref={dropdown => { dropdown && this.dropdowns.set(4, dropdown); }}>
+                    <DropdownTrigger>lab5</DropdownTrigger>
+                    <DropdownContent>
+                        <a
+                            onClick={
+                                this.handleMenuClick(<Turtle updateImage={this.props.updateImage} />)
+                            }
+                        >
+                            turtle
                         </a>
                     </DropdownContent>
                 </Dropdown>
