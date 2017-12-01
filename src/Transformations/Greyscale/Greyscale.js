@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-const greyscaleTransformation = (M = 256) => image => {
+const convertImageToGreyscale = image => {
     const width = image.shape[0];
     const height = image.shape[1];
 
@@ -12,6 +12,11 @@ const greyscaleTransformation = (M = 256) => image => {
             }
         }
     }
+};
+
+
+const greyscaleTransformation = (M = 256) => image => {
+    convertImageToGreyscale(image);
 
     return {
         title: `greyscale`,
@@ -43,3 +48,4 @@ class Greyscale extends Component {
 }
 
 export default Greyscale;
+export { convertImageToGreyscale };
