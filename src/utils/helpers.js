@@ -123,10 +123,11 @@ const forEachPixel = (picture, fn, pictureToApply, mask) => {
                     val = picture.get(i, j, k);
                 }
 
-                const newVal = fn(val);
                 if (pictureToApply) {
+                    const newVal = fn(val, pictureToApply.get(i, j, k));
                     pictureToApply.set(i, j, k, newVal);
                 } else {
+                    const newVal = fn(val);
                     picture.set(i, j, k, newVal);
                 }
             }

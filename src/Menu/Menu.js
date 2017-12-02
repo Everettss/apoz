@@ -19,6 +19,7 @@ import UniversalLogicalSmooth from '../Transformations/Lab3/UniversalLogicalSmoo
 import Morphological from "../Transformations/Lab4/Morphological/Morphological";
 import Skeletonize from "../Transformations/Lab4/Skeletonize/Skeletonize";
 import MaskCombination from "../Transformations/Lab4/MaskCombination/MaskCombination";
+import SegmentationThreshold from "../Transformations/Lab5/SegmentationThreshold/SegmentationThreshold";
 import Turtle from "../Transformations/Lab5/Turtle/Turtle";
 
 class Menu extends Component {
@@ -206,6 +207,13 @@ class Menu extends Component {
                 <Dropdown ref={dropdown => { dropdown && this.dropdowns.set(4, dropdown); }}>
                     <DropdownTrigger>lab5</DropdownTrigger>
                     <DropdownContent>
+                        <a
+                            onClick={
+                                this.handleMenuClick(<SegmentationThreshold updateImage={this.props.updateImage} />)
+                            }
+                        >
+                            Segmentation - Threshold
+                        </a>
                         <a
                             onClick={
                                 this.handleMenuClick(<Turtle updateImage={this.props.updateImage} />)
