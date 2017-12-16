@@ -27,8 +27,12 @@ const maskCombinationTransformation = (edgeRule, scaleRule, ffilter, gfilter, co
     if (edgeRule === 'not-modify') {
         operationOnPixelNeighbours = filter => arr => {
             const flattenMask = flattenMatrix(arr);
-            if (flattenMask.filter(x => x !== null).length < arr.length * arr[0].length) { // missing
-                return arr[2][2]; // get center pixel
+            if (flattenMask.filter(x => x === null).length > 0) { // missing
+                let maskWidth = arr[0].length;
+                let maskHeight = arr.length;
+                let midX = (maskWidth - (maskWidth % 2)) / 2 - ((maskWidth + 1) % 2);
+                let midY = (maskHeight - (maskHeight % 2)) / 2 - ((maskHeight + 1) % 2);
+                return arr[midX][midY]; // get center pixel
             } else {
                return algorithm(filter)(arr);
             }
