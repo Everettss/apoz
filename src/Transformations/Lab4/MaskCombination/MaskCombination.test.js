@@ -37,9 +37,9 @@ describe('mask combination', () => {
     describe('one by one', () => {
         const expectedOutput =
             [
-                [5,  6,  6,  6],
-                [9, 15, 15, 15],
-                [9, 15, 15, 15]
+                [  2,  5,  6,  2 ],
+                [  3,  0,  0,  4 ],
+                [  9,  3, 15,  1 ]
             ];
 
         const inputPicture = makeTestPicture(input);
