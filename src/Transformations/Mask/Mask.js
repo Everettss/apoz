@@ -86,7 +86,7 @@ class Mask extends Component {
                 case "double-cross":
                     // if height is less than 3 there is no possibility to get double cross
                     // so fill simple cross
-                    if (filterH > 3 ) {
+                    if (filterH > 2 ) {
                         for (var x = 0; x < filterH; x++) {
                             newFilter[x][middleIndexes.y] = constantFilled;
                         }
@@ -96,6 +96,20 @@ class Mask extends Component {
                         }
                     } else {
                         this.maskFillerHandler("cross");
+                    }
+                    break;
+
+                case "sides-vertical":
+                    for (var x = 0; x < filterH; x++) {
+                        newFilter[x][0] = constantFilled;
+                        newFilter[x][filterW - 1] = constantFilled;
+                    }
+                    break;
+
+                case "sides-horizontal":
+                    for (var y = 0; y < filterW; y++) {
+                        newFilter[0][y] = constantFilled;
+                        newFilter[filterH - 1][y] = constantFilled;
                     }
                     break;
 
@@ -128,8 +142,17 @@ class Mask extends Component {
                     >dc</button>
                     <button
                         className="filter-inputs__input"
-                        onClick={this.maskFillerHandler("cross")}
-                    >.</button>
+                        onClick={this.maskFillerHandler("sides-vertical")}
+                    >||</button>
+                    <button
+                        className="filter-inputs__input"
+                        onClick={this.maskFillerHandler("sides-horizontal")}
+                    >=</button>
+                    {/*clear*/}
+                    <button
+                        className="filter-inputs__input"
+                        onClick={this.maskFillerHandler("")}
+                    > </button>
                 </div>
                 <div
                 className="filter-inputs__row">
