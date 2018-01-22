@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import NumericInput from 'react-numeric-input';
 import './Mask.css';
-import { resize2DArray, getMaskMiddleIndexes, setArrayToDefaultValue } from '../../utils/helpers';
+import { resize2DArray, getMaskMiddleIndexes, createEmptyArrayWithDefaultValue } from '../../utils/helpers';
 
 class Mask extends Component {
     constructor(props) {
@@ -55,27 +55,48 @@ class Mask extends Component {
     // fills mask with predefined figures selected by a user
     maskFillerHandler (type) {
         return e => {
-            // son of a bitch... this part gave me serious headache. Who would have thought that you have to return anything...
+            // this part gave me serious headache. Who would have thought that you have to return anything...
             // and that the event is actually passed automagically to this handler...
             // and not preventing default results in endless recursive loop in render function
             e.preventDefault();
             let constantFilled = 1;
             let constantEmpty = 0;
-            var newFilter = setArrayToDefaultValue(this.state.filter, constantEmpty);
+            let filterH = this.state.maskHeight;
+            let filterW = this.state.maskWidth;
+            var newFilter = createEmptyArrayWithDefaultValue(filterW, filterH, constantEmpty);
             let middleIndexes = getMaskMiddleIndexes(newFilter);
-            let filterH = newFilter[0].length;
-            let filterW = newFilter.length;
 
             switch (type) {
                 case "cross":
                     for (var x = 0; x < filterH; x++) {
-                        console.log("x=" + x);
                         newFilter[x][middleIndexes.y] = constantFilled;
                     }
                     for (var y = 0; y < filterW; y++) {
                         newFilter[middleIndexes.x][y] = constantFilled;
                     }
+                    break;
 
+                case "x":
+                    for (var x = 0, y = 0; x < Math.min(filterH, filterW); x++, y++) {
+                        newFilter[x][y] = constantFilled;
+                        newFilter[x][filterW - 1 - y] = constantFilled;
+                    }
+                    break;
+
+                case "double-cross":
+                    // if height is less than 3 there is no possibility to get double cross
+                    // so fill simple cross
+                    if (filterH > 3 ) {
+                        for (var x = 0; x < filterH; x++) {
+                            newFilter[x][middleIndexes.y] = constantFilled;
+                        }
+                        for (var y = 0; y < filterW; y++) {
+                            newFilter[middleIndexes.x - 1][y] = constantFilled;
+                            newFilter[middleIndexes.x + 1][y] = constantFilled;
+                        }
+                    } else {
+                        this.maskFillerHandler("cross");
+                    }
                     break;
 
                 default:
@@ -83,8 +104,8 @@ class Mask extends Component {
                     break;
             }
 
-            console.log(newFilter);
             this.setState({filter: newFilter});
+            this.props.callback(newFilter);
         }
 
     }
@@ -96,7 +117,19 @@ class Mask extends Component {
                     <button
                         className="filter-inputs__input"
                         onClick={this.maskFillerHandler("cross")}
-                    />
+                    >cr</button>
+                    <button
+                        className="filter-inputs__input"
+                        onClick={this.maskFillerHandler("x")}
+                    >x</button>
+                    <button
+                        className="filter-inputs__input"
+                        onClick={this.maskFillerHandler("double-cross")}
+                    >dc</button>
+                    <button
+                        className="filter-inputs__input"
+                        onClick={this.maskFillerHandler("cross")}
+                    >.</button>
                 </div>
                 <div
                 className="filter-inputs__row">
