@@ -228,8 +228,8 @@ const resize1DArray = (array, size, defaultValue, treatEmptyAsNotExistent = fals
     return newArray;
 };
 
-const setArrayToDefaultValue = (array, defaultValue = 0) => {
-    let newArray = new Array(array[0].length).fill(defaultValue).map(x => new Array(array.length).fill(defaultValue));
+const createEmptyArrayWithDefaultValue = (width = 3, height = 3, defaultValue = 0) => {
+    let newArray = new Array(height).fill(defaultValue).map(x => new Array(width).fill(defaultValue));
 
     return newArray;
 };
@@ -294,5 +294,5 @@ export {
     filterOutNullsFrom,
     transposeArray,
     getMaskMiddleIndexes,
-    setArrayToDefaultValue,
+    createEmptyArrayWithDefaultValue,
 }
