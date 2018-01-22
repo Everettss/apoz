@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import NumericInput from 'react-numeric-input';
 import './Mask.css';
-import { resize2DArray } from '../../utils/helpers';
+import { resize2DArray, getMaskMiddleIndexes, setArrayToDefaultValue } from '../../utils/helpers';
 
 class Mask extends Component {
     constructor(props) {
@@ -16,6 +16,7 @@ class Mask extends Component {
 
         this.filterInputHandler = this.filterInputHandler.bind(this);
         this.maskSizeChangeHandler = this.maskSizeChangeHandler.bind(this);
+        this.maskFillerHandler = this.maskFillerHandler.bind(this);
     }
 
     filterInputHandler(i, j) {
@@ -51,9 +52,53 @@ class Mask extends Component {
         }
     }
 
+    // fills mask with predefined figures selected by a user
+    maskFillerHandler (type) {
+        return e => {
+            // son of a bitch... this part gave me serious headache. Who would have thought that you have to return anything...
+            // and that the event is actually passed automagically to this handler...
+            // and not preventing default results in endless recursive loop in render function
+            e.preventDefault();
+            let constantFilled = 1;
+            let constantEmpty = 0;
+            var newFilter = setArrayToDefaultValue(this.state.filter, constantEmpty);
+            let middleIndexes = getMaskMiddleIndexes(newFilter);
+            let filterH = newFilter[0].length;
+            let filterW = newFilter.length;
+
+            switch (type) {
+                case "cross":
+                    for (var x = 0; x < filterH; x++) {
+                        console.log("x=" + x);
+                        newFilter[x][middleIndexes.y] = constantFilled;
+                    }
+                    for (var y = 0; y < filterW; y++) {
+                        newFilter[middleIndexes.x][y] = constantFilled;
+                    }
+
+                    break;
+
+                default:
+                    //do nothing
+                    break;
+            }
+
+            console.log(newFilter);
+            this.setState({filter: newFilter});
+        }
+
+    }
+
     prepareMaskControlPane () {
 
-        return (<div
+        return (<div>
+                <div className="filter-inputs__row">
+                    <button
+                        className="filter-inputs__input"
+                        onClick={this.maskFillerHandler("cross")}
+                    />
+                </div>
+                <div
                 className="filter-inputs__row">
                 <span><b>H: </b></span>
                 <NumericInput
@@ -73,6 +118,7 @@ class Mask extends Component {
                     value={this.state.maskWidth}
                     onChange={this.maskSizeChangeHandler("w")}
                 /></div>
+        </div>
         )
     }
 

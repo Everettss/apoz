@@ -18,6 +18,15 @@ const histogram = (picture, channel) => {
     return hist;
 };
 
+const getMaskMiddleIndexes = (mask) => {
+    let maskWidth = mask.length;
+    let maskHeight = mask[0].length;
+    let midX = (maskWidth - (maskWidth % 2)) / 2 - ((maskWidth + 1) % 2);
+    let midY = (maskHeight - (maskHeight % 2)) / 2 - ((maskHeight + 1) % 2);
+
+    return {x: midX, y: midY}
+};
+
 const neighbours = (picture, i, j, channel, { maskWidth = 3, maskHeight = 3, type = 'omit', shape = 'square' } = {}) => {
     const height = picture.shape[0];
     const width = picture.shape[1];
@@ -219,6 +228,12 @@ const resize1DArray = (array, size, defaultValue, treatEmptyAsNotExistent = fals
     return newArray;
 };
 
+const setArrayToDefaultValue = (array, defaultValue = 0) => {
+    let newArray = new Array(array[0].length).fill(defaultValue).map(x => new Array(array.length).fill(defaultValue));
+
+    return newArray;
+};
+
 const filterOutNullsFrom = arr => {
     return flattenMatrix(arr).filter(elem => elem !== null);
 };
@@ -278,4 +293,6 @@ export {
     resize2DArray,
     filterOutNullsFrom,
     transposeArray,
+    getMaskMiddleIndexes,
+    setArrayToDefaultValue,
 }
