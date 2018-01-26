@@ -11,20 +11,30 @@ class Mask extends Component {
         this.state = {
             filter: props.filter,
             maskHeight: props.filter.length,
-            maskWidth: props.filter[0].length
+            maskWidth: props.filter[0].length,
+            fillerSetValue: 1
         };
 
         this.filterInputHandler = this.filterInputHandler.bind(this);
+        this.fillerValueChangeHandler = this.fillerValueChangeHandler.bind(this);
         this.maskSizeChangeHandler = this.maskSizeChangeHandler.bind(this);
         this.maskFillerHandler = this.maskFillerHandler.bind(this);
     }
+
+
 
     filterInputHandler(i, j) {
         return val => {
             const filter = _.cloneDeep(this.state.filter);
             filter[i][j] = val;
-            this.setState({ filter });
+            this.setState({filter});
             this.props.callback(filter);
+        }
+    }
+
+    fillerValueChangeHandler() {
+        return val => {
+            this.setState({ fillerSetValue: val });
         }
     }
 
@@ -59,7 +69,7 @@ class Mask extends Component {
             // and that the event is actually passed automagically to this handler...
             // and not preventing default results in endless recursive loop in render function
             e.preventDefault();
-            let constantFilled = 1;
+            let constantFilled = this.state.fillerSetValue;
             let constantEmpty = 0;
             let filterH = this.state.maskHeight;
             let filterW = this.state.maskWidth;
@@ -153,6 +163,17 @@ class Mask extends Component {
                         className="filter-inputs__input"
                         onClick={this.maskFillerHandler("")}
                     > </button>
+                </div>
+                <div className="filter-inputs__row">
+                    <span>filler set value</span>
+                        <NumericInput
+                        className="filter-inputs__input"
+                        style={false}
+                        min={0}
+                        max={99}
+                        value={this.state.fillerSetValue}
+                        onChange={this.fillerValueChangeHandler()}
+                        />
                 </div>
                 <div
                 className="filter-inputs__row">
