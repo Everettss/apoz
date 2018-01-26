@@ -5,7 +5,6 @@ import Histogram from './Histogram/Histogram';
 import Image from './Image/Image';
 import Menu from './Menu/Menu';
 import { cloneImage } from './utils/helpers';
-import LUT from './Transformations/Lab2/LUT/LUT';
 
 
 class App extends Component {
@@ -143,10 +142,9 @@ class App extends Component {
                         </div>
                     </div>
                     <div className="aside">
-                        {/*{this.state.operation ? <div className="aside__item aside__item--operation">*/}
-                            {/*{this.state.operation}*/}
-                        {/*</div> : ''}*/}
-                        <LUT updateImage={this.updateImage}/>
+                        {this.state.operation ? <div className="aside__item aside__item--operation">
+                            {this.state.operation}
+                        </div> : ''}
                         <div className="aside__item aside__item--history">
                             <h3 className="aside__item__title">History</h3>
 
