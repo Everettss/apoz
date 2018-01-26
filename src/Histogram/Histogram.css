@@ -1,13 +1,3 @@
 .histogram-value {
     font-size: 12px;
 }
-
-.lut-editor__wrapper {
-    position: relative;
-}
-
-#editor {
-    position: absolute;
-    left: 20px;
-    top: 20px;
-}

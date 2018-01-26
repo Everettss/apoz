@@ -108,7 +108,11 @@ class LUT extends Component {
         };
 
         const makeHandler = (stateHandler, color, checkBound, cb = () => {}) => {
-            const handler = draw.circle(HANDLER_RADIUS * 2).move(stateHandler.x, stateHandler.y).attr({ fill: color });
+            const handler = draw
+                .circle(HANDLER_RADIUS * 2)
+                .move(stateHandler.x, stateHandler.y)
+                .attr({ fill: color })
+                .addClass('lut-handler');
 
             const setState = this.setState.bind(this);
             handler.draggable(function(x, y) {
