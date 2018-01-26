@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import BezierEditor from 'bezier-easing-editor';
 import bezierEasing from 'bezier-easing';
 import * as d3 from 'd3';
 import 'svg.js';
@@ -10,9 +9,10 @@ import { forEachPixel } from '../../../utils/helpers';
 
 const DEFAULT_M = 256;
 const BOX_SIZE = DEFAULT_M - 1;
-const DEFAULT_CURVE = [0.2, 0.2, 0.8, 0.8];
+const HANDLER_RADIUS = 7;
+const BOX_PADDING = 27;
 
-const lutTransformation = (LUT, M = DEFAULT_M) => {
+const lutTransformation = (LUT) => {
     return image => {
         forEachPixel(image, pixel => LUT[pixel]);
 
@@ -44,28 +44,17 @@ class LUT extends Component {
     }
 
     componentDidMount() {
-        const HANDLER_RADIUS = 10;
-        const BOX_PADDING = 30;
-
-
-
-
-
-
-
-
-
         const state = this.state;
         state.hProportions = _.cloneDeep(state);
         const handlers = {};
 
-        const draw = window.SVG('test').size(BOX_SIZE + HANDLER_RADIUS * 2, BOX_SIZE + HANDLER_RADIUS * 2);
+        const draw = window.SVG('editor').size(BOX_SIZE + HANDLER_RADIUS * 2, BOX_SIZE + HANDLER_RADIUS * 2);
 
         draw.rect(BOX_SIZE, BOX_SIZE).move(HANDLER_RADIUS, HANDLER_RADIUS).addClass('box')
             .attr({
                 fill: 'none',
                 strokeWidth: 1,
-                stroke: 'green'
+                stroke: '#333333'
             });
 
         const path = draw
@@ -75,8 +64,8 @@ class LUT extends Component {
                     ${state.h2.x + HANDLER_RADIUS} ${state.h2.y + HANDLER_RADIUS}, 
                     ${state.e2.x + HANDLER_RADIUS} ${state.e2.y + HANDLER_RADIUS}
                 `);
-        path.fill('none').move(HANDLER_RADIUS, HANDLER_RADIUS)
-        path.stroke({ color: 'blue', width: 4, linecap: 'round', linejoin: 'round' });
+        path.fill('none').move(HANDLER_RADIUS, HANDLER_RADIUS);
+        path.stroke({ color: 'grey', width: 4, linecap: 'round', linejoin: 'round' });
 
 
         const makeLine = (start, end) =>
@@ -87,7 +76,7 @@ class LUT extends Component {
                     end.x + HANDLER_RADIUS,
                     end.y + HANDLER_RADIUS
                 )
-                .stroke({ width: 1 });
+                .stroke({ width: 2, color: 'red' });
 
         const line1 = makeLine(state.e1, state.h1);
         const line2 = makeLine(state.e2, state.h2);
@@ -118,8 +107,8 @@ class LUT extends Component {
                 `)
         };
 
-        const makeHandler = (stateHandler, checkBound, cb = () => {}) => {
-            const handler = draw.circle(HANDLER_RADIUS * 2).move(stateHandler.x, stateHandler.y).attr({ fill: '#f06' });
+        const makeHandler = (stateHandler, color, checkBound, cb = () => {}) => {
+            const handler = draw.circle(HANDLER_RADIUS * 2).move(stateHandler.x, stateHandler.y).attr({ fill: color });
 
             const setState = this.setState.bind(this);
             handler.draggable(function(x, y) {
@@ -133,7 +122,6 @@ class LUT extends Component {
                 cb();
                 updatePath();
                 updateLines();
-                console.log(state);
 
                 setState(_.cloneDeep({
                     h1: state.h1,
@@ -197,48 +185,38 @@ class LUT extends Component {
             handlers.h2.move(state.h2.x, state.h2.y);
         };
 
-        handlers.e1 = makeHandler(state.e1, checkBoundE1, onChangeE);
-        handlers.e2 = makeHandler(state.e2, checkBoundE2, onChangeE);
-        handlers.h1 = makeHandler(state.h1, checkBoundH1, onChangeH);
-        handlers.h2 = makeHandler(state.h2, checkBoundH2, onChangeH);
+        handlers.e1 = makeHandler(state.e1, 'blue', checkBoundE1, onChangeE);
+        handlers.e2 = makeHandler(state.e2, 'blue', checkBoundE2, onChangeE);
+        handlers.h1 = makeHandler(state.h1, 'red', checkBoundH1, onChangeH);
+        handlers.h2 = makeHandler(state.h2, 'red', checkBoundH2, onChangeH);
 
+        const width = BOX_SIZE, height = BOX_SIZE;
 
+        const svg = d3.select("#axis").append("svg")
+            .attr("width", width + BOX_PADDING * 2)
+            .attr("height", height + BOX_PADDING * 2);
 
-
-
-
-
-
-
-
-
-        var width = BOX_SIZE, height = BOX_SIZE;
-
-        var data = [10, 15, 20, 25, 30];
-        var svg = d3.select("#test > svg");
-
-        var xscale = d3.scaleLinear()
-            .domain([0, d3.max(data)])
+        const xScale = d3.scaleLinear()
+            .domain([0, DEFAULT_M - 1])
             .range([0, width]);
 
-        var yscale = d3.scaleLinear()
-            .domain([0, d3.max(data)])
-            .range([height/2, 0]);
+        const yScale = d3.scaleLinear()
+            .domain([0, DEFAULT_M - 1])
+            .range([height, 0]);
 
-        var x_axis = d3.axisBottom()
-            .scale(xscale);
+        const x_axis = d3.axisBottom(xScale)
+            .tickValues([0, 63, 127, 191, 255]);
 
-        var y_axis = d3.axisLeft()
-            .scale(yscale);
+        const y_axis = d3.axisLeft(yScale)
+            .tickValues([0, 63, 127, 191, 255]);
 
         svg.append("g")
-            .attr("transform", "translate(50, 10)")
+            .attr("transform", "translate(" + BOX_PADDING + ", " + BOX_PADDING  +")")
             .call(y_axis);
 
-        var xAxisTranslate = BOX_SIZE + HANDLER_RADIUS;
 
         svg.append("g")
-            .attr("transform", "translate(50, " + xAxisTranslate  +")")
+            .attr("transform", "translate(" + BOX_PADDING + ", " + (BOX_SIZE + BOX_PADDING)  +")")
             .call(x_axis)
 
     }
@@ -250,7 +228,6 @@ class LUT extends Component {
     formHandler(e) {
         e.preventDefault();
 
-        console.log(this.state);
         let LUT = [];
 
         const e1x = Math.round(this.state.e1.x);
@@ -265,12 +242,7 @@ class LUT extends Component {
             (this.state.h1.y - this.state.e1.y) / (this.state.e2.y - this.state.e1.y),
             (this.state.h2.x - this.state.e1.x) / (this.state.e2.x - this.state.e1.x),
             (this.state.h2.y - this.state.e1.y) / (this.state.e2.y - this.state.e1.y),
-        ]
-        console.log(
-            e1x, e2x, height, offset
-        );
-
-        console.log(curve);
+        ];
 
         const easing = bezierEasing(...curve);
 
@@ -289,19 +261,25 @@ class LUT extends Component {
             LUT = [...LUT, Math.round(BOX_SIZE - this.state.e2.y)];
         }
 
-
-        console.log(LUT);
         this.props.updateImage(lutTransformation(LUT));
     }
 
     render() {
         return (
             <div>
-                <h3 className="aside__item__title">Reduction of gray levels</h3>
+                <h3 className="aside__item__title">LUT</h3>
                 <form action="#" onSubmit={this.formHandler}>
-                    <div id="axis" />
-                    <div id="test" />
-                    {/*<BezierEditor className="bezier" defaultValue={DEFAULT_CURVE} onChange={this.bezierHandler} />*/}
+                    <div
+                        className="lut-editor__wrapper"
+                        style={{
+                            width: BOX_SIZE + BOX_PADDING * 2,
+                            height: BOX_SIZE + BOX_PADDING * 2,
+                        }}
+                    >
+                        <div id="axis" />
+                        <div id="editor" />
+                    </div>
+
                     <br />
                     <input type="submit" value="Apply"/>
                 </form>
