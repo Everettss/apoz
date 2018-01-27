@@ -138,7 +138,6 @@ const lineChart = (_data, el) => {
 
 
 const getHistogramData = picture => {
-    console.log (picture);
     const width = picture.shape[0];
     const height = picture.shape[1];
 

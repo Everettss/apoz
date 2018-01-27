@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 import * as d3 from 'd3';
 import './LineProfile.css';
-// import getPixels from 'get-pixels';
 
 const lineChart = (_data, startPoint, endPoint, el) => {
     const w = Math.abs(startPoint.x - endPoint.x);
-    const h = Math.abs(startPoint.y - endPoint.y);
     const lineWidth = Math.abs(startPoint.x - endPoint.x);
     const svg = d3.select(el);
     const margin = {top: 20, right: 15, bottom: 30, left: 15};
@@ -53,7 +51,7 @@ const lineChart = (_data, startPoint, endPoint, el) => {
     createPath(d => d.g, 'green', 'none');
     createPath(d => d.b, 'blue', 'none');
 
-    let step = Math.round (width / 4);
+    let step = Math.round (w / 4);
 
     // Add the X Axis
     // temporal calculation of step
@@ -154,18 +152,14 @@ const getHistogramData = (picture, startPoint, endPoint) => {
     let hist = new Array(lineWidth).fill({});
 
     hist = hist.map((_, i) => ({ x: i, r: 0, g: 0, b: 0, bw: 0 }));
-    console.log("hist data: ", minX, maxX, lineWidth, step, hist);
 
     var currY = startPoint.y;
 
     for (let i = minX; i < maxX; ++i) {
-        console.log ("xy ", i, currY);
-
         const rc = picture.get(i, Math.round(currY), 0);
         const gc = picture.get(i, Math.round(currY), 1);
         const bc = picture.get(i, Math.round(currY), 2);
         const bwc = Math.round((rc + gc + bc) / 3);
-        console.log("rgb are ", rc, gc, bc, bwc);
         Object.assign(hist[i - minX], { r: rc, g: gc, b: bc, bw:bwc });
 
         currY += step;
