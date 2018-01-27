@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 import * as d3 from 'd3';
-import './Histogram.css';
+import './LineProfile.css';
 // import getPixels from 'get-pixels';
 
 const lineChart = (_data, el) => {
-    console.log("doing line chart. Data" + _data);
+    console.log("doing line chart In line profile. Data" + _data);
     const data = [{ x: -1, r: 0, g: 0, b: 0, bw: 0 }, ..._data, { x: 256, r: 0, g: 0, b: 0, bw: 0 }];
     const svg = d3.select(el);
     const margin = {top: 20, right: 15, bottom: 30, left: 15};
@@ -163,20 +163,18 @@ const getHistogramData = picture => {
 };
 
 
-class Histogram extends Component {
+class LineProfile extends Component {
     componentWillReceiveProps(nextProps) {
         if (
             !this.props.data ||
             (
                 nextProps &&
                 nextProps.data &&
-                nextProps.data.modificationDate &&
-                this.props.data &&
-                nextProps.data.modificationDate !== this.props.data.modificationDate
+                this.props.data
             )
         ) {
             console.log(nextProps.data.picture);
-            lineChart(getHistogramData(nextProps.data.picture), findDOMNode(this));
+            lineChart(getHistogramData(nextProps.data), findDOMNode(this));
         }
     }
 
@@ -187,4 +185,4 @@ class Histogram extends Component {
     }
 }
 
-export default Histogram;
+export default LineProfile;

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import './Image.css'
 import Modal from 'react-modal';
 import savePixels from 'save-pixels';
+import LineProfile from "../LineProfile/LineProfile";
+import {imageDataToPicture} from '../utils/helpers';
 
 const getMousePos = (canvas, evt) => {
     let rect = canvas.getBoundingClientRect();
@@ -61,9 +63,9 @@ class Image extends Component {
         this.setState({
             lineEndPoint: clickPoint,
             modalIsOpen: true,
-            subimage: subImageData,
+            subimage: imageDataToPicture(subImageData),
         });
-        console.log(subImageData);
+        console.log(imageDataToPicture(subImageData));
     }
 
 
@@ -109,11 +111,12 @@ class Image extends Component {
                         isOpen={this.state.modalIsOpen}
                         onAfterOpen={this.afterOpenModal}
                         onRequestClose={this.closeModal}
+                        appElement={this.canvasWrapper}
                         style={customStyles}
                         contentLabel="Example Modal">
                         <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2>
                         <button onClick={this.closeModal}>close</button>
-                        <div></div>
+                        <LineProfile data={this.state.subimage}/>
                     </Modal>
                 </div></div>
         );

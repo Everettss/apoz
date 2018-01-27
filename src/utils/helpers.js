@@ -280,6 +280,12 @@ const transposeArray = (arr, degree) => {
     return newArr;
 };
 
+// this function converts ImageData received from canvas
+// and turn it into format used in this app for a picture
+const imageDataToPicture = (imageData) => {
+    return ndarray(new Uint8Array(imageData.data), [imageData.height, imageData.width, 4]);
+};
+
 export {
     histogram,
     forEachPixel,
@@ -295,4 +301,5 @@ export {
     transposeArray,
     getMaskMiddleIndexes,
     createEmptyArrayWithDefaultValue,
+    imageDataToPicture,
 }
