@@ -66,10 +66,10 @@ class Image extends Component {
             let sy = this.state.lineStartPoint.y;
 
             let subImageData = context.getImageData(
-                sx,
-                sy,
-                sx - clickPoint.x,
-                sy - clickPoint.y
+                0,
+                0,
+                canvas.width,
+                canvas.height
             );
 
             this.setState({
@@ -128,7 +128,9 @@ class Image extends Component {
                         contentLabel="Line Profile">
                         <h2 ref={subtitle => this.subtitle = subtitle}>LineProfile</h2>
                         <button onClick={this.closeModal}>close</button>
-                        <LineProfile data={this.state.subimage}/>
+                        <LineProfile data={this.state.subimage}
+                                     startPoint={this.state.lineStartPoint}
+                                     endPoint={this.state.lineEndPoint}/>
                     </Modal>
                 </div></div>
         );

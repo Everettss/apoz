@@ -4,20 +4,22 @@ import * as d3 from 'd3';
 import './LineProfile.css';
 // import getPixels from 'get-pixels';
 
-const lineChart = (_data, w, h, el) => {
+const lineChart = (_data, startPoint, endPoint, el) => {
+    const w = Math.abs(startPoint.x - endPoint.x);
+    const h = Math.abs(startPoint.y - endPoint.y);
+    const lineWidth = Math.abs(startPoint.x - endPoint.x);
     const svg = d3.select(el);
     const margin = {top: 20, right: 15, bottom: 30, left: 15};
     const width = +svg.attr('width') - margin.left - margin.right;
     const height = +svg.attr('height') - margin.top - margin.bottom;
-    const data = [{ x: -1, r: 0, g: 0, b: 0, bw: 0 }, ..._data, { x: 256, r: 0, g: 0, b: 0, bw: 0 }];
+    const data = [{ x: -1, r: 0, g: 0, b: 0, bw: 0 }, ..._data, { x: lineWidth, r: 0, g: 0, b: 0, bw: 0 }];
     const maxR = d3.max(data, d => d.r);
     const maxG = d3.max(data, d => d.g);
     const maxB = d3.max(data, d => d.b);
     const maxBW = d3.max(data, d => d.bw);
-    console.log ("h = " + h + " w = " + w);
 
     const x = d3.scaleLinear().range([0, width]);
-    const y = d3.scaleLinear().range([h, 0]);
+    const y = d3.scaleLinear().range([height, 0]);
 
     svg.selectAll("*").remove();
     const graph = svg.append('g')
@@ -118,7 +120,11 @@ const lineChart = (_data, w, h, el) => {
             mouseX = width
         }
         let x0 = Math.round( x.invert(mouseX) );
-        console.log ("x0 = " + x0);
+        if (x0 < 0) {
+            x0 = 0;
+        } else if (x0 > lineWidth) {
+            x0 = lineWidth;
+        }
 
         histBWValue.select("text").text("bw: " + data[x0].bw);
         histBValue.select("text").text("b:  " +  data[x0].b);
@@ -139,32 +145,30 @@ const lineChart = (_data, w, h, el) => {
 };
 
 
-const getHistogramData = picture => {
-    const width = picture.shape[0];
-    const height = picture.shape[1];
-    console.log("width = " + width);
-    console.log("height = " + height);
-    console.log("picture = " );
-    console.log(picture);
+const getHistogramData = (picture, startPoint, endPoint) => {
+    const minX = Math.min(startPoint.x, endPoint.x);
+    const maxX = Math.max(startPoint.x, endPoint.x);
+    const lineWidth = Math.abs(startPoint.x - endPoint.x);
+    const step = (endPoint.y - startPoint.y) / lineWidth;
 
-
-    let hist = new Array(256).fill({});
+    let hist = new Array(lineWidth).fill({});
 
     hist = hist.map((_, i) => ({ x: i, r: 0, g: 0, b: 0, bw: 0 }));
+    console.log("hist data: ", minX, maxX, lineWidth, step, hist);
 
-    for (let i = 0; i < width; ++i) {
-        for (let j = 0; j < height; ++j) {
-            console.log ("i = ", i, " j = ", j);
-            const r = picture.get(i, j, 0);
-            console.log ("r = ",r);
-            const g = picture.get(i, j, 1);
-            const b = picture.get(i, j, 2);
-            const bw = Math.round((r + g + b) / 3);
-            Object.assign(hist[r], { r: hist[r].r + 1 });
-            Object.assign(hist[g], { g: hist[g].g + 1 });
-            Object.assign(hist[b], { b: hist[b].b + 1 });
-            Object.assign(hist[bw], { bw: hist[bw].bw + 1 });
-        }
+    var currY = startPoint.y;
+
+    for (let i = minX; i < maxX; ++i) {
+        console.log ("xy ", i, currY);
+
+        const rc = picture.get(i, Math.round(currY), 0);
+        const gc = picture.get(i, Math.round(currY), 1);
+        const bc = picture.get(i, Math.round(currY), 2);
+        const bwc = Math.round((rc + gc + bc) / 3);
+        console.log("rgb are ", rc, gc, bc, bwc);
+        Object.assign(hist[i - minX], { r: rc, g: gc, b: bc, bw:bwc });
+
+        currY += step;
     }
 
     return hist;
@@ -172,19 +176,35 @@ const getHistogramData = picture => {
 
 
 class LineProfile extends Component {
+    constructor(props) {
+        super(props);
+        console.log ("received props", props);
+
+        this.state = {
+            lineStartPoint: props.startPoint,
+            lineEndPoint: props.endPoint,
+            subimage: props.data,
+        };
+
+    }
     componentWillReceiveProps(nextProps) {
+        console.log("nexprops");
+        console.log(nextProps);
         if (
             !this.props.data ||
             (
                 nextProps &&
                 nextProps.data &&
+                nextProps.startPoint &&
                 this.props.data
             )
         ) {
             lineChart(
-                getHistogramData(nextProps.data),
-                nextProps.data.shape[0],
-                nextProps.data.shape[1],
+                getHistogramData(nextProps.data,
+                this.state.lineStartPoint,
+                this.state.lineEndPoint),
+                this.state.lineStartPoint,
+                this.state.lineEndPoint,
                 findDOMNode(this)
             );
         }
