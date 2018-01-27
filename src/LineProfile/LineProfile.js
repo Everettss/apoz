@@ -172,7 +172,6 @@ const getHistogramData = (picture, startPoint, endPoint) => {
 class LineProfile extends Component {
     constructor(props) {
         super(props);
-        console.log ("received props", props);
 
         this.state = {
             lineStartPoint: props.startPoint,
@@ -182,8 +181,6 @@ class LineProfile extends Component {
 
     }
     componentWillReceiveProps(nextProps) {
-        console.log("nexprops");
-        console.log(nextProps);
         if (
             !this.props.data ||
             (
