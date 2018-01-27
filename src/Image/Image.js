@@ -50,31 +50,34 @@ class Image extends Component {
     }
 
     setLineProfileEndPoint (ev) {
-        let canvas = this.canvasWrapper.childNodes.item(0);
-        let clickPoint = getMousePos(canvas, ev);
-        console.log ("line profile end point");
-        console.log(
-            this.state.lineStartPoint.x,
-            this.state.lineStartPoint.y,
-            clickPoint.x,
-            clickPoint.y
-        );
-        let context = canvas.getContext('2d');
-        let sx = this.state.lineStartPoint.x;
-        let sy = this.state.lineStartPoint.y;
+        //if modal is open we do not want to react on image click in the background
+        if (this.state.modalIsOpen === false) {
+            let canvas = this.canvasWrapper.childNodes.item(0);
+            let clickPoint = getMousePos(canvas, ev);
+            console.log("line profile end point");
+            console.log(
+                this.state.lineStartPoint.x,
+                this.state.lineStartPoint.y,
+                clickPoint.x,
+                clickPoint.y
+            );
+            let context = canvas.getContext('2d');
+            let sx = this.state.lineStartPoint.x;
+            let sy = this.state.lineStartPoint.y;
 
-        let subImageData = context.getImageData(
-            sx,
-            sy,
-            sx - clickPoint.x,
-            sy - clickPoint.y
-        );
+            let subImageData = context.getImageData(
+                sx,
+                sy,
+                sx - clickPoint.x,
+                sy - clickPoint.y
+            );
 
-        this.setState({
-            lineEndPoint: clickPoint,
-            modalIsOpen: true,
-            subimage: imageDataToPicture(subImageData),
-        });
+            this.setState({
+                lineEndPoint: clickPoint,
+                modalIsOpen: true,
+                subimage: imageDataToPicture(subImageData),
+            });
+        }
     }
 
 

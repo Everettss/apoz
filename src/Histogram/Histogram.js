@@ -5,7 +5,6 @@ import './Histogram.css';
 // import getPixels from 'get-pixels';
 
 const lineChart = (_data, el) => {
-    console.log("doing line chart. Data" + _data);
     const data = [{ x: -1, r: 0, g: 0, b: 0, bw: 0 }, ..._data, { x: 256, r: 0, g: 0, b: 0, bw: 0 }];
     const svg = d3.select(el);
     const margin = {top: 20, right: 15, bottom: 30, left: 15};
@@ -139,6 +138,7 @@ const lineChart = (_data, el) => {
 
 
 const getHistogramData = picture => {
+    console.log (picture);
     const width = picture.shape[0];
     const height = picture.shape[1];
 
@@ -175,7 +175,6 @@ class Histogram extends Component {
                 nextProps.data.modificationDate !== this.props.data.modificationDate
             )
         ) {
-            console.log(nextProps.data.picture);
             lineChart(getHistogramData(nextProps.data.picture), findDOMNode(this));
         }
     }
