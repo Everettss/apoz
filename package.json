@@ -24,7 +24,7 @@
     "save-pixels": "^2.3.4",
     "simple-statistics": "^5.2.1",
     "svg.draggable.js": "^2.2.1",
-    "svg.js": "^2.6.3"
+    "svg.js": "^2.6.3",
     "ndarray": "latest"
   },
   "devDependencies": {
