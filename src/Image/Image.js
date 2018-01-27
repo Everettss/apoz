@@ -52,12 +52,22 @@ class Image extends Component {
     setLineProfileEndPoint (ev) {
         let canvas = this.canvasWrapper.childNodes.item(0);
         let clickPoint = getMousePos(canvas, ev);
-        let context = canvas.getContext('2d');
-        let subImageData = context.getImageData(
+        console.log ("line profile end point");
+        console.log(
             this.state.lineStartPoint.x,
             this.state.lineStartPoint.y,
             clickPoint.x,
             clickPoint.y
+        );
+        let context = canvas.getContext('2d');
+        let sx = this.state.lineStartPoint.x;
+        let sy = this.state.lineStartPoint.y;
+
+        let subImageData = context.getImageData(
+            sx,
+            sy,
+            sx - clickPoint.x,
+            sy - clickPoint.y
         );
 
         this.setState({
@@ -65,7 +75,6 @@ class Image extends Component {
             modalIsOpen: true,
             subimage: imageDataToPicture(subImageData),
         });
-        console.log(imageDataToPicture(subImageData));
     }
 
 
@@ -113,8 +122,8 @@ class Image extends Component {
                         onRequestClose={this.closeModal}
                         appElement={this.canvasWrapper}
                         style={customStyles}
-                        contentLabel="Example Modal">
-                        <h2 ref={subtitle => this.subtitle = subtitle}>Hello</h2>
+                        contentLabel="Line Profile">
+                        <h2 ref={subtitle => this.subtitle = subtitle}>LineProfile</h2>
                         <button onClick={this.closeModal}>close</button>
                         <LineProfile data={this.state.subimage}/>
                     </Modal>
