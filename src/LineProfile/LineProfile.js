@@ -4,20 +4,20 @@ import * as d3 from 'd3';
 import './LineProfile.css';
 // import getPixels from 'get-pixels';
 
-const lineChart = (_data, el) => {
-    console.log("doing line chart In line profile. Data" + _data);
-    const data = [{ x: -1, r: 0, g: 0, b: 0, bw: 0 }, ..._data, { x: 256, r: 0, g: 0, b: 0, bw: 0 }];
+const lineChart = (_data, w, h, el) => {
     const svg = d3.select(el);
     const margin = {top: 20, right: 15, bottom: 30, left: 15};
     const width = +svg.attr('width') - margin.left - margin.right;
     const height = +svg.attr('height') - margin.top - margin.bottom;
+    const data = [{ x: -1, r: 0, g: 0, b: 0, bw: 0 }, ..._data, { x: 256, r: 0, g: 0, b: 0, bw: 0 }];
     const maxR = d3.max(data, d => d.r);
     const maxG = d3.max(data, d => d.g);
     const maxB = d3.max(data, d => d.b);
     const maxBW = d3.max(data, d => d.bw);
+    console.log ("h = " + h + " w = " + w);
 
     const x = d3.scaleLinear().range([0, width]);
-    const y = d3.scaleLinear().range([height, 0]);
+    const y = d3.scaleLinear().range([h, 0]);
 
     svg.selectAll("*").remove();
     const graph = svg.append('g')
@@ -51,10 +51,13 @@ const lineChart = (_data, el) => {
     createPath(d => d.g, 'green', 'none');
     createPath(d => d.b, 'blue', 'none');
 
+    let step = Math.round (width / 4);
+
     // Add the X Axis
+    // temporal calculation of step
     graph.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickValues([0, 63, 127, 191, 255]).tickSizeOuter(0));
+        .call(d3.axisBottom(x).tickValues([0, step, step * 2, step * 3, w]).tickSizeOuter(0));
 
     // add value of histogram in place pointed by mouse
     let histBWValue = svg.append("g")
@@ -115,12 +118,13 @@ const lineChart = (_data, el) => {
             mouseX = width
         }
         let x0 = Math.round( x.invert(mouseX) );
+        console.log ("x0 = " + x0);
 
-        histBWValue.select("text").text("bw: " + roundTo2(data[x0].bw, maxBW));
-        histBValue.select("text").text("b:  " + roundTo2(data[x0].b, maxB));
-        histRValue.select("text").text("r:  " + roundTo2(data[x0].r, maxR));
-        histGValue.select("text").text("g:  " + roundTo2(data[x0].g, maxG));
-        histXValue.select("text").text("x:  " + x0);
+        histBWValue.select("text").text("bw: " + data[x0].bw);
+        histBValue.select("text").text("b:  " +  data[x0].b);
+        histRValue.select("text").text("r:  " +  data[x0].r);
+        histGValue.select("text").text("g:  " +  data[x0].g);
+        histXValue.select("text").text("x:  " +  x0);
 
     });
 
@@ -132,15 +136,17 @@ const lineChart = (_data, el) => {
         histXValue.select("text").text("");
     });
 
-    function roundTo2 (a, b) {
-        return +(Math.round( (a * 100) / b)  / 100);
-    }
 };
 
 
 const getHistogramData = picture => {
     const width = picture.shape[0];
     const height = picture.shape[1];
+    console.log("width = " + width);
+    console.log("height = " + height);
+    console.log("picture = " );
+    console.log(picture);
+
 
     let hist = new Array(256).fill({});
 
@@ -148,7 +154,9 @@ const getHistogramData = picture => {
 
     for (let i = 0; i < width; ++i) {
         for (let j = 0; j < height; ++j) {
+            console.log ("i = ", i, " j = ", j);
             const r = picture.get(i, j, 0);
+            console.log ("r = ",r);
             const g = picture.get(i, j, 1);
             const b = picture.get(i, j, 2);
             const bw = Math.round((r + g + b) / 3);
@@ -173,8 +181,12 @@ class LineProfile extends Component {
                 this.props.data
             )
         ) {
-            console.log(nextProps.data.picture);
-            lineChart(getHistogramData(nextProps.data), findDOMNode(this));
+            lineChart(
+                getHistogramData(nextProps.data),
+                nextProps.data.shape[0],
+                nextProps.data.shape[1],
+                findDOMNode(this)
+            );
         }
     }
 

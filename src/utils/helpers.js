@@ -283,7 +283,14 @@ const transposeArray = (arr, degree) => {
 // this function converts ImageData received from canvas
 // and turn it into format used in this app for a picture
 const imageDataToPicture = (imageData) => {
-    return ndarray(new Uint8Array(imageData.data), [imageData.height, imageData.width, 4]);
+    console.log("image data");
+    console.log(imageData);
+
+    let x = ndarray(new Uint8Array(imageData.data), [imageData.width, imageData.height, 4]);
+    x.stride[0] = 4;
+    x.stride[1] = imageData.width * 4;
+    console.log (x);
+    return x;
 };
 
 export {
