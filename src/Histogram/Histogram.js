@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 import * as d3 from 'd3';
 import './Histogram.css';
-// import getPixels from 'get-pixels';
 
 const lineChart = (_data, el) => {
     const data = [{ x: -1, r: 0, g: 0, b: 0, bw: 0 }, ..._data, { x: 256, r: 0, g: 0, b: 0, bw: 0 }];
