@@ -209,6 +209,18 @@ class LineProfile extends Component {
         }
     }
 
+    // here we already have DOMElement set up
+    componentDidMount () {
+        lineChart(
+            getHistogramData(this.state.subimage,
+                this.state.lineStartPoint,
+                this.state.lineEndPoint),
+            this.state.lineStartPoint,
+            this.state.lineEndPoint,
+            findDOMNode(this)
+        );
+    }
+
     render() {
         return (
             <svg width="442" height="300" />
