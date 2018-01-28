@@ -4,12 +4,7 @@ import { forEachPixel, flattenMatrix, cloneImage } from '../../../utils/helpers'
 import NumericInput from 'react-numeric-input';
 
 const adaptiveTresholdTransformation = (statisticalRule, neighbourhoodRadius, tresholdModificator) => image => {
-    console.log ("statistical rule ", statisticalRule);
-    console.log ("ne radius ", neighbourhoodRadius);
-    console.log ("tres mod ", tresholdModificator);
-
     const neighbourhoodSize = neighbourhoodRadius * 2 + 1;
-
     const newImage = cloneImage(image); // you can't mutate image during computation
 
     let algorithm = arr => {
@@ -23,7 +18,6 @@ const adaptiveTresholdTransformation = (statisticalRule, neighbourhoodRadius, tr
          }
 
          mediumValue += tresholdModificator;
-
         let midArrayIndex = (neighbourhoodSize - (neighbourhoodSize % 2)) / 2 - ((neighbourhoodSize + 1) % 2);
 
         return arr[midArrayIndex][midArrayIndex] > mediumValue ? 0 : 255;
