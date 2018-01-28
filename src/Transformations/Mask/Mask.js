@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import NumericInput from 'react-numeric-input';
 import './Mask.css';
+import mcross from './mask-cross.png';
+import mclear from './mask-clear.png';
+import mdoublecross from './mask-double-cross.png';
+import msidesh from './mask-sides-h.png';
+import msidesv from './mask-sides-v.png';
+import mx from './mask-x.png';
 import { resize2DArray, getMaskMiddleIndexes, createEmptyArrayWithDefaultValue } from '../../utils/helpers';
 
 class Mask extends Component {
@@ -140,29 +146,29 @@ class Mask extends Component {
                 <div className="filter-inputs__row">
                     <button
                         className="filter-inputs__input"
+                        style={{backgroundImage: `url(${mcross}`}}
                         onClick={this.maskFillerHandler("cross")}
-                    >cr</button>
+                        />
                     <button
                         className="filter-inputs__input"
-                        onClick={this.maskFillerHandler("x")}
-                    >x</button>
+                        style={{backgroundImage: `url(${mx}`}}
+                        onClick={this.maskFillerHandler("x")} />
                     <button
                         className="filter-inputs__input"
-                        onClick={this.maskFillerHandler("double-cross")}
-                    >dc</button>
+                        style={{backgroundImage: `url(${mdoublecross}`}}
+                        onClick={this.maskFillerHandler("double-cross")} />
                     <button
                         className="filter-inputs__input"
-                        onClick={this.maskFillerHandler("sides-vertical")}
-                    >||</button>
+                        style={{backgroundImage: `url(${msidesv}`}}
+                        onClick={this.maskFillerHandler("sides-vertical")} />
                     <button
                         className="filter-inputs__input"
-                        onClick={this.maskFillerHandler("sides-horizontal")}
-                    >=</button>
-                    {/*clear*/}
+                        style={{backgroundImage: `url(${msidesh}`}}
+                        onClick={this.maskFillerHandler("sides-horizontal")} />
                     <button
                         className="filter-inputs__input"
-                        onClick={this.maskFillerHandler("")}
-                    > </button>
+                        style={{backgroundImage: `url(${mclear}`}}
+                        onClick={this.maskFillerHandler("")} />
                 </div>
                 <div className="filter-inputs__row">
                     <span>filler set value</span>
