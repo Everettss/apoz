@@ -1,33 +1,42 @@
 import React, { Component } from 'react';
 import './AdaptiveTreshold.css';
-import { forEachPixel, flattenMatrix, cloneImage, scale } from '../../../utils/helpers';
+import { forEachPixel, flattenMatrix, cloneImage } from '../../../utils/helpers';
 import NumericInput from 'react-numeric-input';
 
-const detectMinusValInFilter = arr => !!flattenMatrix(arr).filter(x => x < 0).length;
+const adaptiveTresholdTransformation = (statisticalRule, neighbourhoodRadius, tresholdModificator) => image => {
+    console.log ("statistical rule ", statisticalRule);
+    console.log ("ne radius ", neighbourhoodRadius);
+    console.log ("tres mod ", tresholdModificator);
 
-const adaptiveTresholdTransformation = (statisticalRule, scaleRule, filter, type, M = 256) => image => {
+    const neighbourhoodSize = neighbourhoodRadius * 2 + 1;
 
     const newImage = cloneImage(image); // you can't mutate image during computation
 
     let algorithm = arr => {
-         let outputValue = 0;
-                let filterTotal = flattenMatrix(filter).reduce((acc, x) => acc + x, 0);
-                for (let x = 0; x < arr.length; x++) {
-                    for (let y = 0; y < arr[0].length; y++) {
-                        outputValue += arr[x][y] * filter[x][y] / (filterTotal ? filterTotal : 1);
-                    }
-                }
-                return Math.round(scale(scaleRule, outputValue, 0, M - 1) );
+        let mediumValue;
+        let maskFlat = flattenMatrix(arr);
+         if (statisticalRule === 'average') {
+            mediumValue = maskFlat.reduce((acc,x) => acc + x, 0 ) / maskFlat.length;
+         } else {
+             let medArray = Math.round(maskFlat.length / 2);
+             mediumValue = maskFlat.sort()[medArray];
+         }
+
+         mediumValue += tresholdModificator;
+
+        let midArrayIndex = (neighbourhoodSize - (neighbourhoodSize % 2)) / 2 - ((neighbourhoodSize + 1) % 2);
+
+        return arr[midArrayIndex][midArrayIndex] > mediumValue ? 0 : 255;
     };
 
         let operationOnPixelNeighbours = arr => {
             return algorithm(arr);
         };
 
-    forEachPixel(image, operationOnPixelNeighbours, newImage, {maskHeight: filter.length, maskWidth: filter[0].length });
+    forEachPixel(image, operationOnPixelNeighbours, newImage, {maskHeight: neighbourhoodSize, maskWidth: neighbourhoodSize });
 
     return {
-        title: `filter`,
+        title: `adaptive-treshold`,
         picture: newImage
     };
 };
@@ -54,18 +63,22 @@ class AdaptiveTreshold extends Component {
         this.setState({ statisticalMethod: event.target.value });
     }
 
-    tresholdModificatorInputHandler(event) {
-        this.setState({ tresholdModificator: event.target.value });
+    tresholdModificatorInputHandler() {
+        return val => {
+            this.setState({ tresholdModificator: val });
+        }
     }
 
-    neighbourhoodRadiusInputHandler(event) {
-        this.setState({ neighbourhoodRadius: event.target.value });
+    neighbourhoodRadiusInputHandler() {
+        return val => {
+            this.setState({ neighbourhoodRadius: val });
+        }
     }
 
     formHandler(e) {
         e.preventDefault();
         this.props.updateImage(
-            adaptiveTresholdTransformation(this.state.edgeRule, this.state.scaleRule, this.state.filter, this.state.type)
+            adaptiveTresholdTransformation(this.state.statisticalMethod, this.state.neighbourhoodRadius, this.state.tresholdModificator)
         );
     }
 
@@ -100,7 +113,7 @@ class AdaptiveTreshold extends Component {
                                     min={1}
                                     max={255}
                                     value={this.state.neighbourhoodRadius}
-                                    onChange={this.neighbourhoodRadiusInputHandler}
+                                    onChange={this.neighbourhoodRadiusInputHandler()}
                                 />
                             </div>
 
@@ -109,10 +122,10 @@ class AdaptiveTreshold extends Component {
                                 <NumericInput
                                     className="filter-inputs__input"
                                     style={false}
-                                    min={0}
+                                    min={-255}
                                     max={255}
                                     value={this.state.tresholdModificator}
-                                    onChange={this.tresholdModificatorInputHandler}
+                                    onChange={this.tresholdModificatorInputHandler()}
                                 />
                             </div>
                         </div>
