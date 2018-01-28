@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import _ from 'lodash';
 import './AdaptiveTreshold.css';
-import * as preselected from './preselected';
 import { forEachPixel, flattenMatrix, cloneImage, scale } from '../../../utils/helpers';
-import Mask from "../../Mask/Mask";
+import NumericInput from 'react-numeric-input';
 
 const detectMinusValInFilter = arr => !!flattenMatrix(arr).filter(x => x < 0).length;
 
-const adaptiveTresholdTransformation = (edgeRule, scaleRule, filter, type, M = 256) => image => {
+const adaptiveTresholdTransformation = (statisticalRule, scaleRule, filter, type, M = 256) => image => {
 
     const newImage = cloneImage(image); // you can't mutate image during computation
 
@@ -22,27 +20,11 @@ const adaptiveTresholdTransformation = (edgeRule, scaleRule, filter, type, M = 2
                 return Math.round(scale(scaleRule, outputValue, 0, M - 1) );
     };
 
-    let operationOnPixelNeighbours;
-    const maskHeight = filter[0].length;
-    const maskWidth = filter.length;
-    let midMaskX = (maskWidth - (maskWidth % 2)) / 2 - ((maskWidth + 1) % 2);
-    let midMaskY = (maskHeight - (maskHeight % 2)) / 2 - ((maskHeight + 1) % 2);
-    if (edgeRule === 'not-modify') {
-        operationOnPixelNeighbours = arr => {
-            const flattenMask = flattenMatrix(arr);
-            if (flattenMask.filter(x => x !== null).length < filter.length * filter[0].length) { // missing
-                return arr[midMaskX][midMaskY]; // get center pixel
-            } else {
-               return algorithm(arr);
-            }
-        };
-    } else {
-        operationOnPixelNeighbours = arr => {
+        let operationOnPixelNeighbours = arr => {
             return algorithm(arr);
         };
-    }
 
-    forEachPixel(image, operationOnPixelNeighbours, newImage, {maskHeight: filter.length, maskWidth: filter[0].length, type: edgeRule });
+    forEachPixel(image, operationOnPixelNeighbours, newImage, {maskHeight: filter.length, maskWidth: filter[0].length });
 
     return {
         title: `filter`,
@@ -57,44 +39,27 @@ class AdaptiveTreshold extends Component {
         super(props);
 
         this.state = {
-            edgeRule: 'not-modify',
-            type: 'custom',
-            scaleRule: 'proportional',
-            showScaleMethod: false,
-            filter: [
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', ''],
-            ]
+            statisticalMethod: 'average',
+            neighbourhoodRadius: 1,
+            tresholdModificator: 0,
         };
 
-        this.filterInputHandler = this.filterInputHandler.bind(this);
-        this.radioEdgeHandler = this.radioEdgeHandler.bind(this);
-        this.radioScaleHandler = this.radioScaleHandler.bind(this);
+        this.radioStaticticalMethodHandler = this.radioStaticticalMethodHandler.bind(this);
+        this.neighbourhoodRadiusInputHandler = this.neighbourhoodRadiusInputHandler.bind(this);
+        this.tresholdModificatorInputHandler = this.tresholdModificatorInputHandler.bind(this);
         this.formHandler = this.formHandler.bind(this);
-        this.filterUpdateCallback = this.filterUpdateCallback.bind(this);
     }
 
-    radioEdgeHandler(event) {
-        this.setState({ edgeRule: event.target.value });
+    radioStaticticalMethodHandler(event) {
+        this.setState({ statisticalMethod: event.target.value });
     }
 
-    radioScaleHandler(event) {
-        this.setState({ scaleRule: event.target.value });
+    tresholdModificatorInputHandler(event) {
+        this.setState({ tresholdModificator: event.target.value });
     }
 
-    filterInputHandler(i, j) {
-        return val => {
-            const filter = _.cloneDeep(this.state.filter);
-            filter[i][j] = val;
-            this.setState({ filter, type: 'custom', showScaleMethod: detectMinusValInFilter(filter) });
-        }
-    }
-    handlePreselect(filter, type) {
-        return e => {
-            e.preventDefault();
-            this.setState({ filter, type, showScaleMethod: detectMinusValInFilter(filter) });
-        }
+    neighbourhoodRadiusInputHandler(event) {
+        this.setState({ neighbourhoodRadius: event.target.value });
     }
 
     formHandler(e) {
@@ -104,96 +69,54 @@ class AdaptiveTreshold extends Component {
         );
     }
 
-    preselectedLink(filter, type, name) {
-        return (
-            <a
-                className="filter-inputs__preselected-link"
-                onClick={this.handlePreselect(filter, type)}
-            >
-                {name}
-            </a>
-        );
-    };
-
-    filterUpdateCallback (newFilter) {
-        this.setState({filter: newFilter});
-    }
-
     render() {
         return (
             <div>
-                <h3 className="aside__item__title">Filter</h3>
+                <h3 className="aside__item__title">Adaptive Treshold</h3>
                 <form action="#" onSubmit={this.formHandler}>
                     <div className="form-wrapper">
                         <div className="form-col">
-                            <Mask filter={this.state.filter} callback={this.filterUpdateCallback} />
-
-                            <br/><strong>Edge</strong>
-                            <div onChange={this.radioEdgeHandler}>
+                            <br/><strong>Statistical method</strong>
+                            <div onChange={this.radioStaticticalMethodHandler}>
                                 <input
                                     type="radio"
-                                    value="not-modify"
-                                    name="edgeRule"
-                                    defaultChecked={this.state.edgeRule === 'not-modify'}
-                                /> Not modify <br />
+                                    value="median"
+                                    name="statisticalMethod"
+                                    defaultChecked={this.state.statisticalMethod === 'median'}
+                                /> Median <br />
                                 <input
                                     type="radio"
-                                    value="duplicate"
-                                    name="edgeRule"
-                                    defaultChecked={this.state.edgeRule === 'duplicate'}
-                                /> Duplicate <br />
-                                <input
-                                    type="radio"
-                                    value="omit"
-                                    name="edgeRule"
-                                    defaultChecked={this.state.edgeRule === 'omit'}
-                                /> Omit <br />
+                                    value="average"
+                                    name="statisticalMethod"
+                                    defaultChecked={this.state.statisticalMethod === 'average'}
+                                /> Average <br />
                             </div>
 
-                            {this.state.showScaleMethod && <div>
-                                <br/><strong>Scale</strong>
-                                <div onChange={this.radioScaleHandler}>
-                                    <input
-                                        type="radio"
-                                        value="proportional"
-                                        name="scaleRule"
-                                        defaultChecked={this.state.scaleRule === 'proportional'}
-                                    /> Proportional <br />
-                                    <input
-                                        type="radio"
-                                        value="trivalent"
-                                        name="scaleRule"
-                                        defaultChecked={this.state.scaleRule === 'trivalent'}
-                                    /> Trivalent <br />
-                                    <input
-                                        type="radio"
-                                        value="trimming"
-                                        name="scaleRule"
-                                        defaultChecked={this.state.scaleRule === 'trimming'}
-                                    /> Trimming <br />
-                                </div>
-                            </div>}
-                        </div>
-                        <div className="form-col">
-                            <strong>Smooth</strong><br/>
-                            {this.preselectedLink(preselected.smoothingStrong, 'smooth', 'strong')}
-                            {this.preselectedLink(preselected.smoothingMedium, 'smooth', 'medium')}
-                            {this.preselectedLink(preselected.smoothingWeek, 'smooth', 'week')}
-                            {this.preselectedLink(preselected.smoothingVeryWeek, 'smooth', 'very week')}
+                            <div>
+                                <br/><strong>Neighbourhood radius:  </strong>
+                                <NumericInput
+                                    className="filter-inputs__input"
+                                    style={false}
+                                    min={1}
+                                    max={255}
+                                    value={this.state.neighbourhoodRadius}
+                                    onChange={this.neighbourhoodRadiusInputHandler}
+                                />
+                            </div>
 
-                            <br/><strong>Sharpen</strong><br/>
-                            {this.preselectedLink(preselected.sharpenStrong, 'sharpen', 'strong')}
-                            {this.preselectedLink(preselected.sharpenMedium, 'sharpen', 'medium')}
-                            {this.preselectedLink(preselected.sharpenWeek, 'sharpen', 'week')}
-                            {this.preselectedLink(preselected.sharpenVeryWeek, 'sharpen', 'very week')}
-
-                            <br/><strong>Edges</strong><br/>
-                            {this.preselectedLink(preselected.edgeHorizontal, 'edges', 'horizontal')}
-                            {this.preselectedLink(preselected.edgeVertical, 'edges', 'vertical')}
-                            {this.preselectedLink(preselected.edgeDiagonal, 'edges', 'diagonal')}
+                            <div>
+                                <br/><strong>Treshold modificator:  </strong>
+                                <NumericInput
+                                    className="filter-inputs__input"
+                                    style={false}
+                                    min={0}
+                                    max={255}
+                                    value={this.state.tresholdModificator}
+                                    onChange={this.tresholdModificatorInputHandler}
+                                />
+                            </div>
                         </div>
                     </div>
-
                     <br/><input type="submit" value="Apply"/>
                 </form>
             </div>
