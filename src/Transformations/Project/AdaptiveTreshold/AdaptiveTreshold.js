@@ -17,10 +17,17 @@ const adaptiveTresholdTransformation = (statisticalRule, neighbourhoodRadius, tr
              mediumValue = maskFlat.sort()[medArray];
          }
 
-         mediumValue += tresholdModificator;
         let midArrayIndex = (neighbourhoodSize - (neighbourhoodSize % 2)) / 2 - ((neighbourhoodSize + 1) % 2);
+        let midArrayValue = arr[midArrayIndex][midArrayIndex];
 
-        return arr[midArrayIndex][midArrayIndex] > mediumValue ? 0 : 255;
+        if (tresholdModificator < 1) {
+            tresholdModificator = 1;
+        }
+
+        let isForegroundObject = midArrayValue > mediumValue + tresholdModificator ||
+        midArrayValue < mediumValue - tresholdModificator;
+
+        return isForegroundObject ? 0 : 255;
     };
 
         let operationOnPixelNeighbours = arr => {
