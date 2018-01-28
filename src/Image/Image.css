@@ -6,3 +6,32 @@
   max-width: 100%;
   max-height: 100%;
 }
+
+.canvas-size {
+  line-height: 0;
+  margin: 8px;
+}
+
+.canvas-wrapper-outer {
+  position: relative;
+  display: flex;
+  /*padding-right: 20px;*/
+}
+
+.canvas-wrapper {
+  height: 100%;
+  width: 100%;
+}
+
+.line-editor-wrapper-outer {
+  position: absolute;
+  top: 0;
+  line-height: 0;
+}
+/*.line-editor-wrapper-outer svg {*/
+  /*padding-right: 0;*/
+  /*width: auto;*/
+  /*height: auto;*/
+  /*max-width: 100%;*/
+  /*max-height: 100%;*/
+/*}*/

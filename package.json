@@ -9,6 +9,7 @@
     "font-awesome": "^4.7.0",
     "get-pixels": "^3.3.0",
     "lodash": "^4.17.4",
+    "ndarray": "latest",
     "ndarray-pack": "^1.2.1",
     "ndarray-unpack": "^1.0.0",
     "prop-types": "^15.6.0",
@@ -17,13 +18,13 @@
     "react-dropzone": "^4.2.1",
     "react-modal": "^3.1.11",
     "react-numeric-input": "^2.2.0",
+    "react-resize-detector": "^1.1.0",
     "react-scripts": "1.0.14",
     "react-simple-dropdown": "^3.2.0",
     "save-pixels": "^2.3.4",
     "simple-statistics": "^5.2.1",
     "svg.draggable.js": "^2.2.1",
-    "svg.js": "^2.6.3",
-    "ndarray": "latest"
+    "svg.js": "^2.6.3"
   },
   "scripts": {
     "start": "react-scripts start",
