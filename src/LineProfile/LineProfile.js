@@ -51,13 +51,18 @@ const lineChart = (_data, startPoint, endPoint, el) => {
     createPath(d => d.g, 'green', 'none');
     createPath(d => d.b, 'blue', 'none');
 
-    let step = Math.round (w / 4);
+    let stepX = Math.round (w / 4);
+    let stepY = Math.round(Math.max(maxBW, maxG, maxG, maxR) / 4);
 
     // Add the X Axis
-    // temporal calculation of step
+    // temporal calculation of stepX
     graph.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickValues([0, step, step * 2, step * 3, w]).tickSizeOuter(0));
+        .call(d3.axisBottom(x).tickValues([0, stepX, stepX * 2, stepX * 3, w]).tickSizeOuter(0));
+
+    graph.append("g")
+        .attr("transform", "translate(" + width + ", 0)")
+        .call(d3.axisRight(y).tickValues([0, stepY, stepY * 2, stepY * 3, stepY * 4]).tickSizeOuter(0));
 
     // add value of histogram in place pointed by mouse
     let histBWValue = svg.append("g")
@@ -156,6 +161,9 @@ const getHistogramData = (picture, startPoint, endPoint) => {
     var currY = startPoint.y;
 
     for (let i = minX; i < maxX; ++i) {
+        // I don't know if there's something wrong here
+        // should white color have 255 on each channel?
+        //TODO check
         const rc = picture.get(i, Math.round(currY), 0);
         const gc = picture.get(i, Math.round(currY), 1);
         const bc = picture.get(i, Math.round(currY), 2);

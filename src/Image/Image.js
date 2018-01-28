@@ -56,6 +56,15 @@ class Image extends Component {
             let canvas = this.canvasWrapper.childNodes.item(0);
             let clickPoint = getMousePos(canvas, ev);
 
+            //drawing line showing along what path the LineProfile will be done
+            let ctx = canvas.getContext('2d');
+            ctx.beginPath();
+            ctx.fillStyle = 'rgb(200,0,0)';
+            ctx.lineWidth = 5;
+            ctx.moveTo(this.state.lineStartPoint.x, this.state.lineStartPoint.y);
+            ctx.lineTo(clickPoint.x, clickPoint.y);
+            ctx.stroke();
+
             this.setState({
                 lineEndPoint: clickPoint,
                 modalIsOpen: true,
@@ -75,6 +84,9 @@ class Image extends Component {
 
     closeModal() {
         this.setState({modalIsOpen: false});
+        const canvas = savePixels(this.state.subimage, 'canvas');
+        this.canvasWrapper.innerHTML = '';
+        this.canvasWrapper.appendChild(canvas);
     }
 
 
