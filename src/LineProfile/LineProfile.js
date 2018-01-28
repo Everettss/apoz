@@ -4,7 +4,6 @@ import * as d3 from 'd3';
 import './LineProfile.css';
 
 const lineChart = (_data, startPoint, endPoint, el) => {
-    const w = Math.abs(startPoint.x - endPoint.x);
     const lineWidth = d3.max(_data, d => d.x) + 1;
     const svg = d3.select(el);
     const margin = {top: 20, right: 15, bottom: 30, left: 15};
@@ -54,8 +53,7 @@ const lineChart = (_data, startPoint, endPoint, el) => {
     let stepX = Math.round (lineWidth / 4);
     let stepY = Math.round(Math.max(maxBW, maxG, maxG, maxR) / 4);
 
-    // Add the X Axis
-    // temporal calculation of stepX
+    // Add the X and Y Axis
     graph.append("g")
         .attr("transform", "translate(0," + height + ")")
         .call(d3.axisBottom(x).tickValues([0, stepX, stepX * 2, stepX * 3, lineWidth]).tickSizeOuter(0));
@@ -164,10 +162,6 @@ const getHistogramData = (picture, startPoint, endPoint) => {
     for (let i = 0; i < lineLength; ++i) {
         const currX = Math.round(startPoint.x + stepX * i);
         const currY = Math.round(startPoint.y + stepY * i);
-        console.log("current xy", currX, currY);
-        // I don't know if there's something wrong here
-        // should white color have 255 on each channel?
-        //TODO check
         const rc = picture.get(currX, currY, 0);
         const gc = picture.get(currX, currY, 1);
         const bc = picture.get(currX, currY, 2);
