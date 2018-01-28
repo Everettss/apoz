@@ -3,24 +3,25 @@ import './Image.css'
 import Modal from 'react-modal';
 import savePixels from 'save-pixels';
 import LineProfile from "../LineProfile/LineProfile";
-import {imageDataToPicture} from '../utils/helpers';
 
 const getMousePos = (canvas, evt) => {
-    let rect = canvas.getBoundingClientRect();
+    let rect = canvas.getBoundingClientRect(),
+        scaleX = canvas.width / rect.width,
+        scaleY = canvas.height / rect.height;
     return {
-        x: evt.clientX - rect.left + 20,
-        y: evt.clientY - rect.top + 20
+        x: Math.round((evt.clientX - rect.left) * scaleX),
+        y: Math.round((evt.clientY - rect.top) * scaleY)
     };
 };
 
 const customStyles = {
     content : {
         top                   : '50%',
-        left                  : '50%',
+        left                  : '30%',
         right                 : 'auto',
         bottom                : 'auto',
-        marginRight           : '-50%',
-        transform             : 'translate(-50%, -50%)'
+        marginRight           : '-30%',
+        transform             : 'translate(-30%, -30%)'
     }
 };
 
@@ -54,19 +55,10 @@ class Image extends Component {
         if (this.state.modalIsOpen === false) {
             let canvas = this.canvasWrapper.childNodes.item(0);
             let clickPoint = getMousePos(canvas, ev);
-            let context = canvas.getContext('2d');
-
-            let subImageData = context.getImageData(
-                0,
-                0,
-                canvas.width,
-                canvas.height
-            );
 
             this.setState({
                 lineEndPoint: clickPoint,
                 modalIsOpen: true,
-                subimage: imageDataToPicture(subImageData),
             });
         }
     }
@@ -100,6 +92,7 @@ class Image extends Component {
             const canvas = savePixels(nextProps.data.picture, 'canvas');
             this.canvasWrapper.innerHTML = '';
             this.canvasWrapper.appendChild(canvas);
+            this.setState({subimage: nextProps.data.picture});
         }
     }
 
