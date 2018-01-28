@@ -4,8 +4,7 @@ import * as d3 from 'd3';
 import './LineProfile.css';
 
 const lineChart = (_data, startPoint, endPoint, el) => {
-    const w = Math.abs(startPoint.x - endPoint.x);
-    const lineWidth = Math.abs(startPoint.x - endPoint.x);
+    const lineWidth = d3.max(_data, d => d.x) + 1;
     const svg = d3.select(el);
     const margin = {top: 20, right: 15, bottom: 30, left: 15};
     const width = +svg.attr('width') - margin.left - margin.right;
@@ -51,14 +50,13 @@ const lineChart = (_data, startPoint, endPoint, el) => {
     createPath(d => d.g, 'green', 'none');
     createPath(d => d.b, 'blue', 'none');
 
-    let stepX = Math.round (w / 4);
+    let stepX = Math.round (lineWidth / 4);
     let stepY = Math.round(Math.max(maxBW, maxG, maxG, maxR) / 4);
 
-    // Add the X Axis
-    // temporal calculation of stepX
+    // Add the X and Y Axis
     graph.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickValues([0, stepX, stepX * 2, stepX * 3, w]).tickSizeOuter(0));
+        .call(d3.axisBottom(x).tickValues([0, stepX, stepX * 2, stepX * 3, lineWidth]).tickSizeOuter(0));
 
     graph.append("g")
         .attr("transform", "translate(" + width + ", 0)")
@@ -149,28 +147,26 @@ const lineChart = (_data, startPoint, endPoint, el) => {
 
 
 const getHistogramData = (picture, startPoint, endPoint) => {
-    const minX = Math.min(startPoint.x, endPoint.x);
-    const maxX = Math.max(startPoint.x, endPoint.x);
-    const lineWidth = Math.abs(startPoint.x - endPoint.x);
-    const step = (endPoint.y - startPoint.y) / lineWidth;
+    let a = Math.abs(startPoint.x - endPoint.x),
+        b = Math.abs(startPoint.y - endPoint.y),
+        c = Math.sqrt(a * a + b * b);
 
-    let hist = new Array(lineWidth).fill({});
+    let lineLength = Math.round(c);
+    const stepX = (endPoint.x - startPoint.x) / lineLength;
+    const stepY = (endPoint.y - startPoint.y) / lineLength;
+
+    let hist = new Array(lineLength).fill({});
 
     hist = hist.map((_, i) => ({ x: i, r: 0, g: 0, b: 0, bw: 0 }));
 
-    var currY = startPoint.y;
-
-    for (let i = minX; i < maxX; ++i) {
-        // I don't know if there's something wrong here
-        // should white color have 255 on each channel?
-        //TODO check
-        const rc = picture.get(i, Math.round(currY), 0);
-        const gc = picture.get(i, Math.round(currY), 1);
-        const bc = picture.get(i, Math.round(currY), 2);
+    for (let i = 0; i < lineLength; ++i) {
+        const currX = Math.round(startPoint.x + stepX * i);
+        const currY = Math.round(startPoint.y + stepY * i);
+        const rc = picture.get(currX, currY, 0);
+        const gc = picture.get(currX, currY, 1);
+        const bc = picture.get(currX, currY, 2);
         const bwc = Math.round((rc + gc + bc) / 3);
-        Object.assign(hist[i - minX], { r: rc, g: gc, b: bc, bw:bwc });
-
-        currY += step;
+        Object.assign(hist[i], { r: rc, g: gc, b: bc, bw:bwc });
     }
 
     return hist;

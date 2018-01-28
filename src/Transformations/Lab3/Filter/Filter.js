@@ -120,7 +120,7 @@ class Filter extends Component {
     };
 
     filterUpdateCallback (newFilter) {
-        this.state.filter = newFilter;
+        this.setState({filter: newFilter});
     }
 
     render() {
