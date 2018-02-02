@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 import * as d3 from 'd3';
 import './Histogram.css';
-// import getPixels from 'get-pixels';
 
 const lineChart = (_data, el) => {
     const data = [{ x: -1, r: 0, g: 0, b: 0, bw: 0 }, ..._data, { x: 256, r: 0, g: 0, b: 0, bw: 0 }];
@@ -138,7 +137,6 @@ const lineChart = (_data, el) => {
 
 
 const getHistogramData = picture => {
-    console.log (picture);
     const width = picture.shape[0];
     const height = picture.shape[1];
 
@@ -181,7 +179,7 @@ class Histogram extends Component {
 
     render() {
         return (
-            <svg width="442" height="300" />
+            <svg width="280" height="250" />
         );
     }
 }

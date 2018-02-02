@@ -115,10 +115,6 @@ class MaskCombination extends Component {
         let newCombinedFilter = new Array(5).fill(1).map(x => new Array(5).fill(1));
         let ffilterReduced = flattenMatrix(ffilter);
         let gfilterReduced = flattenMatrix(gfilter);
-        let ffilterTotal = ffilterReduced.reduce((acc, x) => acc + x, 0);
-        let gfilterTotal = gfilterReduced.reduce((acc, x) => acc + x, 0);
-        let combinedFilterTotal = ffilterTotal * gfilterTotal;
-        console.log (combinedFilterTotal);
         for (var i = 0; i < newCombinedFilter[0].length; i++) {
             for (var j = 0; j < newCombinedFilter.length; j++) {
                 var currPointValue = 0;
@@ -186,12 +182,12 @@ class MaskCombination extends Component {
     };
 
     ffilterUpdateCallback (newFilter) {
-        this.state.ffilter = newFilter;
+        this.setState({ffilter: newFilter});
         this.calculateCombinedFilter(newFilter, this.state.gfilter);
     }
 
     gfilterUpdateCallback (newFilter) {
-        this.state.gfilter = newFilter;
+        this.setState({gfilter: newFilter});
         this.calculateCombinedFilter(this.state.ffilter, newFilter);
     }
 
