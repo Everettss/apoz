@@ -16,6 +16,10 @@ class App extends Component {
             originalPicture: null,
             secondPicture: null,
             operation: null,
+            lineProfile: {
+                first: false,
+                second: false,
+            },
         };
         this.handleRemoveHistory = this.handleRemoveHistory.bind(this);
         this.handleMenu = this.handleMenu.bind(this);
@@ -28,6 +32,10 @@ class App extends Component {
         this.setState({
             secondPicture: null,
             operation: null,
+            lineProfile: {
+                first: false,
+                second: false,
+            },
             originalPicture: {
                 picture,
                 modificationDate: new Date(),
@@ -114,7 +122,11 @@ class App extends Component {
                 </div>
                 <div className="app-shell">
                     <div className="images">
-                        <div className="images-row image-modified">
+                        <div
+                            className={`images-row image-modified ${
+                                this.state.lineProfile.first ? 'display-line-profile' : ''
+                            }`}
+                        >
                             <div className="histogram-wrapper">
                                 <Histogram
                                     data={
@@ -122,6 +134,18 @@ class App extends Component {
                                         this.state.transformations[this.state.transformations.length - 1]
                                     }
                                 />
+                                <div>
+                                    <button
+                                        onClick={() => this.setState(prevState => ({
+                                            lineProfile: Object.assign(
+                                                {},
+                                                this.state.lineProfile,
+                                                { first: !prevState.lineProfile.first })
+                                        }))}
+                                    >
+                                        line profile
+                                    </button>
+                                </div>
                             </div>
                             <div className="image-wrapper">
                                 <Image
@@ -132,9 +156,24 @@ class App extends Component {
                                 />
                             </div>
                         </div>
-                        <div className="images-row image-original">
+                        <div className={`images-row image-image-original ${
+                                this.state.lineProfile.second ? 'display-line-profile' : ''
+                            }`}
+                        >
                             <div className="histogram-wrapper">
                                 <Histogram data={this.state.originalPicture} />
+                                <div>
+                                    <button
+                                        onClick={() => this.setState(prevState => ({
+                                            lineProfile: Object.assign(
+                                                {},
+                                                this.state.lineProfile,
+                                                { second: !prevState.lineProfile.second })
+                                        }))}
+                                    >
+                                        line profile
+                                    </button>
+                                </div>
                             </div>
                             <div className="image-wrapper">
                                 <Image data={this.state.originalPicture}/>
