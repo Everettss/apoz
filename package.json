@@ -2,13 +2,16 @@
   "name": "apoz",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://Everettss.github.io/apoz",
   "dependencies": {
     "bezier-easing": "^2.0.3",
     "bezier-easing-editor": "^0.7.0",
     "d3": "^4.12.2",
     "font-awesome": "^4.7.0",
     "get-pixels": "^3.3.0",
+    "gh-pages": "^1.1.0",
     "lodash": "^4.17.4",
+    "ndarray": "latest",
     "ndarray-pack": "^1.2.1",
     "ndarray-unpack": "^1.0.0",
     "prop-types": "^15.6.0",
@@ -22,13 +25,14 @@
     "save-pixels": "^2.3.4",
     "simple-statistics": "^5.2.1",
     "svg.draggable.js": "^2.2.1",
-    "svg.js": "^2.6.3",
-    "ndarray": "latest"
+    "svg.js": "^2.6.3"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   }
 }
