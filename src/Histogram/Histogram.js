@@ -179,7 +179,7 @@ class Histogram extends Component {
 
     render() {
         return (
-            <svg width="280" height="250" />
+            <svg width="340" height="250" />
         );
     }
 }

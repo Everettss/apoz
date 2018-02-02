@@ -198,7 +198,7 @@ class Image extends Component {
                         ref={(lineEditorWrapper) => { this.lineEditorWrapper = lineEditorWrapper; }}
                     />
                     <div>
-                        <button onClick={this.openModal}>apply</button>
+                        <button className="line-profile-apply" onClick={this.openModal}>apply</button>
                     </div>
                 </div>
             </div>

@@ -36,6 +36,11 @@
   line-height: 0;
 }
 
+.line-profile-apply {
+  position: relative;
+  top: -5px;
+  left: 7px;
+}
 .display-line-profile .line-editor-wrapper-outer {
   display: block;
 }
