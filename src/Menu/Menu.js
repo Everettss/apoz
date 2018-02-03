@@ -21,6 +21,7 @@ import Skeletonize from "../Transformations/Lab4/Skeletonize/Skeletonize";
 import MaskCombination from "../Transformations/Lab4/MaskCombination/MaskCombination";
 import SegmentationThreshold from "../Transformations/Lab5/SegmentationThreshold/SegmentationThreshold";
 import Turtle from "../Transformations/Lab5/Turtle/Turtle";
+import AdaptiveTreshold from "../Transformations/Project/AdaptiveTreshold/AdaptiveTreshold";
 
 class Menu extends Component {
     constructor(props) {
@@ -220,6 +221,18 @@ class Menu extends Component {
                             }
                         >
                             turtle
+                        </a>
+                    </DropdownContent>
+                </Dropdown>
+                <Dropdown ref={dropdown => { dropdown && this.dropdowns.set(5, dropdown); }}>
+                    <DropdownTrigger>project</DropdownTrigger>
+                    <DropdownContent>
+                        <a
+                            onClick={
+                                this.handleMenuClick(<AdaptiveTreshold updateImage={this.props.updateImage} />)
+                            }
+                        >
+                            Adaptive Treshold
                         </a>
                     </DropdownContent>
                 </Dropdown>
